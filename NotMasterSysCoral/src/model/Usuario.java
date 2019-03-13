@@ -5,7 +5,6 @@ public class Usuario {
 	private String usuario;
 	private String perfil;
 	
-	
 	public Usuario(String usuario, String perfil) {
 		super();
 		this.usuario = usuario;
@@ -23,8 +22,6 @@ public class Usuario {
 	public void setPerfil(String perfil) {
 		this.perfil = perfil;
 	}
-	
-	
 	
 
 }
