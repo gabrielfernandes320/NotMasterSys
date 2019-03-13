@@ -3,6 +3,10 @@ package view;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import java.awt.Frame;
+import javax.swing.JButton;
+import javax.swing.JMenu;
 
 public class MainWindow {
 
@@ -37,7 +41,13 @@ public class MainWindow {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH); 
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu mnNewMenu = new JMenu("New menu");
+		menuBar.add(mnNewMenu);
 	}
 
 }
