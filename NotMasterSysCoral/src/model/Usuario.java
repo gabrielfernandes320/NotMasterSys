@@ -5,6 +5,9 @@ public class Usuario {
 	private String usuario;
 	private String perfil;
 	
+	public Usuario() {
+	}
+	
 	public Usuario(String usuario, String perfil) {
 		super();
 		this.usuario = usuario;

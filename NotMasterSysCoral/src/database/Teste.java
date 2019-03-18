@@ -2,6 +2,9 @@ package database;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+
+import model.Usuario;
 
 public class Teste {
 
@@ -11,7 +14,19 @@ public class Teste {
 		
 		try {
 			conn.setAutoCommit(false);
-			System.out.println("Conectado com sucesso");
+			
+			UsuarioDAO dao = new UsuarioDAO(conn);
+			List<Object> lst = dao.SelectAll();
+			
+			for (int i = 0; i < lst.size(); i++) {				
+				Usuario usuario = (Usuario)lst.get(i);
+				System.out.println(usuario.getPerfil());
+			}		
+			
+			
+					
+			/*AlunoModel retorno = (AlunoModel)dao.Select(model);
+			System.out.println(retorno.getCidade());*/
 		} catch(SQLException e) {
 e.printStackTrace();
 		}
