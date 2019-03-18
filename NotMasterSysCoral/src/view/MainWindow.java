@@ -7,6 +7,9 @@ import javax.swing.JMenuBar;
 import java.awt.Frame;
 import javax.swing.JButton;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainWindow {
 
@@ -46,8 +49,18 @@ public class MainWindow {
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 		
-		JMenu mnNewMenu = new JMenu("New menu");
-		menuBar.add(mnNewMenu);
+		JMenu mnSistema = new JMenu("Sistema");
+		menuBar.add(mnSistema);
+		
+		JMenuItem mntmUsuarios = new JMenuItem("Usuarios");
+		mntmUsuarios.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			new UsersFrm();
+		
+		});
+		mnSistema.add(mntmUsuarios);
+		frame.getContentPane().setLayout(null);
 	}
-
 }
