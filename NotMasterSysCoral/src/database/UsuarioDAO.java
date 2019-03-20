@@ -25,13 +25,14 @@ public class UsuarioDAO extends MasterDAO {
 									+"		DEFAULT, 			"
 									+"		?, 					"
 									+"						   )";
-		private String is_update = "UPDATE usuarios\r\n" + 
-				"   SET usuario=?, perfil=?\r\n" + 
-				" WHERE <condition>";
+		private String is_update = "UPDATE usuarios " + 
+				"   SET usuario= ?, perfil= ?" + 
+				" WHERE usuario = ?";
 		
 		private PreparedStatement pst_selectAll;
 		private PreparedStatement pst_select;
 		private PreparedStatement pst_insert;
+		private PreparedStatement pst_update;
 		
 		Connection io_connection;
 			
@@ -42,6 +43,7 @@ public class UsuarioDAO extends MasterDAO {
 			pst_selectAll = connection.prepareStatement(is_selectAll);
 			pst_select = connection.prepareStatement(is_select);
 			pst_insert = connection.prepareStatement(is_insert);
+			pst_update = connection.prepareStatement(is_update);
 		}
 
 	@Override
@@ -85,12 +87,12 @@ public class UsuarioDAO extends MasterDAO {
 	@Override
 	public void Update(Object parameter) throws SQLException {
 		
-		pst_insert.clearParameters();
+		pst_update.clearParameters();
 		
 		Usuario lo_aluno = (Usuario)parameter;
 		
-		Set(pst_insert, 1, lo_aluno.getUsuario());
-		Set(pst_insert, 2, lo_aluno.getPerfil());
+		Set(pst_update, 1, lo_aluno.getUsuario());
+		Set(pst_update, 2, lo_aluno.getPerfil());
 		
 		pst_insert.execute();
 		
