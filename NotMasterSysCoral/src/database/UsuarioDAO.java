@@ -26,8 +26,8 @@ public class UsuarioDAO extends MasterDAO {
 									+"		?, 					"
 									+"						   )";
 		private String is_update = "UPDATE usuarios\r\n" + 
-				"   SET usuario= ?, perfil=?\r\n" + 
-				" WHERE usuario = ?;"
+				"   SET usuario=?, perfil=?\r\n" + 
+				" WHERE <condition>";
 		
 		private PreparedStatement pst_selectAll;
 		private PreparedStatement pst_select;
