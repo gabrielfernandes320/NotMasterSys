@@ -13,6 +13,7 @@ public class AlunoDAO extends MasterDAO {
 	
 	// Cria as variaveis contendo o select a ser feito.
 	private String is_selectAll = "select * from alunos order by aluno";
+	private String is_delete = "delete from alunos where aluno = ? and email = ?";
 	private String is_select = "select * from alunos where aluno = ? and email = ? order by aluno";
 	private String is_insert = "INSERT INTO alunos			"
 								+"	(						" 
@@ -56,6 +57,7 @@ public class AlunoDAO extends MasterDAO {
 	private PreparedStatement pst_selectAll;
 	private PreparedStatement pst_select;
 	private PreparedStatement pst_insert;
+	private PreparedStatement pst_delete;
 	
 	Connection io_connection;
 		
@@ -66,6 +68,8 @@ public class AlunoDAO extends MasterDAO {
 		pst_selectAll = connection.prepareStatement(is_selectAll);
 		pst_select = connection.prepareStatement(is_select);
 		pst_insert = connection.prepareStatement(is_insert);
+		pst_delete = connection.prepareStatement(is_delete);
+		
 	}
 
 	@Override
@@ -104,17 +108,17 @@ public class AlunoDAO extends MasterDAO {
 	public Object Select(Object parameter) throws SQLException {
 		
 		// Cria o objeto aluno.
-		AlunoModel aluno = null;
+		Aluno aluno = null;
 		
 		// Seta os parametros.
-		Set(pst_select, 1, ((AlunoModel)parameter).getAluno());
-		Set(pst_select, 2, ((AlunoModel)parameter).getEmail());
+		Set(pst_select, 1, ((Aluno)parameter).getCodigo_aluno());
+		Set(pst_select, 2, ((Aluno)parameter).getEmail());
 		
 		ResultSet rst = pst_select.executeQuery();
 		
 		if (rst.next()) {
-			aluno = new AlunoModel();
-			aluno.setAluno(rst.getString("aluno"));
+			aluno = new Aluno();
+			aluno.setCodigo_aluno(rst.getString("aluno"));
 			aluno.setData_nascimento(rst.getDate("data_nascimento"));
 			aluno.setSexo(rst.getString("sexo").charAt(0));
 			aluno.setTelefone(rst.getString("telefone"));
@@ -144,9 +148,9 @@ public class AlunoDAO extends MasterDAO {
 		
 		pst_insert.clearParameters();
 		
-		AlunoModel lo_aluno = (AlunoModel)parameter;
+		Aluno lo_aluno = (Aluno)parameter;
 		
-		Set(pst_insert, 1, lo_aluno.getAluno());
+		Set(pst_insert, 1, lo_aluno.getCodigo_aluno());
 		Set(pst_insert, 2, lo_aluno.getData_nascimento());
 		Set(pst_insert, 3, lo_aluno.getSexo());
 		
@@ -159,8 +163,18 @@ public class AlunoDAO extends MasterDAO {
 	}
 
 	@Override
-	public void Delete(Object parameter) throws SQLException {
-				
+    public int Delete(Object parameter) throws SQLException{
+ 
+        int affectedrows = 0;
+                 
+        pst_delete.setObject(1, parameter);
+ 
+        affectedrows = pst_delete.executeUpdate();
+ 
+        return affectedrows;
+        
+    }
+		
 	}
 
 }
