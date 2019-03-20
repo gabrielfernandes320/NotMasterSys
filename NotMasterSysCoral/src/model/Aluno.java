@@ -5,6 +5,7 @@ import java.util.Date;
 public class Aluno {
 	
 	private String codigo_aluno;
+	private String aluno;
 	private Date data_nascimento;
 	private char sexo;
 	private String telefone;
@@ -44,6 +45,16 @@ public class Aluno {
 		this.cep = cep;
 	}
 
+	
+	
+
+	public String getAluno() {
+		return aluno;
+	}
+
+	public void setAluno(String aluno) {
+		this.aluno = aluno;
+	}
 
 	public String getCodigo_aluno() {
 		return codigo_aluno;
