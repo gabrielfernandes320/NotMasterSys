@@ -25,6 +25,9 @@ public class UsuarioDAO extends MasterDAO {
 									+"		DEFAULT, 			"
 									+"		?, 					"
 									+"						   )";
+		private String is_update = "UPDATE usuarios\r\n" + 
+				"   SET usuario= ?, perfil=?\r\n" + 
+				" WHERE usuario = ?;"
 		
 		private PreparedStatement pst_selectAll;
 		private PreparedStatement pst_select;
@@ -61,19 +64,58 @@ public class UsuarioDAO extends MasterDAO {
 
 	@Override
 	public Object Select(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		// Cria o objeto aluno.
+				Usuario usuario = null;
+				
+				// Seta os parametros.
+				Set(pst_select, 1, ((Usuario)parameter).getUsuario());
+				Set(pst_select, 2, ((Usuario)parameter).getPerfil());
+				
+				ResultSet rst = pst_select.executeQuery();
+				
+				if (rst.next()) {
+					usuario = new Usuario();
+					usuario.setUsuario(rst.getString("usuario"));
+					usuario.setPerfil(rst.getString("perfil"));
+				}
+				
+				return usuario;
 	}
 
 	@Override
 	public void Update(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
+		
+		pst_insert.clearParameters();
+		
+		Usuario lo_aluno = (Usuario)parameter;
+		
+		Set(pst_insert, 1, lo_aluno.getUsuario());
+		Set(pst_insert, 2, lo_aluno.getPerfil());
+		
+		pst_insert.execute();
+		
+		if (pst_insert.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
+		
 		
 	}
 
 	@Override
 	public void Insert(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
+		
+		pst_insert.clearParameters();
+		
+		Usuario lo_aluno = (Usuario)parameter;
+		
+		Set(pst_insert, 1, lo_aluno.getUsuario());
+		Set(pst_insert, 2, lo_aluno.getPerfil());
+		
+		pst_insert.execute();
+		
+		if (pst_insert.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
 		
 	}
 
