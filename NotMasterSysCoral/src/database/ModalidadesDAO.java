@@ -51,7 +51,7 @@ public class ModalidadesDAO extends MasterDAO{
 			 arlModalidade.add(model);
 		 }
 				
-		return arlModalidade;
+		return arlModalidade;;
 	}
 
 	@Override
