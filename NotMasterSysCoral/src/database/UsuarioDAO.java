@@ -25,14 +25,31 @@ public class UsuarioDAO extends MasterDAO {
 									+"		DEFAULT, 			"
 									+"		?, 					"
 									+"						   )";
-		private String is_update = "UPDATE usuarios " + 
-				"   SET usuario= ?, perfil= ?" + 
-				" WHERE usuario = ?";
+		
+		private String is_update = "UPDATE usuarios " 
+				+"   SET usuario= ?, perfil= ?"
+				+" WHERE usuario = ?";
+		
+		private String is_create_role = "create	role ?1"
+				+"	with login"
+				+"	encrypted password	'?2'"
+				+"	in role	admin";
+		
+		private String is_alter_role = "alter	role		?1"
+				+"	with login"
+				+"	encrypted password'?2'";
+		
+		private String is_drop_role = "drop	role		?1";
+					
 		
 		private PreparedStatement pst_selectAll;
 		private PreparedStatement pst_select;
 		private PreparedStatement pst_insert;
 		private PreparedStatement pst_update;
+		private PreparedStatement pst_create_role;
+		private PreparedStatement pst_alter_role;
+		private PreparedStatement pst_drop_role;
+		
 		
 		Connection io_connection;
 			
@@ -44,6 +61,9 @@ public class UsuarioDAO extends MasterDAO {
 			pst_select = connection.prepareStatement(is_select);
 			pst_insert = connection.prepareStatement(is_insert);
 			pst_update = connection.prepareStatement(is_update);
+			pst_create_role = connection.prepareStatement(is_create_role);
+			pst_alter_role = connection.prepareStatement(is_alter_role);
+			pst_drop_role = connection.prepareStatement(is_drop_role);
 		}
 
 	@Override
@@ -122,8 +142,10 @@ public class UsuarioDAO extends MasterDAO {
 	}
 
 	@Override
-	public void Delete(Object parameter) throws SQLException {
+	public int Delete(Object parameter) throws SQLException {
 		// TODO Auto-generated method stub
+		
+	return (Integer) null;
 		
 	}
 
