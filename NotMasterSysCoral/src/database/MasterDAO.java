@@ -26,7 +26,7 @@ public abstract class MasterDAO {
 		throws			SQLException;
 	
 	public abstract
-	void				Delete(Object parameter)
+	int				Delete(Object parameter)
 		throws			SQLException;
 	
 	public
