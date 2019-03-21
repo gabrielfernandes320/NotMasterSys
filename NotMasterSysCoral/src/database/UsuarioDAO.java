@@ -16,23 +16,19 @@ public class UsuarioDAO extends MasterDAO {
 		private String is_selectAll = "select * from usuarios order by usuario";
 		private String is_select = "select * from usuarios where usuario = ? and perfil = ? order by usuario";
 		private String is_insert = "INSERT INTO usuarios			"
-									+"	(						" 
-									+"		usuario, 		"
-									+"		perfil, 				"
-									+"	)						"  
-									+"  VALUES 					"
-									+"	(						"
-									+"		DEFAULT, 			"
-									+"		?, 					"
-									+"						   )";
+									+"(usuario,"
+									+"perfil)"
+									+"VALUES("
+									+"?,?) ";
+
 		
 		private String is_update = "UPDATE usuarios " 
 				+"   SET usuario= ?, perfil= ?"
 				+" WHERE usuario = ?";
 		
-		private String is_create_role = "create	role ?1"
+		private String is_create_role = "create	role ?"
 				+"	with login"
-				+"	encrypted password	'?2'"
+				+"	encrypted password	'?'"
 				+"	in role	admin";
 		
 		private String is_alter_role = "alter	role		?1"
@@ -40,6 +36,8 @@ public class UsuarioDAO extends MasterDAO {
 				+"	encrypted password'?2'";
 		
 		private String is_drop_role = "drop	role		?1";
+
+		private String is_delete = "asd";
 					
 		
 		private PreparedStatement pst_selectAll;
@@ -49,6 +47,8 @@ public class UsuarioDAO extends MasterDAO {
 		private PreparedStatement pst_create_role;
 		private PreparedStatement pst_alter_role;
 		private PreparedStatement pst_drop_role;
+		private PreparedStatement pst_delete;
+
 		
 		
 		Connection io_connection;
@@ -109,18 +109,16 @@ public class UsuarioDAO extends MasterDAO {
 		
 		pst_update.clearParameters();
 		
-		Usuario lo_aluno = (Usuario)parameter;
+		Usuario lo_usuario = (Usuario)parameter;
 		
-		Set(pst_update, 1, lo_aluno.getUsuario());
-		Set(pst_update, 2, lo_aluno.getPerfil());
+		Set(pst_update, 1, lo_usuario.getUsuario());
+		Set(pst_update, 2, lo_usuario.getPerfil());
+
+		pst_update.execute();
 		
-		pst_insert.execute();
-		
-		if (pst_insert.getUpdateCount() > 0) {
+		if (pst_update.getUpdateCount() > 0) {
 			io_connection.commit();
 		}
-		
-		
 	}
 
 	@Override
@@ -128,10 +126,10 @@ public class UsuarioDAO extends MasterDAO {
 		
 		pst_insert.clearParameters();
 		
-		Usuario lo_aluno = (Usuario)parameter;
+		Usuario lo_usuario = (Usuario)parameter;
 		
-		Set(pst_insert, 1, lo_aluno.getUsuario());
-		Set(pst_insert, 2, lo_aluno.getPerfil());
+		Set(pst_insert, 1, lo_usuario.getUsuario());
+		Set(pst_insert, 2, lo_usuario.getPerfil());
 		
 		pst_insert.execute();
 		
@@ -141,29 +139,69 @@ public class UsuarioDAO extends MasterDAO {
 		
 	}
 	
-	public void CreateRole(Object parameter) throws SQLException {
-		
-		pst_create_role.clearParameters();
-		
-		Usuario lo_aluno = (Usuario)parameter;
-		
-		Set(pst_insert, 1, lo_aluno.getUsuario());
-		Set(pst_insert, 2, lo_aluno.getPerfil());
-		
-		pst_insert.execute();
-		
-		if (pst_insert.getUpdateCount() > 0) {
-			io_connection.commit();
-		}
-		
-	}
 
 	@Override
 	public int Delete(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
-		
-	return (Integer) null;
+
+		int affectedrows = 0;
+
+		Usuario lo_usuario = (Usuario)parameter;
+
+		Set(pst_delete, 1, lo_usuario.getPerfil());
+		Set(pst_delete, 2, lo_usuario.getUsuario());
+		affectedrows = pst_delete.executeUpdate();
+
+		return affectedrows;
 		
 	}
+
+	public void CreateRole(Object parameter) throws SQLException {
+
+		pst_create_role.clearParameters();
+
+		Usuario lo_aluno = (Usuario)parameter;
+
+		Set(pst_create_role, 1, lo_aluno.getUsuario());
+		Set(pst_create_role, 2, lo_aluno.getPerfil());
+
+		pst_create_role.execute();
+
+		if (pst_create_role.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
+
+	}
+
+	public void AlterRole(Object parameter) throws SQLException {
+
+		pst_alter_role.clearParameters();
+
+		Usuario lo_usuario = (Usuario)parameter;
+
+		Set(pst_alter_role, 1, lo_usuario.getUsuario());
+		Set(pst_alter_role, 2, lo_usuario.getPerfil());
+
+		pst_alter_role.execute();
+
+		if (pst_alter_role.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
+	}
+
+	public int DropRole(Object parameter) throws SQLException {
+
+		int affectedrows = 0;
+
+		Usuario lo_usuario = (Usuario)parameter;
+
+		Set(pst_drop_role, 1, lo_usuario.getPerfil());
+		Set(pst_drop_role, 2, lo_usuario.getUsuario());
+		affectedrows = pst_drop_role.executeUpdate();
+
+		return affectedrows;
+
+	}
+
+
 
 }

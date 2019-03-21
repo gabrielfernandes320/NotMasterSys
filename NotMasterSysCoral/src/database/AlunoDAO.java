@@ -210,17 +210,17 @@ public class AlunoDAO extends MasterDAO {
 
 	@Override
     public int Delete(Object parameter) throws SQLException{
- 
+
         int affectedrows = 0;
-        
+
         Aluno lo_aluno = (Aluno)parameter;
-                 
+
         Set(pst_delete, 1, lo_aluno.getAluno());
         Set(pst_delete, 2, lo_aluno.getEmail());
-        
+
         affectedrows = pst_delete.executeUpdate();
- 
+
         return affectedrows;
-        
+
     }
 }

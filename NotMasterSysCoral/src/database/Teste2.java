@@ -1,4 +1,6 @@
-/*package database;
+package database;
+
+import model.Usuario;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -6,33 +8,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import database.dao.AlunoDAO;
-import database.model.AlunoModel;
-import image.MasterImage;
 
-public class Teste {
+public class Teste2 {
 
 	public static void main(String[] args) {
-		
-		Connection conn = ConnectionFactory.getConnection
-							(
-								"master", 
-								"admin", 
-								"admin"
-							);
+
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 		try {
 			conn.setAutoCommit(false);
 			System.out.println("Conectado com sucesso!");
 			
-			AlunoDAO dao = new AlunoDAO(conn);
+			UsuarioDAO dao = new UsuarioDAO(conn);
 			
-			AlunoModel model = new AlunoModel();
-			model.setAluno("Matheus Leandro Ferreira");
-			model.setEmail("mlf@unesc.net");
-			model.setData_nascimento(new Date("03/06/2019"));
-			
-			dao.Insert(model);			
-		
+			Usuario model = new Usuario();
+			model.setPerfil("Administrador");
+			model.setUsuario("testess");
+			model.setSenha("testess");
+
+			dao.Insert(model);
+			model.setPerfil(null);
+			dao.CreateRole(model);
 			/*List<Object> lst = dao.SelectAll();
 			
 			for (int i = 0; i < lst.size(); i++) {				
@@ -43,7 +38,7 @@ public class Teste {
 			
 					
 			/*AlunoModel retorno = (AlunoModel)dao.Select(model);
-			System.out.println(retorno.getCidade());
+			System.out.println(retorno.getCidade());*/
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -51,7 +46,7 @@ public class Teste {
 
 	}
 
-}*/
+}
 
 
 
