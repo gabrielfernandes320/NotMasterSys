@@ -140,6 +140,23 @@ public class UsuarioDAO extends MasterDAO {
 		}
 		
 	}
+	
+	public void CreateRole(Object parameter) throws SQLException {
+		
+		pst_create_role.clearParameters();
+		
+		Usuario lo_aluno = (Usuario)parameter;
+		
+		Set(pst_insert, 1, lo_aluno.getUsuario());
+		Set(pst_insert, 2, lo_aluno.getPerfil());
+		
+		pst_insert.execute();
+		
+		if (pst_insert.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
+		
+	}
 
 	@Override
 	public int Delete(Object parameter) throws SQLException {
