@@ -4,8 +4,15 @@ import java.awt.EventQueue;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 import javax.swing.SwingConstants;
+
+import database.ConnectionFactory;
+import database.UsuarioDAO;
+import model.Usuario;
+
 import javax.swing.JButton;
 import java.awt.Point;
 import java.awt.Dimension;
@@ -19,11 +26,15 @@ import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
 import java.awt.Font;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.awt.event.ActionEvent;
 
 public class UsersFrm extends JInternalFrame {
-	private JTextField textField;
-	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
+	private JTextField tbUser;
+	private JPasswordField tbPassword;
+	private JPasswordField tbConfirmPassword;
 
 	/**
 	 * Launch the application.
@@ -45,54 +56,54 @@ public class UsersFrm extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public UsersFrm() {
-		setBounds(100, 100, 431, 249);
+		setClosable(true);
+		setBounds(100, 100, 466, 249);
 		getContentPane().setLayout(null);
 		
-		JButton btnNewButton = new JButton("Buscar");
-		btnNewButton.setBounds(10, 11, 86, 31);
-		btnNewButton.setPreferredSize(new Dimension(40, 25));
-		btnNewButton.setBackground(new Color(240, 240, 240));
-		btnNewButton.setIcon(new ImageIcon("C:\\Users\\gabri\\Desktop\\NotMasterSys\\MasterImage\\src\\16x16\\localizar.png"));
-		getContentPane().add(btnNewButton);
-		
 		JButton btnAdicionar = new JButton("Adicionar");
-		btnAdicionar.setIcon(new ImageIcon("C:\\Users\\gabri\\Desktop\\NotMasterSys\\MasterImage\\src\\22x22\\adicionar.png"));
+		
+		btnAdicionar.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/adicionar.png")));
 		btnAdicionar.setPreferredSize(new Dimension(40, 25));
 		btnAdicionar.setBackground(SystemColor.menu);
-		btnAdicionar.setBounds(95, 11, 104, 31);
+		btnAdicionar.setBounds(119, 11, 104, 31);
 		getContentPane().add(btnAdicionar);
 		
-		JButton button = new JButton("Adicionar");
-		button.setIcon(new ImageIcon("C:\\Users\\gabri\\Desktop\\NotMasterSys\\MasterImage\\src\\22x22\\salvar.png"));
-		button.setPreferredSize(new Dimension(40, 25));
-		button.setBackground(SystemColor.menu);
-		button.setBounds(301, 11, 104, 31);
-		getContentPane().add(button);
+		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnSalvar.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/salvar.png")));
+		btnSalvar.setPreferredSize(new Dimension(40, 25));
+		btnSalvar.setBackground(SystemColor.menu);
+		btnSalvar.setBounds(324, 11, 104, 31);
+		getContentPane().add(btnSalvar);
 		
 		JButton btnRemover = new JButton("Remover");
-		btnRemover.setIcon(new ImageIcon("C:\\Users\\gabri\\Desktop\\NotMasterSys\\MasterImage\\src\\22x22\\remover.png"));
+		
+		btnRemover.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/remover.png")));
 		btnRemover.setPreferredSize(new Dimension(40, 25));
 		btnRemover.setBackground(SystemColor.menu);
-		btnRemover.setBounds(198, 11, 104, 31);
+		btnRemover.setBounds(222, 11, 104, 31);
 		getContentPane().add(btnRemover);
 		
-		textField = new JTextField();
-		textField.setBounds(135, 79, 271, 20);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		tbUser = new JTextField();
+		tbUser.setBounds(135, 79, 271, 20);
+		getContentPane().add(tbUser);
+		tbUser.setColumns(10);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(135, 110, 270, 20);
-		getContentPane().add(passwordField);
+		tbPassword = new JPasswordField();
+		tbPassword.setBounds(135, 110, 270, 20);
+		getContentPane().add(tbPassword);
 		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(135, 141, 270, 20);
-		getContentPane().add(passwordField_1);
+		tbConfirmPassword = new JPasswordField();
+		tbConfirmPassword.setBounds(135, 141, 270, 20);
+		getContentPane().add(tbConfirmPassword);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Cadastral", "Matricular", "Financeiro", "Completo"}));
-		comboBox.setBounds(135, 172, 270, 20);
-		getContentPane().add(comboBox);
+		JComboBox cbProfile = new JComboBox();
+		cbProfile.setModel(new DefaultComboBoxModel(new String[] {"Cadastral", "Matricular", "Financeiro", "Completo"}));
+		cbProfile.setBounds(135, 172, 270, 20);
+		getContentPane().add(cbProfile);
 		
 		JLabel lblNewLabel = new JLabel("Usuario:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -113,6 +124,79 @@ public class UsersFrm extends JInternalFrame {
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel_3.setBounds(10, 168, 46, 14);
 		getContentPane().add(lblNewLabel_3);
+		
+		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/localizar.png")));
+		btnBuscar.setPreferredSize(new Dimension(40, 25));
+		btnBuscar.setBackground(SystemColor.menu);
+		btnBuscar.setBounds(10, 11, 110, 31);
+		getContentPane().add(btnBuscar);
+		
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		
+		btnAdicionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					conn.setAutoCommit(false);
+					System.out.println("Conectado com sucesso!");
+
+					UsuarioDAO dao = new UsuarioDAO(conn);
+					Usuario model = new Usuario();
+					
+					btnAdicionar.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							model.setPerfil(cbProfile.getSelectedItem().toString());
+							model.setUsuario(tbUser.getText());
+							try {
+								dao.Insert(model);
+								JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!");
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+						
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+			
+			
+		});
+		
+		btnRemover.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					conn.setAutoCommit(false);
+				
+					UsuarioDAO dao = new UsuarioDAO(conn);
+					Usuario model = new Usuario();
+					
+					btnAdicionar.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							model.setPerfil(cbProfile.getSelectedItem().toString());
+							model.setUsuario(tbUser.getText());
+							try {
+								dao.Delete(model);
+								JOptionPane.showMessageDialog(btnRemover, "Removido com Sucesso!");
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+						
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			
+			}
+			
+		});
+		
+		
+		
 
 	}
 }
