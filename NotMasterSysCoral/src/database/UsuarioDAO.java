@@ -26,11 +26,11 @@ public class UsuarioDAO extends MasterDAO {
 				+"   SET usuario= ?, perfil= ?"
 				+" WHERE usuario = ?";
 		
-		private String is_create_role = "create	role ?"
+		private String is_create_role = "create	role funvionsss"
 				+"	with login"
-				+"	encrypted password	'?'"
+				+"	encrypted password 'asdasd'"
 				+"	in role	admin";
-		
+
 		private String is_alter_role = "alter	role		?1"
 				+"	with login"
 				+"	encrypted password'?2'";
@@ -57,7 +57,7 @@ public class UsuarioDAO extends MasterDAO {
 				throws SQLException 
 		{
 			io_connection = connection;
-			pst_selectAll = connection.prepareStatement(is_selectAll);
+			//pst_selectAll = connection.prepareStatement(is_selectAll);
 			pst_select = connection.prepareStatement(is_select);
 			pst_insert = connection.prepareStatement(is_insert);
 			pst_update = connection.prepareStatement(is_update);
@@ -157,12 +157,12 @@ public class UsuarioDAO extends MasterDAO {
 
 	public void CreateRole(Object parameter) throws SQLException {
 
-		pst_create_role.clearParameters();
+		//pst_create_role.clearParameters();
 
 		Usuario lo_aluno = (Usuario)parameter;
 
-		Set(pst_create_role, 1, lo_aluno.getUsuario());
-		Set(pst_create_role, 2, lo_aluno.getPerfil());
+		//Set(pst_create_role, 1, "asdssdfdasd".replace('\'' , 's'));
+		//Set(pst_create_role, 2, "adsadassadsad");
 
 		pst_create_role.execute();
 

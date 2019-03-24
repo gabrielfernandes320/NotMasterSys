@@ -21,12 +21,11 @@ public class Teste2 {
 			UsuarioDAO dao = new UsuarioDAO(conn);
 			
 			Usuario model = new Usuario();
-			model.setPerfil("Administrador");
-			model.setUsuario("testess");
-			model.setSenha("testess");
+			model.setPerfil("Administradorh");
+			model.setUsuario("testessgs");
+			model.setSenha("testessdd");
 
-			dao.Insert(model);
-			model.setPerfil(null);
+			//dao.Insert(model);
 			dao.CreateRole(model);
 			/*List<Object> lst = dao.SelectAll();
 			
