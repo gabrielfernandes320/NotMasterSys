@@ -37,9 +37,8 @@ public class UsuarioDAO extends MasterDAO {
 		
 		private String is_drop_role = "drop	role		?1";
 
-		private String is_delete = "DELETE FROM usuarios"
-				+"WHERE perfil = ?"
-				+"AND usuario = ?";
+		private String is_delete = "DELETE FROM usuarios "
+				+"WHERE usuario = ?";
 					
 		
 		private PreparedStatement pst_selectAll;
@@ -66,6 +65,7 @@ public class UsuarioDAO extends MasterDAO {
 			pst_create_role = connection.prepareStatement(is_create_role);
 			pst_alter_role = connection.prepareStatement(is_alter_role);
 			pst_drop_role = connection.prepareStatement(is_drop_role);
+			pst_delete = connection.prepareStatement(is_delete);
 		}
 
 	@Override
@@ -149,7 +149,9 @@ public class UsuarioDAO extends MasterDAO {
 
 		Usuario lo_usuario = (Usuario)parameter;
 
-		pst_delete.setString(1, lo_usuario.getPerfil());
+		pst_delete.setString(1, lo_usuario.getUsuario());
+		
+		
 		affectedrows = pst_delete.executeUpdate();
 
 		return affectedrows;
