@@ -183,6 +183,17 @@ public class PrincipalWindow extends JFrame {
 		});
 		
 		//Cadastro
+//		
+		itemModalidadesCad.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				ModalityFrm us = new ModalityFrm();
+				us.setLocation(2, 2);
+				desktopPane.add(us);
+				us.setVisible(true);
+			}
+				});	
 		itemPlanosCad.addActionListener(new ActionListener() {
 
 			@Override
