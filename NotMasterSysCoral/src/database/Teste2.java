@@ -17,28 +17,32 @@ public class Teste2 {
 		try {
 			conn.setAutoCommit(false);
 			System.out.println("Conectado com sucesso!");
-			
-			UsuarioDAO dao = new UsuarioDAO(conn);
-			
-			Usuario model = new Usuario();
-			model.setPerfil("Administrador");
-			model.setUsuario("testess");
-			model.setSenha("testess");
 
-			dao.Insert(model);
-			model.setPerfil(null);
-			dao.CreateRole(model);
-			/*List<Object> lst = dao.SelectAll();
+			UsuarioDAO dao = new UsuarioDAO(conn);
+			Usuario model = new Usuario();
+
+			//Insert OK
+			/*model.setPerfil("Adminstrador");
+			model.setUsuario("gabriel2");
+			dao.Insert(model);*/
+
+			//InsertRole
+			//dao.Insert(model);
+			//dao.CreateRole(model);
+
+			//SelectAll OK
+				/*List<Object> lst = dao.SelectAll();
 			
 			for (int i = 0; i < lst.size(); i++) {				
-				AlunoModel aluno = (AlunoModel)lst.get(i);
-				System.out.println(aluno.getAluno());
-			}*/			
+				Usuario usuario = (Usuario)lst.get(i);
+				System.out.println(usuario.getPerfil());
+			}*/
 			
 			
-					
-			/*AlunoModel retorno = (AlunoModel)dao.Select(model);
-			System.out.println(retorno.getCidade());*/
+			//Select OK
+			model.setUsuario("teste");
+			
+			dao.Delete(model);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

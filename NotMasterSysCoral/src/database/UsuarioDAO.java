@@ -26,18 +26,19 @@ public class UsuarioDAO extends MasterDAO {
 				+"   SET usuario= ?, perfil= ?"
 				+" WHERE usuario = ?";
 		
-		private String is_create_role = "create	role ?"
+		private String is_create_role = "create	role funvionsss"
 				+"	with login"
-				+"	encrypted password	'?'"
+				+"	encrypted password 'asdasd'"
 				+"	in role	admin";
-		
+
 		private String is_alter_role = "alter	role		?1"
 				+"	with login"
 				+"	encrypted password'?2'";
 		
 		private String is_drop_role = "drop	role		?1";
 
-		private String is_delete = "asd";
+		private String is_delete = "DELETE FROM usuarios "
+				+"WHERE usuario = ?";
 					
 		
 		private PreparedStatement pst_selectAll;
@@ -64,6 +65,7 @@ public class UsuarioDAO extends MasterDAO {
 			pst_create_role = connection.prepareStatement(is_create_role);
 			pst_alter_role = connection.prepareStatement(is_alter_role);
 			pst_drop_role = connection.prepareStatement(is_drop_role);
+			pst_delete = connection.prepareStatement(is_delete);
 		}
 
 	@Override
@@ -147,8 +149,9 @@ public class UsuarioDAO extends MasterDAO {
 
 		Usuario lo_usuario = (Usuario)parameter;
 
-		Set(pst_delete, 1, lo_usuario.getPerfil());
-		Set(pst_delete, 2, lo_usuario.getUsuario());
+		pst_delete.setString(1, lo_usuario.getUsuario());
+		
+		
 		affectedrows = pst_delete.executeUpdate();
 
 		return affectedrows;
@@ -161,8 +164,8 @@ public class UsuarioDAO extends MasterDAO {
 
 		Usuario lo_aluno = (Usuario)parameter;
 
-		Set(pst_create_role, 1, lo_aluno.getUsuario());
-		Set(pst_create_role, 2, lo_aluno.getPerfil());
+		Set(pst_create_role, 1, "asdssdfdasd".replace('\'' , 's'));
+		Set(pst_create_role, 2, "adsadassadsad");
 
 		pst_create_role.execute();
 
