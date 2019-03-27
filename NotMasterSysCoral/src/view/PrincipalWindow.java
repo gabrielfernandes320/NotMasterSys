@@ -54,13 +54,13 @@ public class PrincipalWindow extends JFrame {
 		// Define o titulo da janela.
 		setTitle("Menu Principal");
 
-		// Seta o layout a ser utilizado (NULL significa que não irá utilizar nenhum).
+		// Seta o layout a ser utilizado (NULL significa que nï¿½o irï¿½ utilizar nenhum).
 		setLayout(null);
 
-		// Define que não poderá ser alterado as dimensões da tela.
+		// Define que nï¿½o poderï¿½ ser alterado as dimensï¿½es da tela.
 		setResizable(true);
 
-		// Define o método de fechamento da janela.
+		// Define o mï¿½todo de fechamento da janela.
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setBackground(Color.black);
 
@@ -87,7 +87,7 @@ public class PrincipalWindow extends JFrame {
 //			}
 //		});
 
-		// Configuração do DesktopPane
+		// Configuraï¿½ï¿½o do DesktopPane
 		desktopPane = new JDesktopPane();
 		// desktopPane.setSize(800,600);
 		desktopPane.addHierarchyBoundsListener(new HierarchyBoundsListener() {
@@ -112,7 +112,7 @@ public class PrincipalWindow extends JFrame {
 		menuSistema = new JMenu("Sistema");
 		menuCadastros = new JMenu("Cadastros");
 		menuProcessos = new JMenu("Processos");
-		menuRelatorios = new JMenu("Relatórios");
+		menuRelatorios = new JMenu("Relatï¿½rios");
 		menuUtilitarios = new JMenu("Utilitarios");
 		menuAjuda = new JMenu("Ajuda");
 
@@ -158,7 +158,7 @@ public class PrincipalWindow extends JFrame {
 		menuBar.add(menuUtilitarios);
 		menuBar.add(menuAjuda);
 
-		//Ações para os item abaixo
+		//Aï¿½ï¿½es para os item abaixo
 		//Sistema
 		itemUsuariosSist.addActionListener(new ActionListener() {
 
@@ -208,8 +208,18 @@ public class PrincipalWindow extends JFrame {
 		//Processos
 		
 		
-		
+		//MatrÃ­cula
+		itemAlunoMatricularProc.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MatriculaFrm us = new MatriculaFrm();
+				us.setLocation(1, 1);
+				desktopPane.add(us);
+				us.setVisible(true);
+			}
+		});
+		
 		setJMenuBar(menuBar);
 		add(desktopPane);
 
