@@ -22,13 +22,14 @@ public class Teste2 {
 			Usuario model = new Usuario();
 
 			//Insert OK
-			/*model.setPerfil("Adminstrador");
-			model.setUsuario("gabriel2");
-			dao.Insert(model);*/
+			model.setPerfil("Adminstrador");
+			model.setUsuario("hosbavaldo1");
+			model.setPassword("hosbavaldo1");
+			//dao.Insert(model);
 
 			//InsertRole
 			//dao.Insert(model);
-			//dao.CreateRole(model);
+			dao.CreateRole(model);
 
 			//SelectAll OK
 				/*List<Object> lst = dao.SelectAll();
@@ -40,11 +41,11 @@ public class Teste2 {
 			
 			
 			//Select OK
-			model.setUsuario("teste");
+			//model.setUsuario("teste");
 			
-			dao.Delete(model);
+			//dao.Delete(model);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

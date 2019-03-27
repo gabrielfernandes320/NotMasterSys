@@ -4,6 +4,7 @@ public class Usuario {
 
 	private String usuario;
 	private String perfil;
+	private String password;
 	
 	public Usuario() {
 	}
@@ -26,5 +27,15 @@ public class Usuario {
 	public void setPerfil(String perfil) {
 		this.perfil = perfil;
 	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
 
 }
