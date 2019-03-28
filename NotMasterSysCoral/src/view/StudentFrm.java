@@ -6,10 +6,19 @@ import javax.swing.JInternalFrame;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+
+import database.AlunoDAO;
+import database.ConnectionFactory;
+import database.UsuarioDAO;
+import model.Aluno;
+import model.Usuario;
+
 import javax.swing.JButton;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -20,6 +29,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.DropMode;
@@ -119,7 +129,42 @@ public class StudentFrm extends JInternalFrame {
 		btnDelete.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/remover.png")));
 		getContentPane().add(btnDelete, "6, 2, fill, fill");
 		
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		
 		JButton btnSave = new JButton("Salvar");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				try {
+					conn.setAutoCommit(false);
+					System.out.println("Conectado com sucesso!");
+
+					AlunoDAO dao = new AlunoDAO(conn);
+					Aluno model = new Aluno();
+					
+					btnSave.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							model.setCodigo_aluno("nextval('alunos_codigo_aluno_seq'::regclass)");
+							model.setAluno(StudentField.getText().trim());
+							model.setPassword(tbPassword.getText());
+							try {
+								dao.Insert(model);;
+								JOptionPane.showMessageDialog(btnSave, "Adicionado com Sucesso!");
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+						
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		}
+							
+		});
 		btnSave.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/salvar.png")));
 		getContentPane().add(btnSave, "8, 2, fill, fill");
 		

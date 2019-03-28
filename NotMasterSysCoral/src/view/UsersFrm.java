@@ -148,8 +148,9 @@ public class UsersFrm extends JInternalFrame {
 						public void actionPerformed(ActionEvent e) {
 							model.setPerfil(cbProfile.getSelectedItem().toString());
 							model.setUsuario(tbUser.getText());
+							model.setPassword(tbPassword.getText());
 							try {
-								dao.Insert(model);
+								dao.CreateRole(model);;
 								JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!");
 							} catch (SQLException e1) {
 								e1.printStackTrace();
