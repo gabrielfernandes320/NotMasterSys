@@ -35,10 +35,9 @@ public class UsuarioDAO extends MasterDAO {
 				+"	with login"
 				+"	encrypted password'?2'";
 		
-		private String is_drop_role = "drop	role		?1";
+		private String is_drop_role = "drop	role ?1";
 
-		private String is_delete = "DELETE FROM usuarios "
-				+"WHERE usuario = ?";
+		private String is_delete = "DELETE FROM usuarios WHERE usuario = '1?'";
 					
 		
 		private PreparedStatement pst_selectAll;
@@ -64,8 +63,8 @@ public class UsuarioDAO extends MasterDAO {
 			pst_update = connection.prepareStatement(is_update);
 		
 			pst_alter_role = connection.prepareStatement(is_alter_role);
-			pst_drop_role = connection.prepareStatement(is_drop_role);
-			pst_delete = connection.prepareStatement(is_delete);
+			//pst_drop_role = connection.prepareStatement(is_drop_role);
+			//pst_delete = connection.prepareStatement(is_delete);
 		}
 
 	@Override
@@ -145,16 +144,11 @@ public class UsuarioDAO extends MasterDAO {
 	@Override
 	public int Delete(Object parameter) throws SQLException {
 
-		int affectedrows = 0;
-
 		Usuario lo_usuario = (Usuario)parameter;
-
-		pst_delete.setString(1, lo_usuario.getUsuario());
-		
-		
-		affectedrows = pst_delete.executeUpdate();
-
-		return affectedrows;
+		//pst_delete.setString(1, lo_usuario.getUsuario());
+		is_delete = is_delete.replace("1?", lo_usuario.getUsuario());
+		pst_delete = io_connection.prepareStatement(is_delete);
+		return pst_delete.executeUpdate();
 		
 	}
 
@@ -187,15 +181,11 @@ public class UsuarioDAO extends MasterDAO {
 
 	public int DropRole(Object parameter) throws SQLException {
 
-		int affectedrows = 0;
-
 		Usuario lo_usuario = (Usuario)parameter;
-
-		Set(pst_drop_role, 1, lo_usuario.getPerfil());
-		Set(pst_drop_role, 2, lo_usuario.getUsuario());
-		affectedrows = pst_drop_role.executeUpdate();
-
-		return affectedrows;
+		//pst_delete.setString(1, lo_usuario.getUsuario());
+		is_drop_role = is_drop_role.replace("?1", lo_usuario.getUsuario());
+		pst_drop_role = io_connection.prepareStatement(is_drop_role);
+		return pst_drop_role.executeUpdate();
 
 	}
 

@@ -29,7 +29,11 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import java.awt.ScrollPane;
+import javax.swing.JScrollPane;
 
 public class UsersFrm extends JInternalFrame {
 	private JTextField tbUser;
@@ -57,7 +61,7 @@ public class UsersFrm extends JInternalFrame {
 	 */
 	public UsersFrm() {
 		setClosable(true);
-		setBounds(100, 100, 466, 249);
+		setBounds(100, 100, 463, 369);
 		getContentPane().setLayout(null);
 		
 		JButton btnAdicionar = new JButton("Adicionar");
@@ -69,10 +73,7 @@ public class UsersFrm extends JInternalFrame {
 		getContentPane().add(btnAdicionar);
 		
 		JButton btnSalvar = new JButton("Salvar");
-		btnSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		
 		btnSalvar.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/salvar.png")));
 		btnSalvar.setPreferredSize(new Dimension(40, 25));
 		btnSalvar.setBackground(SystemColor.menu);
@@ -81,6 +82,7 @@ public class UsersFrm extends JInternalFrame {
 		
 		JButton btnRemover = new JButton("Remover");
 		
+		
 		btnRemover.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/remover.png")));
 		btnRemover.setPreferredSize(new Dimension(40, 25));
 		btnRemover.setBackground(SystemColor.menu);
@@ -88,41 +90,41 @@ public class UsersFrm extends JInternalFrame {
 		getContentPane().add(btnRemover);
 		
 		tbUser = new JTextField();
-		tbUser.setBounds(135, 79, 271, 20);
+		tbUser.setBounds(135, 53, 271, 20);
 		getContentPane().add(tbUser);
 		tbUser.setColumns(10);
 		
 		tbPassword = new JPasswordField();
-		tbPassword.setBounds(135, 110, 270, 20);
+		tbPassword.setBounds(135, 84, 270, 20);
 		getContentPane().add(tbPassword);
 		
 		tbConfirmPassword = new JPasswordField();
-		tbConfirmPassword.setBounds(135, 141, 270, 20);
+		tbConfirmPassword.setBounds(135, 115, 270, 20);
 		getContentPane().add(tbConfirmPassword);
 		
 		JComboBox cbProfile = new JComboBox();
 		cbProfile.setModel(new DefaultComboBoxModel(new String[] {"Cadastral", "Matricular", "Financeiro", "Completo"}));
-		cbProfile.setBounds(135, 172, 270, 20);
+		cbProfile.setBounds(135, 146, 270, 20);
 		getContentPane().add(cbProfile);
 		
 		JLabel lblNewLabel = new JLabel("Usuario:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(10, 79, 86, 14);
+		lblNewLabel.setBounds(10, 53, 86, 14);
 		getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Senha:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_1.setBounds(10, 109, 68, 14);
+		lblNewLabel_1.setBounds(10, 83, 68, 14);
 		getContentPane().add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Confirmar senha:");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_2.setBounds(10, 140, 115, 14);
+		lblNewLabel_2.setBounds(10, 114, 115, 14);
 		getContentPane().add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("Perfil:");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_3.setBounds(10, 168, 46, 14);
+		lblNewLabel_3.setBounds(10, 142, 46, 14);
 		getContentPane().add(lblNewLabel_3);
 		
 		JButton btnBuscar = new JButton("Buscar");
@@ -132,51 +134,88 @@ public class UsersFrm extends JInternalFrame {
 		btnBuscar.setBounds(10, 11, 110, 31);
 		getContentPane().add(btnBuscar);
 		
-		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setToolTipText("");
+		scrollPane.setEnabled(false);
+		scrollPane.setBounds(10, 182, 428, 146);
+		getContentPane().add(scrollPane);
 		
-		btnAdicionar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 				
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					conn.setAutoCommit(false);
 					System.out.println("Conectado com sucesso!");
 
 					UsuarioDAO dao = new UsuarioDAO(conn);
 					Usuario model = new Usuario();
-					
-					btnAdicionar.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							model.setPerfil(cbProfile.getSelectedItem().toString());
-							model.setUsuario(tbUser.getText());
-							model.setPassword(tbPassword.getText());
-							try {
-								dao.CreateRole(model);;
-								JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!");
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
-						}
-					});
-						
+				
+					model.setPerfil(cbProfile.getSelectedItem().toString());
+					model.setUsuario(tbUser.getText());
+					model.setPassword(tbPassword.getText());
+				try {
+					dao.CreateRole(model);
+					JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!");
 				} catch (SQLException e1) {
 					e1.printStackTrace();
-				}
-
+				  }
+				
+				  } catch (SQLException e1) {
+					 e1.printStackTrace();
 			}
-			
-			
+			}
+		});
+					
+		btnAdicionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+							
+							
+							
+						}
 		});
 		
-		btnRemover.addActionListener(new ActionListener() {
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					try {
+						conn.setAutoCommit(false);
+						System.out.println("Conectado com sucesso!");
+
+						UsuarioDAO dao = new UsuarioDAO(conn);
+						Usuario model = new Usuario();
+					
+						model.setPerfil(cbProfile.getSelectedItem().toString());
+						model.setUsuario(tbUser.getText());
+						model.setPassword(tbPassword.getText());
+					try {
+						Object obj = new Object();
+						obj = dao.Select(model);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					  }
+					
+					  } catch (SQLException e1) {
+						 e1.printStackTrace();
+				}
+				}
+							
+							
+			});
+						
+				
+		
+				
+					
+		btnRemover.addActionListener(new ActionListener() {	
 			public void actionPerformed(ActionEvent e) {
 				try {
 					conn.setAutoCommit(false);
 				
 					UsuarioDAO dao = new UsuarioDAO(conn);
+					System.out.println("aqui foi");
 					Usuario model = new Usuario();
-					
-					btnAdicionar.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
+					System.out.println("aqui tmb");
+				
 							model.setPerfil(cbProfile.getSelectedItem().toString());
 							model.setUsuario(tbUser.getText());
 							try {
@@ -185,19 +224,17 @@ public class UsersFrm extends JInternalFrame {
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
-						}
-					});
-						
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-			
+						}
+						
+					});
+						
+				
 			}
-			
-		});
-		
 		
 		
 
 	}
-}
+

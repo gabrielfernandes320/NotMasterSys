@@ -15,21 +15,20 @@ public class Teste2 {
 
 		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 		try {
-			conn.setAutoCommit(false);
+			//conn.setAutoCommit(false);
 			System.out.println("Conectado com sucesso!");
 
 			UsuarioDAO dao = new UsuarioDAO(conn);
 			Usuario model = new Usuario();
 
 			//Insert OK
-			model.setPerfil("Adminstrador");
-			model.setUsuario("hosbavaldo1");
-			model.setPassword("hosbavaldo1");
-			//dao.Insert(model);
-
+			model.setPerfil("Cadastral");
+			model.setUsuario("testeagora");
+			model.setPassword("testeagora4");
+			//dao.Insert(model);y
 			//InsertRole
 			//dao.Insert(model);
-			dao.CreateRole(model);
+			//dao.CreateRole(model);
 
 			//SelectAll OK
 				/*List<Object> lst = dao.SelectAll();
@@ -43,7 +42,8 @@ public class Teste2 {
 			//Select OK
 			//model.setUsuario("teste");
 			
-			//dao.Delete(model);
+			dao.DropRole(model);
+			System.out.println("ok");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
