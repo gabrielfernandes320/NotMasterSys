@@ -3,32 +3,45 @@ import java.util.Date;
 
 public class Plano {
 	
-	private int codigo_matricula;
-	private Date data_entrada;
+
+	private String modalidade;
+	private String plano;
+	private double valor;
 	
-	public Plano(int codigo_matricula, Date data_entrada) {
+	public String getModalidade() {
+		return modalidade;
+	}
+
+	public void setModalidade(String modalidade) {
+		this.modalidade = modalidade;
+	}
+
+	public String getPlano() {
+		return plano;
+	}
+
+	public void setPlano(String plano) {
+		this.plano = plano;
+	}
+
+	public double getValor() {
+		return valor;
+	}
+
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
+
+	
+	public Plano(String modalidade, String plano, double valor) {
 		super();
-		this.codigo_matricula = codigo_matricula;
-		this.data_entrada = data_entrada;
+		this.modalidade = modalidade;
+		this.plano = plano;
+		this.valor = valor;
 	}
-
-	public int getCodigo_matricula() {
-		return codigo_matricula;
+	public Plano() {
+		
 	}
-
-	public void setCodigo_matricula(int codigo_matricula) {
-		this.codigo_matricula = codigo_matricula;
-	}
-
-	public Date getData_entrada() {
-		return data_entrada;
-	}
-
-	public void setData_entrada(Date data_entrada) {
-		this.data_entrada = data_entrada;
-	} 
-	
-	
 	
 	
 }
