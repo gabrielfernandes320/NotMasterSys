@@ -23,7 +23,7 @@ public class ModalidadesDAO extends MasterDAO{
 								+"	)					"
 								+"	VALUES				"
 								+"	(					"
-								+"		DEFAULT,		"
+								+"		?,		"
 								+"		?"
 								+"	)";
 	private String is_update = "UPDATE public.modalidades\r\n" + 

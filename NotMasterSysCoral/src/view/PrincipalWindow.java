@@ -198,7 +198,7 @@ public class PrincipalWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PlanosFrm us = new PlanosFrm();
+				PlansFrm us = new PlansFrm();
 				us.setLocation(1, 1);
 				desktopPane.add(us);
 				us.setVisible(true);
