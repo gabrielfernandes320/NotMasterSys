@@ -6,7 +6,7 @@ public class Plano {
 
 	private String modalidade;
 	private String plano;
-	private double valor;
+	private double valor_mensal;
 	
 	public String getModalidade() {
 		return modalidade;
@@ -25,19 +25,19 @@ public class Plano {
 	}
 
 	public double getValor() {
-		return valor;
+		return valor_mensal;
 	}
 
-	public void setValor(double valor) {
-		this.valor = valor;
+	public void setValor(double valor_mensal) {
+		this.valor_mensal = valor_mensal;
 	}
 
 	
-	public Plano(String modalidade, String plano, double valor) {
+	public Plano(String modalidade, String plano, double valor_mensal) {
 		super();
 		this.modalidade = modalidade;
 		this.plano = plano;
-		this.valor = valor;
+		this.valor_mensal = valor_mensal;
 	}
 	public Plano() {
 		

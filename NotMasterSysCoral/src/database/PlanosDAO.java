@@ -13,9 +13,9 @@ import model.Plano;
 public class PlanosDAO extends MasterDAO {
 	
 	// Cria as variaveis contendo o select a ser feito.
-		private String is_delete = "delete from planos where plano = ? and modalidade = ?";
+		private String is_delete = "delete from planos where plano = ? ";
 		private String is_selectAll = "select * from planos order by plano";
-		private String is_select = "select * from planos where plano = ? and modalidade = ? order by plano";
+		private String is_select = "select * from planos where plano = ? order by plano";
 		private String is_insert = "INSERT INTO planos	"
 									+" (					"
 									+"		plano,			"
