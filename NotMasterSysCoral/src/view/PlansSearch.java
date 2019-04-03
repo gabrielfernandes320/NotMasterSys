@@ -26,9 +26,10 @@ import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.DefaultComboBoxModel;
 
-public class Searsh extends JInternalFrame {
+public class PlansSearch extends JDialog {
 	private JTextField txfPesquisa;
 	private JTable table;
 	private PlansTableModel model;
@@ -42,7 +43,7 @@ public class Searsh extends JInternalFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Searsh frame = new Searsh();
+					PlansSearch frame = new PlansSearch();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +55,7 @@ public class Searsh extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Searsh() {
+	public PlansSearch() {
 		
 		setBounds(100, 100, 569, 458);
 		getContentPane().setLayout(null);
@@ -104,13 +105,9 @@ public class Searsh extends JInternalFrame {
 				zerarTodos();
 
 				if (comboBox.getSelectedItem().toString().equals("Plano") && !txfPesquisa.getText().equals("")) {
+					
 					try {
-						Integer.parseInt(txfPesquisa.getText());
-					} catch (Exception e) {
-						return;
-					}
-					try {
-						model.addListaDePlanos((List<Object>) new PlanosDAO(conn).Select(txfPesquisa.getText()));
+						model.addListaDePlanos(new PlanosDAO(conn).SelectAll(txfPesquisa.getText()));
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -179,7 +176,7 @@ public class Searsh extends JInternalFrame {
 		try {
 			//// ??????????
 
-			model.addListaDePlanos(new PlanosDAO(conn).SelectAll());
+			model.addListaDePlanos(new PlanosDAO(conn).SelectAll(""));
 		} catch (Exception e) {
 			System.err.printf("Erro: %s.\n", e.getMessage());
 		}

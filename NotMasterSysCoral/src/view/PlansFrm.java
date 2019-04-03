@@ -49,6 +49,11 @@ public class PlansFrm extends JInternalFrame {
 	public PlansFrm() {
 		setBounds(100, 100, 480, 210);
 		getContentPane().setLayout(null);
+		setResizable(false);
+		
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setClosable(true);
+		setIconifiable(true);
 
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.setBounds(10, 11, 96, 31);

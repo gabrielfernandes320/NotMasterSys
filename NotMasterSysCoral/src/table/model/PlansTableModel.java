@@ -108,10 +108,10 @@ public class PlansTableModel extends AbstractTableModel {
 		fireTableRowsDeleted(indiceLinha, indiceLinha);
 	}
 
-	public void addListaDePlanos(List<Object> novosPlanos) {
+	public void addListaDePlanos(List<Plano> novosPlanos) {
 
-		int tamanhoAntigo = getRowCount();
-		planos.add((Plano) novosPlanos);
+		int tamanhoAntigo = getRowCount();		
+		planos = novosPlanos;
 		fireTableRowsInserted(tamanhoAntigo, getRowCount() - 1);
 	}
 

@@ -15,6 +15,7 @@ public class PlanosDAO extends MasterDAO {
 	// Cria as variaveis contendo o select a ser feito.
 		private String is_delete = "delete from planos where plano = ? ";
 		private String is_selectAll = "select * from planos order by plano";
+		private String is_selectAllPesquisa = "select * from planos where plano like ? order by plano";
 		private String is_select = "select * from planos where plano = ? order by plano";
 		private String is_insert = "INSERT INTO planos	"
 									+" (					"
@@ -32,6 +33,8 @@ public class PlanosDAO extends MasterDAO {
 								"   SET plano=?, modalidade=?, valor_mensal";
 		
 		private PreparedStatement pst_selectAll;
+		private PreparedStatement pst_selectAll2;
+		private PreparedStatement pst_selectAllPesquis;
 		private PreparedStatement pst_select;
 		private PreparedStatement pst_insert;
 		private PreparedStatement pst_update;
@@ -43,6 +46,7 @@ public class PlanosDAO extends MasterDAO {
 			
 			io_connection = connection;
 			pst_selectAll = connection.prepareStatement(is_selectAll);
+			pst_selectAllPesquis = connection.prepareStatement(is_selectAllPesquisa);
 			pst_select = connection.prepareStatement(is_select);
 			pst_insert = connection.prepareStatement(is_insert);	
 			pst_delete = connection.prepareStatement(is_delete);
@@ -55,6 +59,26 @@ public class PlanosDAO extends MasterDAO {
 	public List<Object> SelectAll() throws SQLException {
 		List<Object> arlPlano = new ArrayList<Object>();
 		ResultSet rst = pst_selectAll.executeQuery();
+		 
+		while(rst.next()){
+			 Plano model = new Plano();
+			 
+			 model.setPlano(rst.getString("plano"));
+			 model.setModalidade(rst.getString("modalidade"));
+			 model.setValor(rst.getDouble("valor_mensal"));
+			 arlPlano.add(model);
+		 }
+				
+		return arlPlano;
+	}
+
+	
+	public List<Plano> SelectAll(final String pesquisa) throws SQLException {
+		List<Plano> arlPlano = new ArrayList<Plano>();
+		
+		Set(pst_selectAllPesquis, 1, "%"+pesquisa+"%");
+		
+		ResultSet rst = pst_selectAllPesquis.executeQuery();
 		 
 		while(rst.next()){
 			 Plano model = new Plano();
