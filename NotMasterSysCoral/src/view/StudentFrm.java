@@ -5,19 +5,33 @@ import javax.swing.JButton;
 import javax.swing.UIManager;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+
+import database.AlunoDAO;
+import database.ConnectionFactory;
+import database.UsuarioDAO;
+import model.Aluno;
+import model.Usuario;
+
 import java.awt.Color;
+import javax.swing.JFormattedTextField;
 
 public class StudentFrm extends JInternalFrame {
 
 	private JTextField StudentField;
-	private JTextField BirthdateField;
 	private JTextField TelephoneField;
 	private JTextField EmailField;
 	private JTextField PhoneField;
@@ -29,6 +43,7 @@ public class StudentFrm extends JInternalFrame {
 	private JTextField AdressNumField;
 	private JTextField CityField;
 	private JTextField CountryField;
+	private JTextField IdField;
 
 	/**
 	 * Create the frame.
@@ -81,14 +96,9 @@ public class StudentFrm extends JInternalFrame {
 		getContentPane().add(lblNewLabel_3);
 		
 		StudentField = new JTextField();
-		StudentField.setBounds(138, 76, 299, 20);
+		StudentField.setBounds(138, 76, 150, 20);
 		getContentPane().add(StudentField);
 		StudentField.setColumns(10);
-		
-		BirthdateField = new JTextField();
-		BirthdateField.setBounds(138, 101, 115, 20);
-		getContentPane().add(BirthdateField);
-		BirthdateField.setColumns(10);
 		
 		TelephoneField = new JTextField();
 		TelephoneField.setBounds(138, 126, 115, 20);
@@ -221,6 +231,89 @@ public class StudentFrm extends JInternalFrame {
 		CountryField.setBounds(298, 110, 119, 20);
 		EnderecoPanel.add(CountryField);
 		CountryField.setColumns(10);
+		
+		JLabel lblNewLabel_5 = new JLabel("Cod:");
+		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_5.setBounds(292, 79, 46, 14);
+		getContentPane().add(lblNewLabel_5);
+		
+		IdField = new JTextField();
+		IdField.setBounds(351, 76, 86, 20);
+		getContentPane().add(IdField);
+		IdField.setColumns(10);
+		
+		JFormattedTextField BirthdateField = new JFormattedTextField();
+		BirthdateField.setBounds(138, 101, 115, 20);
+		getContentPane().add(BirthdateField);
 
+		// COISAS IMPORTANTES: BOTOES E CONEXAO
+		
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		
+		btnSearch.addActionListener(new ActionListener() {	
+			public void actionPerformed(ActionEvent e) {
+				try {
+					conn.setAutoCommit(false);
+				
+					AlunoDAO dao = new AlunoDAO(conn);
+					Aluno model = new Aluno();
+						
+					model.setAluno(StudentField.getText());
+					model.setEmail(EmailField.getText());
+					
+						try {
+							dao.Delete(model);
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+						}
+						
+					});
+		
+		btnAdd.addActionListener(new ActionListener() {	
+			
+			public void actionPerformed(ActionEvent e) {
+				try {
+					conn.setAutoCommit(false);
+				
+					AlunoDAO dao = new AlunoDAO(conn);
+					Aluno model = new Aluno();
+						
+					model.setCodigo_aluno(IdField.getText());
+					model.setAluno(StudentField.getText());
+					//model.setData_nascimento(BirthdateField.getText());
+					model.setEmail(EmailField.getText());
+
+					//CHECANDO SE SEXO ESTÁ NULO
+					if(SexCmb.getSelectedItem()=="Masculino") {
+						
+						model.setSexo('m');
+						
+					}
+					else if (SexCmb.getSelectedItem()=="Feminino") {
+						
+						model.setSexo('f');
+						
+					}
+					else
+						JOptionPane.showMessageDialog(null, "Erro: Sexo em branco");
+										
+					
+						try {
+							dao.Insert(model);
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+						}
+						
+					});
+		
 	}
 }
+

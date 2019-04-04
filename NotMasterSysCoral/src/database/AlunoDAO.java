@@ -175,7 +175,6 @@ public class AlunoDAO extends MasterDAO {
 		
 	}
 		
-
 	@Override
 	public void Insert(Object parameter) throws SQLException {
 		
