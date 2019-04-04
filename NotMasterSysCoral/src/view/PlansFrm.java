@@ -19,12 +19,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import database.ConnectionFactory;
+import database.ModalidadesDAO;
 import database.PlanosDAO;
 import model.Plano;
 
 public class PlansFrm extends JInternalFrame {
 	private JTextField txfPlano;
 	private JTextField txfValor;
+	private JComboBox cbxModalidade;
+	private String[] modalidades;
 
 	/**
 	 * Launch the application.
@@ -45,6 +48,7 @@ public class PlansFrm extends JInternalFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
 	public PlansFrm() {
 		setBounds(100, 100, 480, 210);
@@ -103,8 +107,26 @@ public class PlansFrm extends JInternalFrame {
 //		PlanosDAO dao = new PlanosDAO(conn);
 //		String modalidade[];
 //		
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 
-		JComboBox cbxModalidade = new JComboBox(new String[] { "Boxe", "Capoeira", "Karate", "Taekwondo" });
+		
+		//PlanosDAO pla = new PlanosDAO(conn);
+		
+		
+		ModalidadesDAO mod;
+		try {
+			mod = new ModalidadesDAO(conn);
+			modalidades = mod.SelectAllModalidade();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		
+		
+		
+		
+		cbxModalidade = new JComboBox(modalidades);
 		cbxModalidade.setBounds(113, 78, 328, 20);
 		getContentPane().add(cbxModalidade);
 
@@ -117,8 +139,6 @@ public class PlansFrm extends JInternalFrame {
 		txfValor.setBounds(113, 138, 168, 20);
 		getContentPane().add(txfValor);
 		txfValor.setColumns(10);
-
-		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -152,6 +172,8 @@ public class PlansFrm extends JInternalFrame {
 		});
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				PlansSearch plans = new PlansSearch(PlansFrm.this);
+				plans.setVisible(true);
 
 			}
 		});
@@ -182,5 +204,14 @@ public class PlansFrm extends JInternalFrame {
 
 		});
 
+	}
+	
+	public void Update(final Plano p) {
+	txfPlano.setText(p.getPlano());
+	txfValor.setText(""+p.getValor());
+	cbxModalidade.setSelectedItem(p.getModalidade());
+//	while()
+//	cbxModalidade.setSelectedIndex();
+//		
 	}
 }

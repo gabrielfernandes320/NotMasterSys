@@ -18,6 +18,7 @@ import javax.swing.event.ListSelectionListener;
 
 import database.ConnectionFactory;
 import database.PlanosDAO;
+import model.Plano;
 import table.model.PlansTableModel;
 
 import javax.swing.JButton;
@@ -35,28 +36,16 @@ public class PlansSearch extends JDialog {
 	private PlansTableModel model;
 	private String idSelecionado;
 	Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PlansSearch frame = new PlansSearch();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private PlansFrm window;
 
 	/**
 	 * Create the frame.
 	 */
-	public PlansSearch() {
+	public PlansSearch(final PlansFrm window) {
 		
+		this.window = window;
+		
+		setModal(true);
 		setBounds(100, 100, 569, 458);
 		getContentPane().setLayout(null);
 		
@@ -157,7 +146,17 @@ public class PlansSearch extends JDialog {
 		     public void mouseClicked(MouseEvent e){
 		         if (e.getClickCount() == 2){
 		            System.out.println(" double click" );
-		           	PlansFrm usu = new PlansFrm();
+		            
+		            Plano p = new Plano();
+		            p.setPlano(tabela.getValueAt(tabela.getSelectedRow(), 0).toString());
+		            p.setModalidade(tabela.getValueAt(tabela.getSelectedRow(), 1).toString());
+		            p.setValor(Double.parseDouble( (String) tabela.getValueAt(tabela.getSelectedRow(), 2)));
+		            
+		            window.Update(p);
+		           	dispose();
+		           	
+		           	
+		           	
 		            
 //		            usu.consultar();
 //		            usu.getTxfCode().setText(idSelecionado);

@@ -9,12 +9,14 @@ import java.util.List;
 
 import model.Aluno;
 import model.Modalidades;
+import model.Plano;
 
 public class ModalidadesDAO extends MasterDAO{
 	
 	// Cria as variaveis contendo o select a ser feito.
 	private String is_delete = "delete from modalidades where modalidade = ? and gradacoes = ?";
 	private String is_selectAll = "select * from modalidades order by modalidade";
+	private String is_selectAllModalidade = "select * from modalidades order by modalidade";
 	private String is_select = "select * from modalidades where modalidade = ? and graduacao = ? order by modalidade";
 	private String is_insert = "INSERT INTO modalidades	"
 								+" (					"
@@ -30,6 +32,7 @@ public class ModalidadesDAO extends MasterDAO{
 							"   SET modalidade=?, gradacoes=?";
 	
 	private PreparedStatement pst_selectAll;
+	private PreparedStatement pst_selectAllModalidade;
 	private PreparedStatement pst_select;
 	private PreparedStatement pst_insert;
 	private PreparedStatement pst_update;
@@ -41,6 +44,7 @@ public class ModalidadesDAO extends MasterDAO{
 		
 		io_connection = connection;
 		pst_selectAll = connection.prepareStatement(is_selectAll);
+		pst_selectAllModalidade = connection.prepareStatement(is_selectAllModalidade);
 		pst_select = connection.prepareStatement(is_select);
 		pst_insert = connection.prepareStatement(is_insert);	
 		pst_delete = connection.prepareStatement(is_delete);
@@ -63,6 +67,22 @@ public class ModalidadesDAO extends MasterDAO{
 		 }
 				
 		return arlModalidade;
+	}
+	public String[] SelectAllModalidade() throws SQLException {
+		ArrayList<String> arlPlano = new ArrayList<String>();
+		String[] returno = null;
+		
+		ResultSet rst = pst_selectAllModalidade.executeQuery();
+		 
+		while(rst.next()){
+			 Plano model = new Plano();
+			 
+			 model.setModalidade(rst.getString("modalidade"));
+			 
+			 arlPlano.add(model.getModalidade());
+		 }
+		returno = new String[arlPlano.size()];
+		return arlPlano.toArray(returno);
 	}
 
 	@Override

@@ -15,12 +15,13 @@ public class PlanosDAO extends MasterDAO {
 	// Cria as variaveis contendo o select a ser feito.
 		private String is_delete = "delete from planos where plano = ? ";
 		private String is_selectAll = "select * from planos order by plano";
+		private String is_selectAllModalidade = "select * from planos order by plano";
 		private String is_selectAllPesquisa = "select * from planos where plano like ? order by plano";
 		private String is_select = "select * from planos where plano = ? order by plano";
 		private String is_insert = "INSERT INTO planos	"
 									+" (					"
-									+"		plano,			"
-									+"		modalidade,		"
+									+"		modalidade,			"
+									+"		plano,		"
 									+ "		valor_mensal	"
 									+"	)					"
 									+"	VALUES				"
@@ -30,10 +31,10 @@ public class PlanosDAO extends MasterDAO {
 									+ "		?				"
 									+"	)";
 		private String is_update = "UPDATE public.planos\r\n" + 
-								"   SET plano=?, modalidade=?, valor_mensal";
+								"   SET modalidade=?, plano=?, valor_mensal";
 		
 		private PreparedStatement pst_selectAll;
-		private PreparedStatement pst_selectAll2;
+		private PreparedStatement pst_selectAllModalidade;
 		private PreparedStatement pst_selectAllPesquis;
 		private PreparedStatement pst_select;
 		private PreparedStatement pst_insert;
@@ -46,6 +47,7 @@ public class PlanosDAO extends MasterDAO {
 			
 			io_connection = connection;
 			pst_selectAll = connection.prepareStatement(is_selectAll);
+			pst_selectAllModalidade = connection.prepareStatement(is_selectAllModalidade);
 			pst_selectAllPesquis = connection.prepareStatement(is_selectAllPesquisa);
 			pst_select = connection.prepareStatement(is_select);
 			pst_insert = connection.prepareStatement(is_insert);	
@@ -63,8 +65,9 @@ public class PlanosDAO extends MasterDAO {
 		while(rst.next()){
 			 Plano model = new Plano();
 			 
-			 model.setPlano(rst.getString("plano"));
+
 			 model.setModalidade(rst.getString("modalidade"));
+			 model.setPlano(rst.getString("plano"));
 			 model.setValor(rst.getDouble("valor_mensal"));
 			 arlPlano.add(model);
 		 }
@@ -83,13 +86,29 @@ public class PlanosDAO extends MasterDAO {
 		while(rst.next()){
 			 Plano model = new Plano();
 			 
-			 model.setPlano(rst.getString("plano"));
 			 model.setModalidade(rst.getString("modalidade"));
+			 model.setPlano(rst.getString("plano"));
 			 model.setValor(rst.getDouble("valor_mensal"));
 			 arlPlano.add(model);
 		 }
 				
 		return arlPlano;
+	}
+	public String[] SelectAllModalidade() throws SQLException {
+		ArrayList<String> arlPlano = new ArrayList<String>();
+		String[] returno = null;
+		
+		ResultSet rst = pst_selectAllPesquis.executeQuery();
+		 
+		while(rst.next()){
+			 Plano model = new Plano();
+			 
+			 model.setModalidade(rst.getString("modalidade"));
+			 
+			 arlPlano.add(model.getModalidade());
+		 }
+		returno = new String[arlPlano.size()];
+		return arlPlano.toArray(returno);
 	}
 
 	@Override
@@ -103,8 +122,8 @@ public class PlanosDAO extends MasterDAO {
 		ResultSet rst = pst_select.executeQuery();
 		if(rst.next()) {
 			plano = new Plano();
-			plano.setPlano(rst.getString("modalidade"));
 			plano.setModalidade(rst.getString("graduacoes"));
+			plano.setPlano(rst.getString("modalidade"));
 			plano.setValor((rst.getDouble("graduacoes")));
 		}
 		return plano;
@@ -115,8 +134,9 @@ public class PlanosDAO extends MasterDAO {
 		pst_insert.clearParameters();
 		
 		Plano lo_plano = (Plano)parameter;
-		Set(pst_update, 1, lo_plano.getPlano());
-		Set(pst_update, 2, lo_plano.getModalidade());
+
+		Set(pst_update, 1, lo_plano.getModalidade());
+		Set(pst_update, 2, lo_plano.getPlano());
 		Set(pst_update, 3, lo_plano.getValor());
 		pst_update.execute();
 		
@@ -131,8 +151,8 @@ public class PlanosDAO extends MasterDAO {
 		pst_insert.clearParameters();
 		
 		Plano lo_plano = (Plano)parameter;
-		Set(pst_insert, 1, lo_plano.getPlano());
-		Set(pst_insert, 2, lo_plano.getModalidade());
+		Set(pst_insert, 1, lo_plano.getModalidade());
+		Set(pst_insert, 2, lo_plano.getPlano());
 		Set(pst_insert, 3, lo_plano.getValor());
 		pst_insert.execute();
 		
@@ -147,9 +167,9 @@ public class PlanosDAO extends MasterDAO {
 		int affectedrows = 0;
 
 		Plano lo_plano = (Plano)parameter;
-
-		Set(pst_delete, 1, lo_plano.getPlano());
-		Set(pst_delete, 2, lo_plano.getModalidade());
+		
+		Set(pst_delete, 1, lo_plano.getModalidade());
+		Set(pst_delete, 2, lo_plano.getPlano());
 		Set(pst_delete, 3, lo_plano.getValor());
 
         affectedrows = pst_delete.executeUpdate();
