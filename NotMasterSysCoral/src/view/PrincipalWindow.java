@@ -204,9 +204,16 @@ public class PrincipalWindow extends JFrame {
 				us.setVisible(true);
 			}
 		});
+		itemAlunosCad.addActionListener(new ActionListener() {
 
-		//Processos
-		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				StudentFrm us = new StudentFrm();
+				us.setLocation(1, 1);
+				desktopPane.add(us);
+				us.setVisible(true);
+			}
+		});
 		
 		//Matrícula
 		itemAlunoMatricularProc.addActionListener(new ActionListener() {

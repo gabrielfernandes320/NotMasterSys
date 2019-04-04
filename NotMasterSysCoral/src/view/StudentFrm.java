@@ -1,342 +1,226 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-
-import database.AlunoDAO;
-import database.ConnectionFactory;
-import database.UsuarioDAO;
-import model.Aluno;
-import model.Usuario;
-
 import javax.swing.JButton;
-import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.UIManager;
 import javax.swing.ImageIcon;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JFormattedTextField;
-import javax.swing.SwingConstants;
+import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
-import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
-import javax.swing.border.EtchedBorder;
+import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
-import javax.swing.DropMode;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import java.awt.Color;
 
 public class StudentFrm extends JInternalFrame {
+
 	private JTextField StudentField;
+	private JTextField BirthdateField;
 	private JTextField TelephoneField;
-	private JTextField CellphoneField_1;
-	private JTextField EmailField_2;
-	private JTextField AdressField_3;
-	private JTextField ComplementField_4;
-	private JTextField NgbhField_5;
-	private JTextField StateField_6;
-	private JTextField CepField_7;
-	private JTextField AdressnumField_8;
-	private JTextField CityField_9;
-	private JTextField CountryField_10;
-	private final Action action = new SwingAction();
+	private JTextField EmailField;
+	private JTextField PhoneField;
+	private JTextField AdressField;
+	private JTextField AdressComplementField;
+	private JTextField NeighbhField;
+	private JTextField StateField;
+	private JTextField CepField;
+	private JTextField AdressNumField;
+	private JTextField CityField;
+	private JTextField CountryField;
 
 	/**
 	 * Create the frame.
 	 */
 	public StudentFrm() {
-		setBorder(null);
-		setTitle("Cadastro de Alunos");
-		setResizable(true);
+		
 		setClosable(true);
-		setBounds(100, 100, 517, 543);
-		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(94dlu;default):grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(84dlu;default)"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(16dlu;default):grow"),
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),}));
+		setTitle("Cadastro de Alunos");
+		setBounds(100, 100, 470, 510);
+		getContentPane().setLayout(null);
 		
 		JButton btnSearch = new JButton("Buscar");
 		btnSearch.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/localizar.png")));
-		getContentPane().add(btnSearch, "2, 2, fill, fill");
+		btnSearch.setBounds(10, 11, 100, 36);
+		getContentPane().add(btnSearch);
 		
-		JButton btnCreate = new JButton("Adicionar");
-		btnCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnCreate.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/adicionar.png")));
-		getContentPane().add(btnCreate, "4, 2, fill, fill");
+		JButton btnAdd = new JButton("Adicionar");
+		btnAdd.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/adicionar.png")));
+		btnAdd.setBounds(109, 11, 115, 36);
+		getContentPane().add(btnAdd);
 		
-		JButton btnDelete = new JButton("Remover");
-		btnDelete.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/remover.png")));
-		getContentPane().add(btnDelete, "6, 2, fill, fill");
+		JButton btnRemove = new JButton("Remover");
+		btnRemove.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/remover.png")));
+		btnRemove.setBounds(223, 11, 115, 36);
+		getContentPane().add(btnRemove);
 		
-		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		JButton btnUpdate = new JButton("Salvar");
+		btnUpdate.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/salvar.png")));
+		btnUpdate.setBounds(337, 11, 100, 36);
+		getContentPane().add(btnUpdate);
 		
-		JButton btnSave = new JButton("Salvar");
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				
-				try {
-					conn.setAutoCommit(false);
-					System.out.println("Conectado com sucesso!");
-
-					AlunoDAO dao = new AlunoDAO(conn);
-					Aluno model = new Aluno();
-					
-					btnSave.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							model.setCodigo_aluno("nextval('alunos_codigo_aluno_seq'::regclass)");
-							model.setAluno(StudentField.getText().trim());
-							model.setPassword(tbPassword.getText());
-							try {
-								dao.Insert(model);;
-								JOptionPane.showMessageDialog(btnSave, "Adicionado com Sucesso!");
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
-						}
-					});
-						
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-
-			}
-		}
-							
-		});
-		btnSave.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/salvar.png")));
-		getContentPane().add(btnSave, "8, 2, fill, fill");
+		JLabel lblNewLabel_1 = new JLabel("Aluno:");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_1.setBounds(10, 77, 46, 14);
+		getContentPane().add(lblNewLabel_1);
 		
-		JLabel lblAluno = new JLabel("Aluno:");
-		lblAluno.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		getContentPane().add(lblAluno, "2, 6, left, default");
+		JLabel lblNewLabel = new JLabel("Data de Nascimento:");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel.setBounds(10, 102, 128, 14);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_2 = new JLabel("Telefone:");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_2.setBounds(10, 127, 100, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("E-Mail:");
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_3.setBounds(10, 152, 46, 14);
+		getContentPane().add(lblNewLabel_3);
 		
 		StudentField = new JTextField();
-		getContentPane().add(StudentField, "4, 6, 5, 1, fill, default");
+		StudentField.setBounds(138, 76, 299, 20);
+		getContentPane().add(StudentField);
 		StudentField.setColumns(10);
 		
-		JLabel lblData = new JLabel("Data de Nascimento:");
-		lblData.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		getContentPane().add(lblData, "2, 8, left, default");
-		
-		JFormattedTextField BirthdateField = new JFormattedTextField();
-		BirthdateField.setDropMode(DropMode.ON);
-		BirthdateField.setHorizontalAlignment(SwingConstants.CENTER);
-		BirthdateField.setFocusLostBehavior(JFormattedTextField.REVERT);
-		BirthdateField.setColumns(3);
-		getContentPane().add(BirthdateField, "4, 8, fill, default");
-		
-		JLabel lblSexo = new JLabel("Sexo:");
-		lblSexo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		getContentPane().add(lblSexo, "6, 8, left, default");
-		
-		JComboBox SexComboBox = new JComboBox();
-		SexComboBox.setModel(new DefaultComboBoxModel(new String[] {"", "Masculino", "Feminino"}));
-		getContentPane().add(SexComboBox, "8, 8, fill, default");
-		
-		JLabel lblTelefone = new JLabel("Telefone:");
-		lblTelefone.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		getContentPane().add(lblTelefone, "2, 10, left, default");
+		BirthdateField = new JTextField();
+		BirthdateField.setBounds(138, 101, 115, 20);
+		getContentPane().add(BirthdateField);
+		BirthdateField.setColumns(10);
 		
 		TelephoneField = new JTextField();
-		getContentPane().add(TelephoneField, "4, 10, fill, default");
+		TelephoneField.setBounds(138, 126, 115, 20);
+		getContentPane().add(TelephoneField);
 		TelephoneField.setColumns(10);
 		
-		JLabel lblNewLabel = new JLabel("Celular:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		getContentPane().add(lblNewLabel, "6, 10, left, default");
+		EmailField = new JTextField();
+		EmailField.setBounds(138, 151, 299, 20);
+		getContentPane().add(EmailField);
+		EmailField.setColumns(10);
 		
-		CellphoneField_1 = new JTextField();
-		getContentPane().add(CellphoneField_1, "8, 10, fill, default");
-		CellphoneField_1.setColumns(10);
+		JLabel lblNewLabel_4 = new JLabel("Sexo:");
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_4.setBounds(263, 104, 46, 14);
+		getContentPane().add(lblNewLabel_4);
 		
-		JLabel lblNewLabel_1 = new JLabel("E-mail:");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		getContentPane().add(lblNewLabel_1, "2, 12, left, default");
+		JComboBox SexCmb = new JComboBox();
+		SexCmb.setModel(new DefaultComboBoxModel(new String[] {"", "Masculino", "Feminino"}));
+		SexCmb.setBounds(319, 101, 118, 20);
+		getContentPane().add(SexCmb);
 		
-		EmailField_2 = new JTextField();
-		getContentPane().add(EmailField_2, "4, 12, 5, 1, fill, default");
-		EmailField_2.setColumns(10);
+		JLabel lblCelular = new JLabel("Celular:");
+		lblCelular.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCelular.setBounds(263, 129, 46, 14);
+		getContentPane().add(lblCelular);
 		
-		JLabel lblNewLabel_2 = new JLabel("Observa\u00E7\u00F5es:");
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		getContentPane().add(lblNewLabel_2, "2, 14");
+		PhoneField = new JTextField();
+		PhoneField.setBounds(319, 126, 118, 20);
+		getContentPane().add(PhoneField);
+		PhoneField.setColumns(10);
 		
-		JTextArea ObservationArea = new JTextArea();
-		ObservationArea.setTabSize(4);
-		ObservationArea.setLineWrap(true);
-		ObservationArea.setRows(5);
-		getContentPane().add(ObservationArea, "2, 16, 7, 7");
+		JLabel lblObservaoes = new JLabel("Observa\u00E7\u00F5es:");
+		lblObservaoes.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblObservaoes.setBounds(10, 177, 100, 14);
+		getContentPane().add(lblObservaoes);
 		
-		JLayeredPane layeredPane = new JLayeredPane();
-		layeredPane.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED, null, null), "Endere\u00E7o", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		getContentPane().add(layeredPane, "2, 24, 7, 15, fill, fill");
-		layeredPane.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(50dlu;default)"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(80dlu;default)"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(108dlu;default)"),},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(18dlu;default)"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(18dlu;default)"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(18dlu;default)"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(18dlu;default)"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(18dlu;default)"),}));
+		JTextArea ObservationField = new JTextArea();
+		ObservationField.setTabSize(5);
+		ObservationField.setLineWrap(true);
+		ObservationField.setRows(5);
+		ObservationField.setBounds(10, 201, 434, 90);
+		getContentPane().add(ObservationField);
 		
-		JLabel lblNewLabel_3 = new JLabel("Endere\u00E7o:");
-		layeredPane.add(lblNewLabel_3, "2, 2, left, default");
+		JPanel EnderecoPanel = new JPanel();
+		EnderecoPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Endere\u00E7o", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		EnderecoPanel.setBounds(10, 302, 427, 170);
+		getContentPane().add(EnderecoPanel);
+		EnderecoPanel.setLayout(null);
 		
-		AdressField_3 = new JTextField();
-		layeredPane.add(AdressField_3, "4, 2, 3, 1");
-		AdressField_3.setColumns(10);
-		
-		JLabel lblNmero = new JLabel("N\u00FAmero:");
-		layeredPane.add(lblNmero, "10, 2, left, default");
-		
-		AdressnumField_8 = new JTextField();
-		layeredPane.add(AdressnumField_8, "12, 2, fill, default");
-		AdressnumField_8.setColumns(10);
-		
-		JLabel lblNewLabel_4 = new JLabel("Complemento:");
-		layeredPane.add(lblNewLabel_4, "2, 4, left, default");
-		
-		ComplementField_4 = new JTextField();
-		layeredPane.add(ComplementField_4, "4, 4, 9, 1, fill, default");
-		ComplementField_4.setColumns(10);
+		JLabel lblNewLabel_6 = new JLabel("Endere\u00E7o:");
+		lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_6.setBounds(10, 36, 94, 14);
+		EnderecoPanel.add(lblNewLabel_6);
 		
 		JLabel lblBairro = new JLabel("Bairro:");
-		layeredPane.add(lblBairro, "2, 6, left, default");
+		lblBairro.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblBairro.setBounds(10, 86, 94, 14);
+		EnderecoPanel.add(lblBairro);
 		
-		NgbhField_5 = new JTextField();
-		layeredPane.add(NgbhField_5, "4, 6, 3, 1, fill, default");
-		NgbhField_5.setColumns(10);
+		JLabel lblCep = new JLabel("Estado:");
+		lblCep.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCep.setBounds(10, 111, 94, 14);
+		EnderecoPanel.add(lblCep);
 		
-		JLabel lblCdade = new JLabel("Cidade:");
-		layeredPane.add(lblCdade, "10, 6, left, default");
+		JLabel lblCep_1 = new JLabel("CEP:");
+		lblCep_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCep_1.setBounds(10, 136, 94, 14);
+		EnderecoPanel.add(lblCep_1);
 		
-		CityField_9 = new JTextField();
-		layeredPane.add(CityField_9, "12, 6, fill, default");
-		CityField_9.setColumns(10);
+		JLabel lblComplemento = new JLabel("Complemento:");
+		lblComplemento.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblComplemento.setBounds(10, 61, 94, 14);
+		EnderecoPanel.add(lblComplemento);
 		
-		JLabel lblNewLabel_5 = new JLabel("Estado:");
-		layeredPane.add(lblNewLabel_5, "2, 8, left, default");
+		AdressField = new JTextField();
+		AdressField.setBounds(114, 35, 118, 20);
+		EnderecoPanel.add(AdressField);
+		AdressField.setColumns(10);
 		
-		StateField_6 = new JTextField();
-		layeredPane.add(StateField_6, "4, 8, 3, 1, fill, default");
-		StateField_6.setColumns(10);
+		AdressComplementField = new JTextField();
+		AdressComplementField.setBounds(114, 60, 303, 20);
+		EnderecoPanel.add(AdressComplementField);
+		AdressComplementField.setColumns(10);
 		
-		JLabel lblNewLabel_7 = new JLabel("Pa\u00EDs:");
-		layeredPane.add(lblNewLabel_7, "10, 8, left, default");
+		NeighbhField = new JTextField();
+		NeighbhField.setBounds(114, 85, 118, 20);
+		EnderecoPanel.add(NeighbhField);
+		NeighbhField.setColumns(10);
 		
-		CountryField_10 = new JTextField();
-		layeredPane.add(CountryField_10, "12, 8, fill, default");
-		CountryField_10.setColumns(10);
+		StateField = new JTextField();
+		StateField.setBounds(114, 110, 118, 20);
+		EnderecoPanel.add(StateField);
+		StateField.setColumns(10);
 		
-		JLabel lblNewLabel_6 = new JLabel("CEP:");
-		layeredPane.add(lblNewLabel_6, "2, 10, left, default");
+		CepField = new JTextField();
+		CepField.setBounds(114, 135, 118, 20);
+		EnderecoPanel.add(CepField);
+		CepField.setColumns(10);
 		
-		CepField_7 = new JTextField();
-		layeredPane.add(CepField_7, "4, 10, 3, 1, fill, default");
-		CepField_7.setColumns(10);
+		JLabel label = new JLabel("");
+		label.setBounds(242, 36, 46, 14);
+		EnderecoPanel.add(label);
+		
+		JLabel lblNmero = new JLabel("N\u00FAmero:");
+		lblNmero.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNmero.setBounds(242, 36, 94, 14);
+		EnderecoPanel.add(lblNmero);
+		
+		JLabel lblCidade = new JLabel("Cidade:");
+		lblCidade.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCidade.setBounds(242, 86, 94, 14);
+		EnderecoPanel.add(lblCidade);
+		
+		JLabel lblPais = new JLabel("Pais:");
+		lblPais.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPais.setBounds(242, 111, 94, 14);
+		EnderecoPanel.add(lblPais);
+		
+		AdressNumField = new JTextField();
+		AdressNumField.setBounds(298, 35, 119, 20);
+		EnderecoPanel.add(AdressNumField);
+		AdressNumField.setColumns(10);
+		
+		CityField = new JTextField();
+		CityField.setBounds(298, 85, 119, 20);
+		EnderecoPanel.add(CityField);
+		CityField.setColumns(10);
+		
+		CountryField = new JTextField();
+		CountryField.setBounds(298, 110, 119, 20);
+		EnderecoPanel.add(CountryField);
+		CountryField.setColumns(10);
 
-	}
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					StudentFrm frame = new StudentFrm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	
-	
-	
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
-			putValue(NAME, "SwingAction");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-		public void actionPerformed(ActionEvent e) {
-		}
 	}
 }
