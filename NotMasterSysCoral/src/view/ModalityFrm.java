@@ -13,6 +13,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.ImageIcon;
+import java.awt.SystemColor;
 
 public class ModalityFrm extends JInternalFrame {
 	private JTextField txfModality;
@@ -53,26 +55,32 @@ public class ModalityFrm extends JInternalFrame {
 		getContentPane().setLayout(null);
 		
 		JButton btnSearch = new JButton("Buscar");
-		btnSearch.setEnabled(false);
-		btnSearch.setBounds(20, 11, 88, 37);
+		btnSearch.setBackground(SystemColor.menu);
+		btnSearch.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/localizar.png")));
+		btnSearch.setEnabled(true);
+		btnSearch.setBounds(20, 11, 94, 37);
 		getContentPane().add(btnSearch);
 				
 		JButton btnRemove = new JButton("Remover");
+		btnRemove.setBackground(SystemColor.menu);
+		btnRemove.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/remover.png")));
 		btnRemove.setEnabled(false);
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnRemove.setBounds(198, 11, 88, 37);
+		btnRemove.setBounds(222, 11, 109, 37);
 		getContentPane().add(btnRemove);
 		
 		JButton btnSave = new JButton("Salvar");
+		btnSave.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/salvar.png")));
+		btnSave.setBackground(SystemColor.menu);
 		btnSave.setEnabled(false);
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnSave.setBounds(288, 11, 88, 37);
+		btnSave.setBounds(331, 11, 88, 37);
 		getContentPane().add(btnSave);
 		
 		JLabel lblModality = new JLabel("Modalidade:");
@@ -98,6 +106,7 @@ public class ModalityFrm extends JInternalFrame {
 		txfGraduate.setColumns(10);
 		
 		JButton btnOk = new JButton("OK");
+		btnOk.setBackground(SystemColor.menu);
 		btnOk.setEnabled(false);
 		btnOk.setBounds(380, 78, 58, 18);
 		getContentPane().add(btnOk);
@@ -132,10 +141,11 @@ public class ModalityFrm extends JInternalFrame {
 		scrollPaneGraduate.setViewportView(tableGraduate);
 		
 		JButton btnAdd = new JButton("Adicionar");
+		btnAdd.setBackground(SystemColor.menu);
+		btnAdd.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/adicionar.png")));
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				btnSearch.setEnabled(true);
 				lblModality.setEnabled(true);
 				lblGraduate.setEnabled(true);
 				txfModality.setEnabled(true);
@@ -148,7 +158,7 @@ public class ModalityFrm extends JInternalFrame {
 
 			}
 		});
-		btnAdd.setBounds(109, 11, 88, 37);
+		btnAdd.setBounds(113, 11, 109, 37);
 		getContentPane().add(btnAdd);
 
 		
