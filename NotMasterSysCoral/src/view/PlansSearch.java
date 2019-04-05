@@ -104,16 +104,20 @@ public class PlansSearch extends JDialog {
 					}
 
 				} 
-//				else {
-//
-//					if (comboBox.getSelectedItem().toString().equals("Nome") && !txfPesquisa.getText().equals("")) {
-//
-//						model.addListaDePlanos(new PlanosDAO().consultar(txfPesquisa.getText()));
-//
-//					} else {
-//						mostrarTodos();
-//					}
-//				}
+				else {
+
+					if (comboBox.getSelectedItem().toString().equals("Modalidade") && !txfPesquisa.getText().equals("")) {
+						
+						try {
+							model.addListaDePlanos(new PlanosDAO(conn).SelectAllM(txfPesquisa.getText()));
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							System.out.println(e);
+						}
+
+					}
+				}
 			}
 		});
 		getContentPane().add(btnPesquisar);
