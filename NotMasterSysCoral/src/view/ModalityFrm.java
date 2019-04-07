@@ -58,7 +58,7 @@ public class ModalityFrm extends JInternalFrame {
 		btnSearch.setBackground(SystemColor.menu);
 		btnSearch.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/localizar.png")));
 		btnSearch.setEnabled(true);
-		btnSearch.setBounds(20, 11, 94, 37);
+		btnSearch.setBounds(20, 11, 95, 37);
 		getContentPane().add(btnSearch);
 				
 		JButton btnRemove = new JButton("Remover");
@@ -69,7 +69,7 @@ public class ModalityFrm extends JInternalFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnRemove.setBounds(222, 11, 109, 37);
+		btnRemove.setBounds(230, 11, 115, 37);
 		getContentPane().add(btnRemove);
 		
 		JButton btnSave = new JButton("Salvar");
@@ -80,7 +80,7 @@ public class ModalityFrm extends JInternalFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnSave.setBounds(331, 11, 88, 37);
+		btnSave.setBounds(345, 11, 104, 37);
 		getContentPane().add(btnSave);
 		
 		JLabel lblModality = new JLabel("Modalidade:");
@@ -95,26 +95,26 @@ public class ModalityFrm extends JInternalFrame {
 		
 		txfModality = new JTextField();
 		txfModality.setEnabled(false);
-		txfModality.setBounds(92, 55, 346, 20);
+		txfModality.setBounds(92, 55, 357, 20);
 		getContentPane().add(txfModality);
 		txfModality.setColumns(10);
 		
 		txfGraduate = new JTextField();
 		txfGraduate.setEnabled(false);
-		txfGraduate.setBounds(92, 78, 286, 20);
+		txfGraduate.setBounds(92, 78, 299, 20);
 		getContentPane().add(txfGraduate);
 		txfGraduate.setColumns(10);
 		
 		JButton btnOk = new JButton("OK");
 		btnOk.setBackground(SystemColor.menu);
 		btnOk.setEnabled(false);
-		btnOk.setBounds(380, 78, 58, 18);
+		btnOk.setBounds(391, 79, 58, 18);
 		getContentPane().add(btnOk);
 		
 		JScrollPane scrollPaneGraduate = new JScrollPane();
 		scrollPaneGraduate.setEnabled(false);
 		scrollPaneGraduate.setToolTipText("");
-		scrollPaneGraduate.setBounds(10, 114, 428, 146);
+		scrollPaneGraduate.setBounds(10, 114, 439, 146);
 		getContentPane().add(scrollPaneGraduate);
 		
 		scrollPaneGraduate.setViewportView(tableGraduate);
@@ -155,10 +155,10 @@ public class ModalityFrm extends JInternalFrame {
 				btnSave.setEnabled(true);
 				btnRemove.setEnabled(true);
 				tableGraduate.setEnabled(true);
-
+				btnAdd.setEnabled(false);
 			}
 		});
-		btnAdd.setBounds(113, 11, 109, 37);
+		btnAdd.setBounds(115, 11, 115, 37);
 		getContentPane().add(btnAdd);
 
 		

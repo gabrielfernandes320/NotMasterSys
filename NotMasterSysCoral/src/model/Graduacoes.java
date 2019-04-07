@@ -1,18 +1,13 @@
 package model;
 
+import java.sql.Array;
 import java.util.ArrayList;
 
 public class Graduacoes {
 	
-	private String modalidade;
+	private String id_modality;
 	private ArrayList<String> graduacoes;
 	
-	public String getModalidade() {
-		return modalidade;
-	}
-	public void setModalidade(String modalidade) {
-		this.modalidade = modalidade;
-	}
 	public ArrayList<String> getGraduacoes() {
 		return graduacoes;
 	}
@@ -20,5 +15,11 @@ public class Graduacoes {
 		this.graduacoes = graduacoes;
 	}
 	
-
+	public String getId_modality() {
+		return id_modality;
+	}
+	public void setId_modality(String id_modality) {
+		this.id_modality = id_modality;
+	}
+	
 }
