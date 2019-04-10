@@ -5,12 +5,16 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import database.ConnectionFactory;
+
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
@@ -161,6 +165,7 @@ public class ModalityFrm extends JInternalFrame {
 		btnAdd.setBounds(115, 11, 115, 37);
 		getContentPane().add(btnAdd);
 
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 		
 		JLabel lblMessage = new JLabel("Duplo clique na linha da gradua\u00E7\u00E3o para remov\u00EA-la.");
 		lblMessage.setBounds(11, 264, 414, 14);
