@@ -11,7 +11,11 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -19,6 +23,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.MaskFormatter;
+
+import com.sun.jndi.cosnaming.IiopUrl.Address;
+import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 import database.AlunoDAO;
 import database.ConnectionFactory;
@@ -242,9 +250,19 @@ public class StudentFrm extends JInternalFrame {
 		getContentPane().add(IdField);
 		IdField.setColumns(10);
 		
-		JFormattedTextField BirthdateField = new JFormattedTextField();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		JFormattedTextField BirthdateField = new JFormattedTextField(df);
 		BirthdateField.setBounds(138, 101, 115, 20);
 		getContentPane().add(BirthdateField);
+		MaskFormatter maskData = null;
+		try {
+			maskData = new MaskFormatter("##/##/####");
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		maskData.install(BirthdateField);
+
 
 		// COISAS IMPORTANTES: BOTOES E CONEXAO
 		
@@ -279,14 +297,27 @@ public class StudentFrm extends JInternalFrame {
 				try {
 					conn.setAutoCommit(false);
 				
+					java.util.Date modelDate = df.parse(BirthdateField.getText());
 					AlunoDAO dao = new AlunoDAO(conn);
 					Aluno model = new Aluno();
 						
 					model.setCodigo_aluno(IdField.getText());
 					model.setAluno(StudentField.getText());
-					//model.setData_nascimento(BirthdateField.getText());
+					model.setData_nascimento(modelDate);
+					model.setTelefone(TelephoneField.getText());
+					model.setCelular(PhoneField.getText());
 					model.setEmail(EmailField.getText());
-
+					model.setObservacao(ObservationField.getText());
+					model.setEndereco(AdressField.getText());
+					model.setNumero(AdressNumField.getText());
+					model.setComplemento(AdressComplementField.getText());
+					model.setBairro(NeighbhField.getText());
+					model.setCidade(CityField.getText());
+					model.setEstado(StateField.getText());
+					model.setPais(CountryField.getText());
+					model.setCep(CepField.getText());
+					
+					
 					//CHECANDO SE SEXO ESTÁ NULO
 					if(SexCmb.getSelectedItem()=="Masculino") {
 						
@@ -307,7 +338,7 @@ public class StudentFrm extends JInternalFrame {
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
-				} catch (SQLException e1) {
+				} catch (SQLException | ParseException e1) {
 					e1.printStackTrace();
 				}
 						}
