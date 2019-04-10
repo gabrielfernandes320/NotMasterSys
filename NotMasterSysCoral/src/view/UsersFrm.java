@@ -10,8 +10,11 @@ import java.awt.BorderLayout;
 import javax.swing.SwingConstants;
 
 import database.ConnectionFactory;
+import database.PlanosDAO;
 import database.UsuarioDAO;
 import model.Usuario;
+import table.model.PlansTableModel;
+import table.model.UsuariosTableModel;
 
 import javax.swing.JButton;
 import java.awt.Point;
@@ -22,6 +25,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
 import java.awt.Font;
@@ -30,15 +34,18 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import java.awt.ScrollPane;
 import javax.swing.JScrollPane;
+import java.awt.Component;
 
 public class UsersFrm extends JInternalFrame {
 	private JTextField tbUser;
 	private JPasswordField tbPassword;
 	private JPasswordField tbConfirmPassword;
+	private UsuariosTableModel model;
 
 	/**
 	 * Launch the application.
@@ -133,13 +140,7 @@ public class UsersFrm extends JInternalFrame {
 		btnBuscar.setBackground(SystemColor.menu);
 		btnBuscar.setBounds(10, 11, 110, 31);
 		getContentPane().add(btnBuscar);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setToolTipText("");
-		scrollPane.setEnabled(false);
-		scrollPane.setBounds(10, 182, 428, 146);
-		getContentPane().add(scrollPane);
-		
+
 		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 				
 		btnSalvar.addActionListener(new ActionListener() {
@@ -149,11 +150,11 @@ public class UsersFrm extends JInternalFrame {
 					System.out.println("Conectado com sucesso!");
 
 					UsuarioDAO dao = new UsuarioDAO(conn);
-					Usuario model = new Usuario();
+					Usuario usuario = new Usuario();
 				
-					model.setPerfil(cbProfile.getSelectedItem().toString());
-					model.setUsuario(tbUser.getText());
-					model.setPassword(tbPassword.getText());
+					usuario.setPerfil(cbProfile.getSelectedItem().toString());
+					usuario.setUsuario(tbUser.getText());
+					usuario.setPassword(tbPassword.getText());
 				try {
 					dao.CreateRole(model);
 					JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!");
@@ -161,9 +162,9 @@ public class UsersFrm extends JInternalFrame {
 					e1.printStackTrace();
 				  }
 				
-				  } catch (SQLException e1) {
+				    } catch (SQLException e1) {
 					 e1.printStackTrace();
-			}
+				      } 
 			}
 		});
 					
@@ -175,6 +176,14 @@ public class UsersFrm extends JInternalFrame {
 						}
 		});
 		
+		model = new UsuariosTableModel();
+		JTable tabela = new JTable(model);
+		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		JScrollPane scrollPane = new JScrollPane(tabela);
+		scrollPane.setBounds(10, 173, 427, 155);
+		getContentPane().add(scrollPane);
+		
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					try {
@@ -182,17 +191,13 @@ public class UsersFrm extends JInternalFrame {
 						System.out.println("Conectado com sucesso!");
 
 						UsuarioDAO dao = new UsuarioDAO(conn);
-						Usuario model = new Usuario();
-					
-						model.setPerfil(cbProfile.getSelectedItem().toString());
-						model.setUsuario(tbUser.getText());
-						model.setPassword(tbPassword.getText());
-					try {
-						Object obj = new Object();
-						obj = dao.Select(model);
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					  }
+						Usuario usuario = new Usuario();
+						List<Usuario> usuariosList = new ArrayList<Usuario>();
+						usuariosList = (List<Usuario>)(List<?>) new UsuarioDAO(conn).SelectAll();
+						model.addListaDeUsuarios(usuariosList);
+						//usuario.setPerfil(cbProfile.getSelectedItem().toString());
+						//usuario.setUsuario(tbUser.getText());
+						//usuario.setPassword(tbPassword.getText());
 					
 					  } catch (SQLException e1) {
 						 e1.printStackTrace();
@@ -233,8 +238,5 @@ public class UsersFrm extends JInternalFrame {
 						
 				
 			}
-		
-		
-
 	}
 
