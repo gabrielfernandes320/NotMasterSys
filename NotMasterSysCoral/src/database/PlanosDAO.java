@@ -31,8 +31,8 @@ public class PlanosDAO extends MasterDAO {
 									+"		?,				"
 									+ "		?				"
 									+"	)";
-		private String is_update = "UPDATE public.planos\r\n" + 
-								"   SET modalidade=?, plano=?, valor_mensal";
+		private String is_update = "UPDATE planos " + 
+								"   SET valor_mensal=? where plano = ?";
 		
 		private PreparedStatement pst_selectAll;
 		private PreparedStatement pst_selectAllModalidade;
@@ -158,9 +158,9 @@ public class PlanosDAO extends MasterDAO {
 		
 		Plano lo_plano = (Plano)parameter;
 
-		Set(pst_update, 1, lo_plano.getModalidade());
+		
 		Set(pst_update, 2, lo_plano.getPlano());
-		Set(pst_update, 3, lo_plano.getValor());
+		Set(pst_update, 1, lo_plano.getValor());
 		pst_update.execute();
 		
 		if (pst_update.getUpdateCount() > 0) {
@@ -191,11 +191,12 @@ public class PlanosDAO extends MasterDAO {
 
 		Plano lo_plano = (Plano)parameter;
 		
-		Set(pst_delete, 1, lo_plano.getModalidade());
-		Set(pst_delete, 2, lo_plano.getPlano());
-		Set(pst_delete, 3, lo_plano.getValor());
+		Set(pst_delete, 1, lo_plano.getPlano());
+		pst_delete.execute();
 
-        affectedrows = pst_delete.executeUpdate();
+		if (pst_delete.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
 
         return affectedrows;
 	}

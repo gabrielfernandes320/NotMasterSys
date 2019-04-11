@@ -38,7 +38,7 @@ public abstract class MasterDAO {
 			pst.setNull(position, Types.NULL);
 		}
 		else if (value instanceof String) {
-			pst.setString(position, (String)value);
+			pst.setString(position, (String) value);
 		}
 		else if (value instanceof Date) {
 			pst.setDate(position, new java.sql.Date(((Date)value).getTime()));			
@@ -52,6 +52,9 @@ public abstract class MasterDAO {
 		}
 		else if	(value	instanceof	BigDecimal) {
 			pst.setBigDecimal(position,(BigDecimal) value);
+		}
+		else if (value instanceof Double) {
+			pst.setDouble(position, (Double) value);
 		}
 	}
 
