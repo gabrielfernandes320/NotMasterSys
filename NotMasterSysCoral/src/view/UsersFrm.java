@@ -156,7 +156,7 @@ public class UsersFrm extends JInternalFrame {
 					usuario.setUsuario(tbUser.getText());
 					usuario.setPassword(tbPassword.getText());
 				try {
-					dao.CreateRole(model);
+					dao.CreateRole(usuario);
 					JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!");
 				} catch (SQLException e1) {
 					e1.printStackTrace();
@@ -195,9 +195,9 @@ public class UsersFrm extends JInternalFrame {
 						List<Usuario> usuariosList = new ArrayList<Usuario>();
 						usuariosList = (List<Usuario>)(List<?>) new UsuarioDAO(conn).SelectAll();
 						model.addListaDeUsuarios(usuariosList);
-						//usuario.setPerfil(cbProfile.getSelectedItem().toString());
-						//usuario.setUsuario(tbUser.getText());
-						//usuario.setPassword(tbPassword.getText());
+						usuario.setPerfil(cbProfile.getSelectedItem().toString());
+						usuario.setUsuario(tbUser.getText());
+						usuario.setPassword(tbPassword.getText());
 					
 					  } catch (SQLException e1) {
 						 e1.printStackTrace();
@@ -206,9 +206,17 @@ public class UsersFrm extends JInternalFrame {
 							
 							
 			});
+		
+		
+		 tabela.setCellSelectionEnabled(true);
+		    ListSelectionModel cellSelectionModel = tabela.getSelectionModel();
+		    cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		    
+		   
+		    
 						
 				
-		
+
 				
 					
 		btnRemover.addActionListener(new ActionListener() {	
@@ -218,13 +226,14 @@ public class UsersFrm extends JInternalFrame {
 				
 					UsuarioDAO dao = new UsuarioDAO(conn);
 					System.out.println("aqui foi");
-					Usuario model = new Usuario();
+					Usuario usuario = new Usuario();
 					System.out.println("aqui tmb");
 				
-							model.setPerfil(cbProfile.getSelectedItem().toString());
-							model.setUsuario(tbUser.getText());
+						usuario.setPerfil(cbProfile.getSelectedItem().toString());
+						usuario.setUsuario(tbUser.getText());
 							try {
-								dao.Delete(model);
+								dao.Delete(usuario);
+								dao.DropRole(usuario);
 								JOptionPane.showMessageDialog(btnRemover, "Removido com Sucesso!");
 							} catch (SQLException e1) {
 								e1.printStackTrace();
@@ -238,5 +247,7 @@ public class UsersFrm extends JInternalFrame {
 						
 				
 			}
+	
+	
 	}
 
