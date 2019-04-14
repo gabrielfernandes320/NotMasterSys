@@ -1,8 +1,13 @@
 package database;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
+import model.Graduacoes;
 
 public class GraduacoesDAO extends MasterDAO{
 		private String is_delete = "delete from graduacoes where graduacao = ?";
@@ -18,8 +23,8 @@ public class GraduacoesDAO extends MasterDAO{
 									+"				?,			"	
 									+"				?"	
 									+"	)";
-		private String is_update = "UPDATE public.graduacoes\r\n"
-								 + " SET modalidade = ?, graduacao = ?";
+		private String is_update = "UPDATE graduacoes\r\n"
+								 + " SET graduacao = ? where graduacoes = ?";
 		
 		private PreparedStatement pst_selectAll;
 		private PreparedStatement pst_select;
@@ -27,13 +32,32 @@ public class GraduacoesDAO extends MasterDAO{
 		private PreparedStatement pst_update;
 		private PreparedStatement pst_delete;
 		
+		Connection io_connection;
 		
+	public GraduacoesDAO(Connection connection) throws SQLException {
 		
+		io_connection = connection;
+		pst_selectAll = connection.prepareStatement(is_selectAll);
+		pst_select = connection.prepareStatement(is_select);
+		pst_insert = connection.prepareStatement(is_insert);	
+		pst_delete = connection.prepareStatement(is_delete);
+		pst_update = connection.prepareStatement(is_update);
 		
+	}
 		
 	@Override
 	public List<Object> SelectAll() throws SQLException {
-		// TODO Auto-generated method stub
+		List<Object> arlgraduacoes = new ArrayList<Object>();
+		ResultSet rst = pst_selectAll.executeQuery();
+		while (rst.next()) {
+			Graduacoes model = new Graduacoes();
+			model.setId_modality("modalidade");
+			model.setGraduations("graduacao");
+			
+		}
+		
+		
+		
 		return null;
 	}
 

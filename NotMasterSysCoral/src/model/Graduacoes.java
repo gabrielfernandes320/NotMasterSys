@@ -7,13 +7,13 @@ import java.util.List;
 public class Graduacoes {
 	
 	private String id_modality;
-	private List<String> graduacoes = new ArrayList<String>();
+	private String graduations;
 	
-	public List<String> getGraduacoes() {
-		return graduacoes;
+	public String getGraduations() {
+		return graduations;
 	}
-	public void setGraduacoes(List<String> graduacoes) {
-		this.graduacoes = graduacoes;
+	public void setGraduations(String graduations) {
+		this.graduations = graduations;
 	}
 	public String getId_modality() {
 		return id_modality;
