@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Graduacoes;
+import model.Modalidades;
 
 public class GraduacoesDAO extends MasterDAO{
 		private String is_delete = "delete from graduacoes where graduacao = ?";
@@ -23,7 +24,7 @@ public class GraduacoesDAO extends MasterDAO{
 									+"				?,			"	
 									+"				?"	
 									+"	)";
-		private String is_update = "UPDATE graduacoes\r\n"
+		private String is_update = "UPDATE graduacoes"
 								 + " SET graduacao = ? where graduacoes = ?";
 		
 		private PreparedStatement pst_selectAll;
@@ -47,41 +48,72 @@ public class GraduacoesDAO extends MasterDAO{
 		
 	@Override
 	public List<Object> SelectAll() throws SQLException {
+		
 		List<Object> arlgraduacoes = new ArrayList<Object>();
 		ResultSet rst = pst_selectAll.executeQuery();
+		
 		while (rst.next()) {
 			Graduacoes model = new Graduacoes();
 			model.setId_modality("modalidade");
 			model.setGraduations("graduacao");
-			
+			arlgraduacoes.add(model);
 		}
-		
-		
-		
-		return null;
+		return arlgraduacoes;
 	}
 
 	@Override
 	public Object Select(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		Graduacoes graduacoes = null;
+		
+		Set(pst_select, 1,((Graduacoes)parameter).getId_modality());
+		Set(pst_select, 2, ((Graduacoes)parameter).getGraduations());
+		
+		ResultSet rst = pst_select.executeQuery();
+		
+		if(rst.next()) {
+			Graduacoes model = new Graduacoes();
+			model.setId_modality(rst.getString("modalidade"));
+			model.setGraduations(rst.getString("graduacao"));
+		}
+		return graduacoes;
 	}
 
 	@Override
 	public void Update(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
+		pst_update.clearParameters();
 		
+		Graduacoes lo_graduacoes = (Graduacoes)parameter;
+		
+		Set(pst_update, 1, lo_graduacoes.getId_modality());
+		Set(pst_update, 2, lo_graduacoes.getGraduations());
+		pst_update.execute();
+		
+		if (pst_insert.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
+				
 	}
 
 	@Override
 	public void Insert(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
+		pst_insert.clearParameters();
+		
+		Graduacoes lo_graduacoes = (Graduacoes)parameter;
+		
+		Set(pst_insert, 1, lo_graduacoes.getId_modality());
+		Set(pst_insert, 2, lo_graduacoes.getGraduations());
+		pst_insert.execute();
+		
+		if (pst_insert.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
 		
 	}
+	
 
 	@Override
 	public int Delete(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
+		// TO DO
 		return 0;
 	}
 	

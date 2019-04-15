@@ -69,10 +69,6 @@ public class ModalityFrm extends JInternalFrame {
 		btnRemove.setBackground(SystemColor.menu);
 		btnRemove.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/remover.png")));
 		btnRemove.setEnabled(false);
-		btnRemove.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		btnRemove.setBounds(230, 11, 115, 37);
 		getContentPane().add(btnRemove);
 		
@@ -80,10 +76,6 @@ public class ModalityFrm extends JInternalFrame {
 		btnSave.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/salvar.png")));
 		btnSave.setBackground(SystemColor.menu);
 		btnSave.setEnabled(false);
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		btnSave.setBounds(345, 11, 104, 37);
 		getContentPane().add(btnSave);
 		
@@ -147,6 +139,16 @@ public class ModalityFrm extends JInternalFrame {
 		JButton btnAdd = new JButton("Adicionar");
 		btnAdd.setBackground(SystemColor.menu);
 		btnAdd.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/adicionar.png")));
+		btnAdd.setBounds(115, 11, 115, 37);
+		getContentPane().add(btnAdd);
+		
+
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		
+		JLabel lblMessage = new JLabel("Duplo clique na linha da gradua\u00E7\u00E3o para remov\u00EA-la.");
+		lblMessage.setBounds(11, 264, 414, 14);
+		getContentPane().add(lblMessage);
+		
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -162,14 +164,29 @@ public class ModalityFrm extends JInternalFrame {
 				btnAdd.setEnabled(false);
 			}
 		});
-		btnAdd.setBounds(115, 11, 115, 37);
-		getContentPane().add(btnAdd);
-
-		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 		
-		JLabel lblMessage = new JLabel("Duplo clique na linha da gradua\u00E7\u00E3o para remov\u00EA-la.");
-		lblMessage.setBounds(11, 264, 414, 14);
-		getContentPane().add(lblMessage);
-
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		
+		
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		
+		btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		btnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		
 	}
 }
