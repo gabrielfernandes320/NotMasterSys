@@ -17,7 +17,7 @@ public class GraduacoesDAO extends MasterDAO{
 		private String is_insert = "INSERT INTO graduacoes		"
 									+"	(			"
 									+"			modalidade,		"
-									+"			graguacoes		"
+									+"			graduacao		"
 									+"	)						"
 									+"	VALUES					"	
 									+"	(						"

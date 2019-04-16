@@ -189,9 +189,9 @@ public class PrincipalWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				ModalityFrm us = new ModalityFrm();
-				us.setLocation(2, 2);
 				desktopPane.add(us);
 				us.setVisible(true);
+				us.setPosicao();
 			}
 				});	
 		itemPlanosCad.addActionListener(new ActionListener() {
