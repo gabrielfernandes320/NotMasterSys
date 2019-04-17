@@ -166,20 +166,18 @@ public class ModalityFrm extends JInternalFrame {
 		            	GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
 		            	Graduacoes g = new Graduacoes();
 		            	g.setGraduations(tableGraduation.getValueAt(tableGraduation.getSelectedRow(), 0).toString());
-//		            	graduationDao.Delete(g);
+		            	model.removeGraduacao(tableGraduation.getSelectedRow());
+		            	graduationDao.Delete(g);
 		            	
 		            	
-		            } catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-		            
-		            dispose();
-		           	
+		            	} catch (SQLException e1) {
+		            		// TODO Auto-generated catch block
+		            		e1.printStackTrace();
+		            	}
 		 
 		            }
-		         }
-		        } );
+		        }
+		 });
 		
 		
 				
@@ -188,12 +186,13 @@ public class ModalityFrm extends JInternalFrame {
 				
 				lblModality.setEnabled(true);
 				lblGraduate.setEnabled(true);
-				txfModality.setEnabled(true);
-				txfGraduation.setEnabled(true);
 				btnOk.setEnabled(true);
 				btnSave.setEnabled(true);
 				btnRemove.setEnabled(true);
 				btnAdd.setEnabled(false);
+				txfModality.setEnabled(true);
+				txfGraduation.setEnabled(true);
+				
 			}
 		});
 		
@@ -236,8 +235,8 @@ public class ModalityFrm extends JInternalFrame {
 					
 					
 					
-				} catch (Exception e2) {
-					// TODO: handle exception
+				}catch (SQLException e2) {
+					e2.printStackTrace();
 				}
 				
 			}

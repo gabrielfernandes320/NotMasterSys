@@ -113,8 +113,16 @@ public class GraduacoesDAO extends MasterDAO{
 
 	@Override
 	public int Delete(Object parameter) throws SQLException {
-		// TO DO
-		return 0;
+		int affectedrows = 0;
+
+		Graduacoes lo_graduacao = (Graduacoes)parameter;
+
+        Set(pst_delete, 1, lo_graduacao.getGraduations());
+
+        affectedrows = pst_delete.executeUpdate();
+
+        return affectedrows;
+
 	}
 	
 	

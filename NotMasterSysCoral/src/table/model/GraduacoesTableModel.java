@@ -36,6 +36,31 @@ public class GraduacoesTableModel extends AbstractTableModel {
 
 	public Class<?> getColumnClass(int columnIndex) {
 		return String.class;	}
+	
+	public void setValueAt(Graduacoes aValue, int rowIndex) {
+		Graduacoes graduacao = graduacoes.get(rowIndex);
+
+		graduacao.setId_modality(aValue.getId_modality());
+		graduacao.setGraduations(aValue.getGraduations());
+		
+		fireTableCellUpdated(rowIndex, 0);
+		fireTableCellUpdated(rowIndex, 1);
+	}
+	
+	
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		Graduacoes graduacao = graduacoes.get(rowIndex);
+
+		switch (columnIndex) {
+		case 0:
+			graduacao.setId_modality(aValue.toString());
+		case 1:
+			graduacao.setGraduations(aValue.toString());
+		default:
+			System.err.println("Índice da coluna inválido");
+		}
+		fireTableCellUpdated(rowIndex, columnIndex);
+	}
 
 
 	
@@ -57,5 +82,48 @@ public class GraduacoesTableModel extends AbstractTableModel {
 
 		return valueObject;
 	}
+	
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return false;
+	}
+	
+	public Graduacoes getGraduacao(int indiceLinha) {
+		return graduacoes.get(indiceLinha);
+	}
+	
+	public void addGraduacao(Graduacoes u) {
+		graduacoes.add(u);
+
+		int ultimoIndice = getRowCount() - 1;
+
+		fireTableRowsInserted(ultimoIndice, ultimoIndice);
+	}
+
+	public void removeGraduacao(int indiceLinha) {
+		graduacoes.remove(indiceLinha);
+
+		fireTableRowsDeleted(indiceLinha, indiceLinha);
+	}
+	
+	public void addListaDeGraduacoes(List<Graduacoes> novasGraduacoes) {
+
+		int tamanhoAntigo = getRowCount();		
+		graduacoes = novasGraduacoes;
+		fireTableRowsInserted(tamanhoAntigo, getRowCount() - 1);
+	}
+
+	public void limpar() {
+		graduacoes.clear();
+		fireTableDataChanged();
+	}
+
+	public boolean isEmpty() {
+		return graduacoes.isEmpty();
+	}
+
+	
+	
+	
+	
 	
 }
