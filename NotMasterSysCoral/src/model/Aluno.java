@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Aluno {
 	
-	private String codigo_aluno;
+	private int codigo_aluno;
 	private String aluno;
 	private Date data_nascimento;
 	private char sexo;
@@ -24,7 +24,7 @@ public class Aluno {
 	public Aluno() {
 	}
 	
-	public Aluno(String codigo_aluno, Date data_nascimento, char sexo, String telefone, String celular, String email,
+	public Aluno(int codigo_aluno, Date data_nascimento, char sexo, String telefone, String celular, String email,
 			String observacao, String endereco, String numero, String complemento, String bairro, String cidade,
 			String estado, String pais, String cep) {
 		super();
@@ -45,9 +45,6 @@ public class Aluno {
 		this.cep = cep;
 	}
 
-	
-	
-
 	public String getAluno() {
 		return aluno;
 	}
@@ -56,12 +53,12 @@ public class Aluno {
 		this.aluno = aluno;
 	}
 
-	public String getCodigo_aluno() {
+	public int getCodigo_aluno() {
 		return codigo_aluno;
 	}
 
 
-	public void setCodigo_aluno(String codigo_aluno) {
+	public void setCodigo_aluno(int codigo_aluno) {
 		this.codigo_aluno = codigo_aluno;
 	}
 
