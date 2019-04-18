@@ -297,13 +297,14 @@ public class StudentFrm extends JInternalFrame {
 				try {
 					conn.setAutoCommit(false);
 				
-					java.util.Date modelDate = df.parse(BirthdateField.getText());
+					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+					java.sql.Date data = new java.sql.Date(format.parse(BirthdateField.getText()).getTime());
 					AlunoDAO dao = new AlunoDAO(conn);
 					Aluno model = new Aluno();
 						
 					model.setCodigo_aluno(IdField.getText());
 					model.setAluno(StudentField.getText());
-					model.setData_nascimento(modelDate);
+					model.setData_nascimento(data);
 					model.setTelefone(TelephoneField.getText());
 					model.setCelular(PhoneField.getText());
 					model.setEmail(EmailField.getText());
@@ -321,12 +322,12 @@ public class StudentFrm extends JInternalFrame {
 					//CHECANDO SE SEXO ESTÁ NULO
 					if(SexCmb.getSelectedItem()=="Masculino") {
 						
-						model.setSexo('m');
+						model.setSexo('M');
 						
 					}
 					else if (SexCmb.getSelectedItem()=="Feminino") {
 						
-						model.setSexo('f');
+						model.setSexo('F');
 						
 					}
 					else
