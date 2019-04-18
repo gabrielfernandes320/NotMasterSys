@@ -68,10 +68,13 @@ public class LoginFrm extends JFrame {
 					user = (Usuario) dao.Select(user);
 					System.out.println(user.getUsuario() + user.getPerfil());
 					new PrincipalWindow(user).setVisible(true);
+					setVisible(false); //you can't see me!
+					dispose(); //Destroy the JFrame object
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
 			}
 		});
 		contentPane.setLayout(null);
