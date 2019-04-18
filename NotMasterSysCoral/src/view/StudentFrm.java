@@ -240,7 +240,6 @@ public class StudentFrm extends JInternalFrame {
 		EnderecoPanel.add(CountryField);
 		CountryField.setColumns(10);
 
-
 		MaskFormatter maskData = null;
 		try {
 			maskData = new MaskFormatter("##/##/####");
@@ -253,11 +252,9 @@ public class StudentFrm extends JInternalFrame {
 		getContentPane().add(BirthdateField);
 		maskData.install(BirthdateField);
 
-
 		// COISAS IMPORTANTES: BOTOES E CONEXAO
 
 		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
-
 
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -269,7 +266,7 @@ public class StudentFrm extends JInternalFrame {
 					AlunoDAO dao = new AlunoDAO(conn);
 					Aluno model = new Aluno();
 
-					model.setAluno(StudentField.getText());		
+					model.setAluno(StudentField.getText());
 					model = dao.Select(model);
 
 					Date data = new Date(df.parse(BirthdateField.getText()).getTime());
@@ -287,12 +284,11 @@ public class StudentFrm extends JInternalFrame {
 					model.setEstado(StateField.getText());
 					model.setPais(CountryField.getText());
 					model.setCep(CepField.getText());
-					model.setCodigo_aluno(model.getCodigo_aluno());
 
 					dao.Update(model);
 					JOptionPane.showMessageDialog(getContentPane(), "Alterações Salvas.");
 
-				} catch (SQLException | ParseException e1){
+				} catch (SQLException | ParseException e1) {
 
 					e1.printStackTrace();
 
@@ -313,11 +309,13 @@ public class StudentFrm extends JInternalFrame {
 					model.setAluno(StudentField.getText());
 					model.setEmail(EmailField.getText());
 
-					if(JOptionPane.showConfirmDialog(getContentPane(), "Confirmar exclusão?", "Aviso:", JOptionPane.YES_NO_OPTION) == 0) {
+					if (JOptionPane.showConfirmDialog(getContentPane(), "Confirmar exclusão?", "Aviso:",
+							JOptionPane.YES_NO_OPTION) == 0) {
 
-						if(dao.Delete(model) == 1) {	
+						if (dao.Delete(model) == 1) {
 
-							JOptionPane.showMessageDialog(getContentPane(), "Cadastro deletado.", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);	
+							JOptionPane.showMessageDialog(getContentPane(), "Cadastro deletado.", "Sucesso!",
+									JOptionPane.INFORMATION_MESSAGE);
 
 							StudentField.setText(null);
 							BirthdateField.setText(null);
@@ -334,15 +332,16 @@ public class StudentFrm extends JInternalFrame {
 							StateField.setText(null);
 							CountryField.setText(null);
 							CepField.setText(null);
-							
+
 							model = null;
 
 						}
 
 						else
 
-							JOptionPane.showMessageDialog(getContentPane(), null, "Erro: Aluno não encontrado!", JOptionPane.INFORMATION_MESSAGE);
-							model = null;
+							JOptionPane.showMessageDialog(getContentPane(), null, "Erro: Aluno não encontrado!",
+									JOptionPane.INFORMATION_MESSAGE);
+						model = null;
 
 					}
 
@@ -361,6 +360,7 @@ public class StudentFrm extends JInternalFrame {
 				try {
 
 					StudentField.setText(null);
+					StudentField.setEnabled(false);
 					BirthdateField.setText(null);
 					TelephoneField.setText(null);
 					SexCmb.setSelectedIndex(0);
@@ -382,39 +382,33 @@ public class StudentFrm extends JInternalFrame {
 					model.setAluno(JOptionPane.showInputDialog(getContentPane(), null, "Nome do Aluno(a)",
 							JOptionPane.QUESTION_MESSAGE));
 
-					if(dao.Select(model) == null) {
+					if (dao.Select(model) == null) {
 
 						JOptionPane.showMessageDialog(getContentPane(), "Aluno não encontrado!");
 
 					}
-					else {
 
-						model = dao.Select(model);
+					model = dao.Select(model);
 
-						StudentField.setText(model.getAluno());
-						BirthdateField.setText(df.format(model.getData_nascimento()));
-						TelephoneField.setText(model.getTelefone());
+					StudentField.setText(model.getAluno());
+					BirthdateField.setText(df.format(model.getData_nascimento()));
+					TelephoneField.setText(model.getTelefone());
 
-						if (model.getSexo() == 'M')
-							SexCmb.setSelectedIndex(1);
-						else
-							SexCmb.setSelectedIndex(2);
+					if (model.getSexo() == 'M')
+						SexCmb.setSelectedIndex(1);
+					else
+						SexCmb.setSelectedIndex(2);
 
-						PhoneField.setText(model.getCelular());
-						EmailField.setText(model.getEmail());
-						ObservationField.setText(model.getObservacao());
-						AdressField.setText(model.getEndereco());
-						AdressNumField.setText(model.getNumero());
-						AdressComplementField.setText(model.getComplemento());
-						NeighbhField.setText(model.getBairro());
-						CityField.setText(model.getCidade());
-						StateField.setText(model.getEstado());
-						CountryField.setText(model.getPais());
-						CepField.setText(model.getCep());					
-
-						model = null;
-						
-					} 
+					PhoneField.setText(model.getCelular());
+					EmailField.setText(model.getEmail());
+					ObservationField.setText(model.getObservacao());
+					AdressField.setText(model.getEndereco());
+					AdressNumField.setText(model.getNumero());
+					AdressComplementField.setText(model.getComplemento());
+					NeighbhField.setText(model.getBairro());
+					CityField.setText(model.getCidade());
+					StateField.setText(model.getEstado());
+					CountryField.setText(model.getPais());
 
 				} catch (SQLException e1) {
 
@@ -424,92 +418,121 @@ public class StudentFrm extends JInternalFrame {
 				}
 
 			}
-			
+
 		});
 
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				if(StudentField.getText().trim().equals("") || BirthdateField.getText().trim().equals("")|| TelephoneField.getText().trim().equals("") || PhoneField.getText().trim().equals("") || EmailField.getText().trim().equals("") || 
-						ObservationField.getText().trim().equals("") || AdressField.getText().trim().equals("") || AdressNumField.getText().trim().equals("") || AdressComplementField.getText().trim().equals("") || SexCmb.getSelectedIndex() == -1
-						|| NeighbhField.getText().trim().equals("") || CityField.getText().trim().equals("") || StateField.getText().trim().equals("") || CountryField.getText().trim().equals("") || CepField.getText().trim().equals("")) {
-					
-					JOptionPane.showMessageDialog(getContentPane(), "Campos em Branco!", "Erro no cadastro:", JOptionPane.INFORMATION_MESSAGE);
-					
-				}
-				else {
-					
-					try{
-						
-						conn.setAutoCommit(false);
-						AlunoDAO dao = new AlunoDAO(conn);
-						Aluno model = new Aluno();
-	
-						Date data = new Date(df.parse(BirthdateField.getText()).getTime());
-						// CHECANDO SE SEXO ESTÁ NULO
-						if (SexCmb.getSelectedItem() == "Masculino")
-							model.setSexo('M');
-						else if (SexCmb.getSelectedItem() == "Feminino")
-							model.setSexo('F');
-						else
-							JOptionPane.showMessageDialog(null, "Erro: Sexo em branco");
-						model.setAluno(StudentField.getText());
-						model.setData_nascimento(data);
-						model.setTelefone(TelephoneField.getText());
-						model.setCelular(PhoneField.getText());
-						model.setEmail(EmailField.getText());
-						model.setObservacao(ObservationField.getText());
-						model.setEndereco(AdressField.getText());
-						model.setNumero(AdressNumField.getText());
-						model.setComplemento(AdressComplementField.getText());
-						model.setBairro(NeighbhField.getText());
-						model.setCidade(CityField.getText());
-						model.setEstado(StateField.getText());
-						model.setPais(CountryField.getText());
-						model.setCep(CepField.getText());
-	
-						if (dao.Select(model) == null) {
-	
-							dao.Insert(model);
-							JOptionPane.showMessageDialog(null, "Sucesso! Aluno Cadastrado");
-	
-							StudentField.setText(null);
-							BirthdateField.setText(null);
-							TelephoneField.setText(null);
-							SexCmb.setSelectedIndex(0);
-							PhoneField.setText(null);
-							EmailField.setText(null);
-							ObservationField.setText(null);
-							AdressField.setText(null);
-							AdressNumField.setText(null);
-							AdressComplementField.setText(null);
-							NeighbhField.setText(null);
-							CityField.setText(null);
-							StateField.setText(null);
-							CountryField.setText(null);
-							CepField.setText(null);
-	
+				if (StudentField.isEnabled() == true) {
+
+					if (StudentField.getText().trim().equals("") || BirthdateField.getText().trim().equals("")
+							|| TelephoneField.getText().trim().equals("") || PhoneField.getText().trim().equals("")
+							|| EmailField.getText().trim().equals("") || ObservationField.getText().trim().equals("")
+							|| AdressField.getText().trim().equals("") || AdressNumField.getText().trim().equals("")
+							|| AdressComplementField.getText().trim().equals("") || SexCmb.getSelectedIndex() == -1
+							|| NeighbhField.getText().trim().equals("") || CityField.getText().trim().equals("")
+							|| StateField.getText().trim().equals("") || CountryField.getText().trim().equals("")
+							|| CepField.getText().trim().equals("")) {
+
+						JOptionPane.showMessageDialog(getContentPane(), "Campos em Branco!", "Erro no cadastro:",
+								JOptionPane.INFORMATION_MESSAGE);
+
+					} else {
+
+						try {
+
+							conn.setAutoCommit(false);
+							AlunoDAO dao = new AlunoDAO(conn);
+							Aluno model = new Aluno();
+
+							Date data = new Date(df.parse(BirthdateField.getText()).getTime());
+							// CHECANDO SE SEXO ESTÁ NULO
+							if (SexCmb.getSelectedItem() == "Masculino")
+								model.setSexo('M');
+							else if (SexCmb.getSelectedItem() == "Feminino")
+								model.setSexo('F');
+							else
+								JOptionPane.showMessageDialog(null, "Erro: Sexo em branco");
+							model.setAluno(StudentField.getText());
+							model.setData_nascimento(data);
+							model.setTelefone(TelephoneField.getText());
+							model.setCelular(PhoneField.getText());
+							model.setEmail(EmailField.getText());
+							model.setObservacao(ObservationField.getText());
+							model.setEndereco(AdressField.getText());
+							model.setNumero(AdressNumField.getText());
+							model.setComplemento(AdressComplementField.getText());
+							model.setBairro(NeighbhField.getText());
+							model.setCidade(CityField.getText());
+							model.setEstado(StateField.getText());
+							model.setPais(CountryField.getText());
+							model.setCep(CepField.getText());
+
+							if (dao.Select(model) == null) {
+
+								dao.Insert(model);
+								JOptionPane.showMessageDialog(null, "Sucesso! Aluno Cadastrado");
+
+								StudentField.setText(null);
+								BirthdateField.setText(null);
+								TelephoneField.setText(null);
+								SexCmb.setSelectedIndex(0);
+								PhoneField.setText(null);
+								EmailField.setText(null);
+								ObservationField.setText(null);
+								AdressField.setText(null);
+								AdressNumField.setText(null);
+								AdressComplementField.setText(null);
+								NeighbhField.setText(null);
+								CityField.setText(null);
+								StateField.setText(null);
+								CountryField.setText(null);
+								CepField.setText(null);
+
+								model = null;
+
+							}
+
+							else
+								JOptionPane.showMessageDialog(null, "Erro no Cadastro! Nome de aluno já existente!");
 							model = null;
-							
+
+						} catch (SQLException | ParseException e1) {
+
+							e1.printStackTrace();
+
 						}
-	
-						else 
-							JOptionPane.showMessageDialog(null, "Erro no Cadastro! Nome de aluno já existente!");
-							model = null;
-	
-					} catch (SQLException | ParseException  e1) {
-	
-						e1.printStackTrace();
-	
+
 					}
-					
+
 				}
-						
+
+				else {
+
+					StudentField.setEnabled(true);
+					StudentField.setText(null);
+					BirthdateField.setText(null);
+					TelephoneField.setText(null);
+					SexCmb.setSelectedIndex(0);
+					PhoneField.setText(null);
+					EmailField.setText(null);
+					ObservationField.setText(null);
+					AdressField.setText(null);
+					AdressNumField.setText(null);
+					AdressComplementField.setText(null);
+					NeighbhField.setText(null);
+					CityField.setText(null);
+					StateField.setText(null);
+					CountryField.setText(null);
+					CepField.setText(null);
+
+				}
+
 			}
 
 		});
 
-		
 	}
 
 }

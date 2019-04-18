@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sun.org.apache.bcel.internal.generic.CASTORE;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import model.Aluno;
 
@@ -15,10 +16,10 @@ public class AlunoDAO extends MasterDAO {
 	
 	// Cria as variaveis contendo o select a ser feito.
 	private String is_update = "UPDATE alunos\r\n" + 
-			"   SET aluno=?, data_nascimento=?, sexo=?, telefone=?, \r\n" + 
+			"   SET data_nascimento=?, sexo=?, telefone=?, \r\n" + 
 			"       celular=?, email=?, observacao=?, endereco=?, numero=?, complemento=?, \r\n" + 
 			"       bairro=?, cidade=?, estado=?, pais=?, cep=?\r\n" + 
-			" WHERE codigo_aluno = ?";
+			" WHERE aluno=?";
 	private String is_selectAll = "select * from alunos order by aluno";
 	private String is_delete = "delete from alunos where aluno =? and email=? ";
 	private String is_select = "select * from alunos where aluno = ? order by aluno";
@@ -160,23 +161,22 @@ public class AlunoDAO extends MasterDAO {
 		
 		Aluno lo_aluno = (Aluno)parameter;
 		
-		Set(pst_update, 1, lo_aluno.getAluno());
-		Set(pst_update, 2, lo_aluno.getData_nascimento());
-		Set(pst_update, 3, lo_aluno.getSexo());
-		Set(pst_update, 4, lo_aluno.getTelefone());
-		Set(pst_update, 5, lo_aluno.getCelular());
-		Set(pst_update, 6, lo_aluno.getEmail());
-		Set(pst_update, 7, lo_aluno.getObservacao());
-		Set(pst_update, 8, lo_aluno.getEndereco());
-		Set(pst_update, 9, lo_aluno.getNumero());
-		Set(pst_update, 10, lo_aluno.getComplemento());
-		Set(pst_update, 11, lo_aluno.getBairro());
-		Set(pst_update, 12, lo_aluno.getCidade());
-		Set(pst_update, 13, lo_aluno.getEstado());
-		Set(pst_update, 14, lo_aluno.getPais());
-		Set(pst_update, 15, lo_aluno.getCep());
-		Set(pst_update, 16, lo_aluno.getCodigo_aluno());
-		
+		Set(pst_update, 1, lo_aluno.getData_nascimento());
+		Set(pst_update, 2, lo_aluno.getSexo());
+		Set(pst_update, 3, lo_aluno.getTelefone());
+		Set(pst_update, 4, lo_aluno.getCelular());
+		Set(pst_update, 5, lo_aluno.getEmail());
+		Set(pst_update, 6, lo_aluno.getObservacao());
+		Set(pst_update, 7, lo_aluno.getEndereco());
+		Set(pst_update, 8, lo_aluno.getNumero());
+		Set(pst_update, 9, lo_aluno.getComplemento());
+		Set(pst_update, 10, lo_aluno.getBairro());
+		Set(pst_update, 11, lo_aluno.getCidade());
+		Set(pst_update, 12, lo_aluno.getEstado());
+		Set(pst_update, 13, lo_aluno.getPais());
+		Set(pst_update, 14, lo_aluno.getCep());
+		Set(pst_update, 15, lo_aluno.getAluno());
+
 		pst_update.execute();
 		
 		if (pst_update.getUpdateCount() > 0) {
