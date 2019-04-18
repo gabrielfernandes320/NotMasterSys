@@ -51,7 +51,8 @@ public class ModalityFrm extends JInternalFrame {
 	private JLabel lblGraduate;
 	private JTable tableGraduate;
 	private String idSelecionado;
-	
+	private GraduacoesTableModel model;
+	private boolean IsUpdate;
 	/**
 	 * Launch the application.
 	 */
@@ -137,7 +138,7 @@ public class ModalityFrm extends JInternalFrame {
 		getContentPane().add(lblMessage);
 
 		JPanel	painelFundo = new JPanel();
-		GraduacoesTableModel model = new GraduacoesTableModel();
+		model = new GraduacoesTableModel();
 		painelFundo.setLayout(null);
 		
 		JTable tableGraduation = new JTable(model);
@@ -190,7 +191,6 @@ public class ModalityFrm extends JInternalFrame {
 				lblGraduate.setEnabled(true);
 				btnOk.setEnabled(true);
 				btnSave.setEnabled(true);
-				btnRemove.setEnabled(true);
 				btnAdd.setEnabled(false);
 				txfModality.setEnabled(true);
 				txfGraduation.setEnabled(true);
@@ -200,7 +200,10 @@ public class ModalityFrm extends JInternalFrame {
 		
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				btnRemove.setEnabled(true);
+				btnSave.setEnabled(true);
+				ModalitySearchFrm modalitySearch = new ModalitySearchFrm(ModalityFrm.this);
+				modalitySearch.setVisible(true);
 			}
 		});
 		
@@ -226,11 +229,10 @@ public class ModalityFrm extends JInternalFrame {
 					modalityModel.setModalidade(txfModality.getText());
 					try {
 						modalityDao.Insert(modalityModel);
-						List<Graduacoes> temp = model.getGraduacoes();
-						for(int i=0; i<temp.size();i++) {
+						for(int i=0; i<model.getRowCount();i++) {
 							graduationDao.Insert(model.getGraduacao(i));
 						}
-			
+						
 					}catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -239,8 +241,7 @@ public class ModalityFrm extends JInternalFrame {
 				}catch (SQLException e2) {
 					e2.printStackTrace();
 				}
-				
-			}
+				}
 			}});
 		
 		
@@ -258,11 +259,46 @@ public class ModalityFrm extends JInternalFrame {
 				newGraduation.setId_modality(txfModality.getText());
 				newGraduation.setGraduations(txfGraduation.getText());
 				model.addGraduacao(newGraduation);
+				txfGraduation.setText("");
 			}
 		});
 		
 		
 	}
+	
+	public void Update(final Modalidades p) {
+
+		txfModality.setText(p.getModalidade());
+		updateCampos();
+		IsUpdate = true;
+
+//	while()
+//	cbxModalidade.setSelectedIndex();
+//		
+	}
+	
+	public void updateCampos() {
+		txfModality.setEnabled(false);
+	}
+	
+	public void zerarTable() {
+		model.limpar();
+	}
+	
+	public void clearScreen(){
+		lblModality.setEnabled(false);
+		lblGraduate.setEnabled(false);
+		btnOk.setEnabled(false);
+		btnSave.setEnabled(false);
+		btnRemove.setEnabled(false);
+		btnAdd.setEnabled(true);
+		txfModality.setEnabled(false);
+		txfGraduation.setEnabled(false);
+		txfGraduation.setText("");
+		txfModality.setText("");
+		
+	}
+	
 	public void setPosicao() {
 		Dimension d = this.getDesktopPane().getSize();
 		this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) /2);

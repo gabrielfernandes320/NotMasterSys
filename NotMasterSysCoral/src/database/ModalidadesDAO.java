@@ -17,6 +17,7 @@ public class ModalidadesDAO extends MasterDAO{
 	private String is_delete = "delete from modalidades where modalidade = ?";
 	private String is_selectAll = "select * from modalidades order by modalidade";
 	private String is_selectAllModalidade = "select * from modalidades order by modalidade";
+	private String is_selectAllPesquisa = "select * from modalidades where modalidade like ? order by modalidade";
 	private String is_select = "select * from modalidades where modalidade = ? order by modalidade";
 	private String is_insert = "INSERT INTO modalidades"
 								+" (					"
@@ -31,6 +32,7 @@ public class ModalidadesDAO extends MasterDAO{
 	
 	private PreparedStatement pst_selectAll;
 	private PreparedStatement pst_selectAllModalidade;
+	private PreparedStatement pst_selectAllPesquisa;
 	private PreparedStatement pst_select;
 	private PreparedStatement pst_insert;
 	private PreparedStatement pst_update;
@@ -43,12 +45,32 @@ public class ModalidadesDAO extends MasterDAO{
 		io_connection = connection;
 		pst_selectAll = connection.prepareStatement(is_selectAll);
 		pst_selectAllModalidade = connection.prepareStatement(is_selectAllModalidade);
+		pst_selectAllPesquisa = connection.prepareStatement(is_selectAllPesquisa);
 		pst_select = connection.prepareStatement(is_select);
 		pst_insert = connection.prepareStatement(is_insert);	
 		pst_delete = connection.prepareStatement(is_delete);
 		pst_update = connection.prepareStatement(is_update);
 		
+		
 	}
+	
+	public List<Modalidades> SelectAll(final String pesquisa) throws SQLException {
+		List<Modalidades> arlModalidade = new ArrayList<Modalidades>();
+		
+		Set(pst_selectAllPesquisa, 1, "%"+pesquisa+"%");
+		
+		ResultSet rst = pst_selectAllPesquisa.executeQuery();
+		 
+		while(rst.next()){
+			 Modalidades model = new Modalidades();
+			 
+			 model.setModalidade(rst.getString("modalidade"));
+			  arlModalidade.add(model);
+		 }
+				
+		return arlModalidade;
+	}
+	
 
 	@Override
 	public List<Object> SelectAll() throws SQLException {
