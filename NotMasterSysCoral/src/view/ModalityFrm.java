@@ -51,7 +51,7 @@ public class ModalityFrm extends JInternalFrame {
 	private JLabel lblGraduate;
 	private JTable tableGraduate;
 	private String idSelecionado;
-	Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+	
 	/**
 	 * Launch the application.
 	 */
@@ -148,6 +148,8 @@ public class ModalityFrm extends JInternalFrame {
 		painelFundo.setBounds(10, 106, 439, 147);
 		getContentPane().add(painelFundo);
 		
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		
 		tableGraduation.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
 
@@ -209,10 +211,9 @@ public class ModalityFrm extends JInternalFrame {
 				if( (txfModality.getText()).isEmpty() ) {
 					JOptionPane.showMessageDialog(null,"O campo da Modalidade deve ser preenchido!");
 				}
-//				else if(true) {
-//					to do check graduations
-//				}
-				else {
+				else if(model.isEmpty()) {
+					JOptionPane.showMessageDialog(null,"Deve ser cadastrada pelos uma graduaçao.");
+				}else {
 					
 				try {
 					conn.setAutoCommit(false);
@@ -220,20 +221,20 @@ public class ModalityFrm extends JInternalFrame {
 					
 					Modalidades modalityModel = new Modalidades();
 					ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
+					GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
 					
 					modalityModel.setModalidade(txfModality.getText());
 					try {
 						modalityDao.Insert(modalityModel);
+						List<Graduacoes> temp = model.getGraduacoes();
+						for(int i=0; i<temp.size();i++) {
+							graduationDao.Insert(model.getGraduacao(i));
+						}
+			
 					}catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					
-					
-					List <GraduacoesDAO> graduationsModel = new ArrayList<GraduacoesDAO>();
-					GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
-					
-					
-					
+				
 					
 				}catch (SQLException e2) {
 					e2.printStackTrace();
@@ -253,6 +254,10 @@ public class ModalityFrm extends JInternalFrame {
 		
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Graduacoes newGraduation = new Graduacoes();
+				newGraduation.setId_modality(txfModality.getText());
+				newGraduation.setGraduations(txfGraduation.getText());
+				model.addGraduacao(newGraduation);
 			}
 		});
 		

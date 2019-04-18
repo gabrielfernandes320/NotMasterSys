@@ -15,15 +15,15 @@ public class GraduacoesDAO extends MasterDAO{
 		private String is_selectAll = "select * from graduacoes order by graduacoes";
 		private String is_select = "select * from graduacoes where graduacao = ? and modalidade = ? order by graduacoes";
 		private String is_insert = "INSERT INTO graduacoes		"
-									+"	(			"
-									+"			modalidade,		"
-									+"			graduacao		"
-									+"	)						"
-									+"	VALUES					"	
-									+"	(						"
-									+"				?,			"	
-									+"				?"	
-									+"	)";
+									+" (					"
+									+"		modalidade,		"
+									+"		graduacao		"
+									+" )					"
+									+"	VALUES				"	
+									+" (					"
+									+"			?,			"	
+									+"			?"	
+									+" )";
 		private String is_update = "UPDATE graduacoes"
 								 + " SET graduacao = ? where graduacoes = ?";
 		

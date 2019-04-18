@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Graduacoes {
 	
-	private String id_modality;
 	private String graduations;
+	private String id_modality;
 	
 	public String getGraduations() {
 		return graduations;

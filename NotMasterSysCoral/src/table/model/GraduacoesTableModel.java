@@ -14,6 +14,11 @@ public class GraduacoesTableModel extends AbstractTableModel {
 	private List<Graduacoes> graduacoes;
 	private String[] colunas = new String[] {"Graduacoes"};
 	
+	public List<Graduacoes> getGraduacoes() {
+		return graduacoes;
+	}
+
+
 	public GraduacoesTableModel(List<Graduacoes> graduation) {
 		this.graduacoes = graduation;
 	}
@@ -71,7 +76,7 @@ public class GraduacoesTableModel extends AbstractTableModel {
 		String valueObject = null;
 		switch (columnIndex) {
 		case 0:
-			valueObject = graduacaoSelecionada.getId_modality();
+			valueObject = graduacaoSelecionada.getGraduations();
 			break;
 		case 1:
 			valueObject = graduacaoSelecionada.getGraduations();

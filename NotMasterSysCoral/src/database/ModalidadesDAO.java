@@ -18,14 +18,14 @@ public class ModalidadesDAO extends MasterDAO{
 	private String is_selectAll = "select * from modalidades order by modalidade";
 	private String is_selectAllModalidade = "select * from modalidades order by modalidade";
 	private String is_select = "select * from modalidades where modalidade = ? order by modalidade";
-	private String is_insert = "INSERT INTO modalidades	"
+	private String is_insert = "INSERT INTO modalidades"
 								+" (					"
-								+"		modalidade,		"
-								+"	)					"
+								+"		modalidade		"
+								+" )					"
 								+"	VALUES				"
-								+"	(					"
+								+" (					"
 								+"		?"
-								+"	)";
+								+" )";
 	private String is_update = "UPDATE public.modalidades\r\n" + 
 							"   SET modalidade=?";
 	
