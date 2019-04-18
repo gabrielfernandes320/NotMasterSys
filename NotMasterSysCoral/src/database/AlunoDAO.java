@@ -18,10 +18,10 @@ public class AlunoDAO extends MasterDAO {
 	private String is_update = "UPDATE alunos\r\n" + 
 			"   SET data_nascimento=?, sexo=?, telefone=?, \r\n" + 
 			"       celular=?, email=?, observacao=?, endereco=?, numero=?, complemento=?, \r\n" + 
-			"       bairro=?, cidade=?, estado=?, pais=?, cep=?\r\n" + 
+			"       bairro=?, cidade=?, estado=?, pais=?, cep=? \r\n" + 
 			" WHERE aluno=?";
 	private String is_selectAll = "select * from alunos order by aluno";
-	private String is_delete = "delete from alunos where aluno =? and email=? ";
+	private String is_delete = "delete from alunos where aluno =?";
 	private String is_select = "select * from alunos where aluno = ? order by aluno";
 	private String is_insert = "INSERT INTO alunos			"
 								+"	(						" 
@@ -224,10 +224,10 @@ public class AlunoDAO extends MasterDAO {
         Aluno lo_aluno = (Aluno)parameter;
 
         Set(pst_delete, 1, lo_aluno.getAluno());
-        Set(pst_delete, 2, lo_aluno.getEmail());
 
         affectedrows = pst_delete.executeUpdate();
-
+        io_connection.commit();
+        
         return affectedrows;
 
     }
