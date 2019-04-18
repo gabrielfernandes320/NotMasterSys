@@ -51,7 +51,6 @@ public class StudentFrm extends JInternalFrame {
 	private JTextField AdressNumField;
 	private JTextField CityField;
 	private JTextField CountryField;
-	private JTextField IdField;
 
 	/**
 	 * Create the frame.
@@ -240,16 +239,6 @@ public class StudentFrm extends JInternalFrame {
 		EnderecoPanel.add(CountryField);
 		CountryField.setColumns(10);
 		
-		JLabel lblNewLabel_5 = new JLabel("Cod:");
-		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel_5.setBounds(292, 79, 46, 14);
-		getContentPane().add(lblNewLabel_5);
-		
-		IdField = new JTextField();
-		IdField.setBounds(351, 76, 86, 20);
-		getContentPane().add(IdField);
-		IdField.setColumns(10);
-		
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		JFormattedTextField BirthdateField = new JFormattedTextField(df);
 		BirthdateField.setBounds(138, 101, 115, 20);
@@ -295,15 +284,17 @@ public class StudentFrm extends JInternalFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				try {
+					
 					conn.setAutoCommit(false);
 				
-					java.util.Date modelDate = df.parse(BirthdateField.getText());
 					AlunoDAO dao = new AlunoDAO(conn);
 					Aluno model = new Aluno();
+					
+					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+					Date data = new Date(format.parse(BirthdateField.getText()).getTime());
 						
-					model.setCodigo_aluno(IdField.getText());
 					model.setAluno(StudentField.getText());
-					model.setData_nascimento(modelDate);
+					model.setData_nascimento(data);
 					model.setTelefone(TelephoneField.getText());
 					model.setCelular(PhoneField.getText());
 					model.setEmail(EmailField.getText());
@@ -321,12 +312,12 @@ public class StudentFrm extends JInternalFrame {
 					//CHECANDO SE SEXO ESTÁ NULO
 					if(SexCmb.getSelectedItem()=="Masculino") {
 						
-						model.setSexo('m');
+						model.setSexo('M');
 						
 					}
 					else if (SexCmb.getSelectedItem()=="Feminino") {
 						
-						model.setSexo('f');
+						model.setSexo('F');
 						
 					}
 					else
@@ -335,7 +326,9 @@ public class StudentFrm extends JInternalFrame {
 					
 						try {
 							dao.Insert(model);
+							JOptionPane.showMessageDialog(null, "Sucesso! Aluno Cadastrado");
 						} catch (SQLException e1) {
+							JOptionPane.showMessageDialog(null, "Erro no Cadastro! Verifique os campos novamente!");
 							e1.printStackTrace();
 						}
 				} catch (SQLException | ParseException e1) {

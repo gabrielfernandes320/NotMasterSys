@@ -182,22 +182,21 @@ public class AlunoDAO extends MasterDAO {
 		
 		Aluno lo_aluno = (Aluno)parameter;
 		
-		Set(pst_insert, 1, lo_aluno.getCodigo_aluno());
-		Set(pst_insert, 2, lo_aluno.getAluno());
-		Set(pst_insert, 3, lo_aluno.getData_nascimento());
-		Set(pst_insert, 4, lo_aluno.getSexo());
-		Set(pst_insert, 5, lo_aluno.getTelefone());
-		Set(pst_insert, 6, lo_aluno.getCelular());
-		Set(pst_insert, 7, lo_aluno.getEmail());
-		Set(pst_insert, 8, lo_aluno.getObservacao());
-		Set(pst_insert, 9, lo_aluno.getEndereco());
-		Set(pst_insert, 10, lo_aluno.getNumero());
-		Set(pst_insert, 11, lo_aluno.getComplemento());
-		Set(pst_insert, 12, lo_aluno.getBairro());
-		Set(pst_insert, 13, lo_aluno.getCidade());
-		Set(pst_insert, 14, lo_aluno.getEstado());
-		Set(pst_insert, 15, lo_aluno.getPais());
-		Set(pst_insert, 16, lo_aluno.getCep());
+		Set(pst_insert, 1, lo_aluno.getAluno());
+		Set(pst_insert, 2, lo_aluno.getData_nascimento());
+		Set(pst_insert, 3, lo_aluno.getSexo());
+		Set(pst_insert, 4, lo_aluno.getTelefone());
+		Set(pst_insert, 5, lo_aluno.getCelular());
+		Set(pst_insert, 6, lo_aluno.getEmail());
+		Set(pst_insert, 7, lo_aluno.getObservacao());
+		Set(pst_insert, 8, lo_aluno.getEndereco());
+		Set(pst_insert, 9, lo_aluno.getNumero());
+		Set(pst_insert, 10, lo_aluno.getComplemento());
+		Set(pst_insert, 11, lo_aluno.getBairro());
+		Set(pst_insert, 12, lo_aluno.getCidade());
+		Set(pst_insert, 13, lo_aluno.getEstado());
+		Set(pst_insert, 14, lo_aluno.getPais());
+		Set(pst_insert, 15, lo_aluno.getCep());
 		
 		pst_insert.execute();
 		
