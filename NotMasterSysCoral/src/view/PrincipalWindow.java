@@ -17,6 +17,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import model.Usuario;
+
 public class PrincipalWindow extends JFrame {
 
 	/**
@@ -45,12 +47,12 @@ public class PrincipalWindow extends JFrame {
 
 	JLabel lbUsuarioHora;
 
-	public PrincipalWindow() {
+	public PrincipalWindow(Usuario user) {
 		// Define o tamanho da janela.
 		setSize(800, 600);
 		setMinimumSize(new Dimension(800, 600));
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
-
+		
 		// Define o titulo da janela.
 		setTitle("Menu Principal");
 
@@ -232,9 +234,4 @@ public class PrincipalWindow extends JFrame {
 
 	}
 
-	public static void main(String[] args) {
-
-		new PrincipalWindow().setVisible(true);
-
-	}
 }

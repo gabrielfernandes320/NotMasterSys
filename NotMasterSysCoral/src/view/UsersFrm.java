@@ -80,6 +80,7 @@ public class UsersFrm extends JInternalFrame {
 		getContentPane().add(btnAdicionar);
 		
 		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.setEnabled(false);
 		
 		btnSalvar.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/salvar.png")));
 		btnSalvar.setPreferredSize(new Dimension(40, 25));
@@ -97,19 +98,23 @@ public class UsersFrm extends JInternalFrame {
 		getContentPane().add(btnRemover);
 		
 		tbUser = new JTextField();
+		tbUser.setEnabled(false);
 		tbUser.setBounds(135, 53, 271, 20);
 		getContentPane().add(tbUser);
 		tbUser.setColumns(10);
 		
 		tbPassword = new JPasswordField();
+		tbPassword.setEnabled(false);
 		tbPassword.setBounds(135, 84, 270, 20);
 		getContentPane().add(tbPassword);
 		
 		tbConfirmPassword = new JPasswordField();
+		tbConfirmPassword.setEnabled(false);
 		tbConfirmPassword.setBounds(135, 115, 270, 20);
 		getContentPane().add(tbConfirmPassword);
 		
 		JComboBox cbProfile = new JComboBox();
+		cbProfile.setEnabled(false);
 		cbProfile.setModel(new DefaultComboBoxModel(new String[] {"Cadastral", "Matricular", "Financeiro", "Completo"}));
 		cbProfile.setBounds(135, 146, 270, 20);
 		getContentPane().add(cbProfile);
@@ -169,11 +174,14 @@ public class UsersFrm extends JInternalFrame {
 		});
 					
 		btnAdicionar.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
-							
-							
-							
-						}
+				btnSalvar.setEnabled(true);
+				tbUser.setEnabled(true);
+				tbPassword.setEnabled(true);
+				tbConfirmPassword.setEnabled(true);
+				cbProfile.setEnabled(true);		
+			}
 		});
 		
 		model = new UsuariosTableModel();

@@ -14,7 +14,7 @@ public class UsuarioDAO extends MasterDAO {
 	
 	// Cria as variaveis contendo o select a ser feito.
 		private String is_selectAll = "select * from usuarios order by usuario";
-		private String is_select = "select * from usuarios where usuario = ? and perfil = ? order by usuario";
+		private String is_select = "select * from usuarios where usuario = ? order by usuario";
 		private String is_insert = "INSERT INTO usuarios			"
 									+"(usuario,"
 									+"perfil)"
@@ -92,7 +92,6 @@ public class UsuarioDAO extends MasterDAO {
 				
 				// Seta os parametros.
 				Set(pst_select, 1, ((Usuario)parameter).getUsuario());
-				Set(pst_select, 2, ((Usuario)parameter).getPerfil());
 				
 				ResultSet rst = pst_select.executeQuery();
 				
