@@ -52,7 +52,8 @@ public class ModalityFrm extends JInternalFrame {
 	private JTable tableGraduate;
 	private String idSelecionado;
 	private GraduacoesTableModel model;
-	private boolean IsUpdate;
+	private boolean IsUpdate = false;
+	private List<Graduacoes> newGraduations = new ArrayList<Graduacoes>();
 	/**
 	 * Launch the application.
 	 */
@@ -78,6 +79,7 @@ public class ModalityFrm extends JInternalFrame {
 		setBounds(100, 100, 475, 318);
 		getContentPane().setLayout(null);
 		
+		
 		JButton btnSearch = new JButton("Buscar");
 		btnSearch.setBackground(SystemColor.menu);
 		btnSearch.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/localizar.png")));
@@ -100,23 +102,23 @@ public class ModalityFrm extends JInternalFrame {
 		getContentPane().add(btnSave);
 		
 		JLabel lblModality = new JLabel("Modalidade:");
-		lblModality.setEnabled(false);
+		lblModality.setEnabled(true);
 		lblModality.setBounds(10, 54, 72, 22);
 		getContentPane().add(lblModality);
 		
 		JLabel lblGraduate = new JLabel(" Gradua\u00E7\u00E3o:");
-		lblGraduate.setEnabled(false);
+		lblGraduate.setEnabled(true);
 		lblGraduate.setBounds(10, 81, 72, 14);
 		getContentPane().add(lblGraduate);
 		
 		txfModality = new JTextField();
-		txfModality.setEnabled(false);
+		txfModality.setEditable(false);
 		txfModality.setBounds(92, 55, 357, 20);
 		getContentPane().add(txfModality);
 		txfModality.setColumns(10);
 		
 		txfGraduation = new JTextField();
-		txfGraduation.setEnabled(false);
+		txfGraduation.setEditable(false);
 		txfGraduation.setBounds(92, 78, 299, 20);
 		getContentPane().add(txfGraduation);
 		txfGraduation.setColumns(10);
@@ -186,25 +188,29 @@ public class ModalityFrm extends JInternalFrame {
 				
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				lblModality.setEnabled(true);
-				lblGraduate.setEnabled(true);
+				btnSearch.setEnabled(true);
 				btnOk.setEnabled(true);
 				btnSave.setEnabled(true);
 				btnAdd.setEnabled(false);
-				txfModality.setEnabled(true);
-				txfGraduation.setEnabled(true);
+				txfModality.setEditable(true);
+				txfGraduation.setEditable(true);
+				txfModality.setText("");
+				model.limpar();
 				
 			}
 		});
 		
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				btnRemove.setEnabled(true);
-				btnSave.setEnabled(true);
 				ModalitySearchFrm modalitySearch = new ModalitySearchFrm(ModalityFrm.this);
 				modalitySearch.setVisible(true);
-			}
+				btnRemove.setEnabled(true);
+				btnSave.setEnabled(true);
+				btnAdd.setEnabled(true);
+				btnOk.setEnabled(true);
+				btnSearch.setEnabled(false);
+				txfGraduation.setEditable(true);
+				}
 		});
 		
 		
@@ -218,30 +224,69 @@ public class ModalityFrm extends JInternalFrame {
 					JOptionPane.showMessageDialog(null,"Deve ser cadastrada pelos uma graduaçao.");
 				}else {
 					
-				try {
-					conn.setAutoCommit(false);
-					System.out.println("Conectado com sucesso!");
-					
-					Modalidades modalityModel = new Modalidades();
-					ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
-					GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
-					
-					modalityModel.setModalidade(txfModality.getText());
-					try {
-						modalityDao.Insert(modalityModel);
-						for(int i=0; i<model.getRowCount();i++) {
-							graduationDao.Insert(model.getGraduacao(i));
-						}
+					if(IsUpdate) {
+						try {
+							conn.setAutoCommit(false);
+							System.out.println("Conectado com sucesso!");
+							
+							GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
+							
+							try {
+							
+								for(int i = 0 ; i< newGraduations.size() ;i++) {
+									
+									graduationDao.Insert(newGraduations.get(i));
+									}
+									newGraduations.clear();
+								
+							}catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+							
+					}catch (SQLException e2) {
+						e2.printStackTrace();
+					}
+						JOptionPane.showMessageDialog(null,"Salvo com sucesso!");
 						
-					}catch (SQLException e1) {
-						e1.printStackTrace();
+					}else {
+						try {
+							conn.setAutoCommit(false);
+							System.out.println("Conectado com sucesso!");
+							
+							Modalidades modalityModel = new Modalidades();
+							ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
+							GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
+							
+							modalityModel.setModalidade(txfModality.getText());
+							try {
+								modalityDao.Insert(modalityModel);
+								for(int i=0; i<model.getRowCount();i++) {
+									graduationDao.Insert(model.getGraduacao(i));
+								}
+								
+							}catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						
+							
+						}catch (SQLException e2) {
+							e2.printStackTrace();
+						}
+						JOptionPane.showMessageDialog(null,"Salvo com sucesso!");
+					  }
 					}
 				
-					
-				}catch (SQLException e2) {
-					e2.printStackTrace();
-				}
-				}
+				btnOk.setEnabled(false);
+				btnSave.setEnabled(false);
+				btnRemove.setEnabled(false);
+				btnSearch.setEnabled(true);
+				txfModality.setEditable(false);
+				txfGraduation.setEditable(false);
+				txfGraduation.setText("");
+				txfModality.setText("");
+				IsUpdate = false;
+				model.limpar();
+				
 			}});
 		
 		
@@ -249,9 +294,36 @@ public class ModalityFrm extends JInternalFrame {
 			public void actionPerformed(ActionEvent e) {
 				if( (txfModality.getText()).isEmpty() ) {
 					JOptionPane.showMessageDialog(null,"Uma modalidade deve ser selecionada!");
+				}else {
+					Modalidades modalityModel = new Modalidades();
+					modalityModel.setModalidade(txfModality.getText().toString());
+					
+						try {
+							ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
+							GraduacoesDAO  graduationDao = new GraduacoesDAO(conn);
+							
+							for(int i = 0; i < model.getRowCount(); i++) {
+								graduationDao.Delete(model.getGraduacao(i));
+							}
+							modalityDao.Delete(modalityModel);
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						JOptionPane.showMessageDialog(null,"Deletado com sucesso!");
 				}
-			}
-		});
+				btnOk.setEnabled(false);
+				btnSave.setEnabled(false);
+				btnRemove.setEnabled(false);
+				btnSearch.setEnabled(true);
+				txfModality.setEditable(false);
+				txfGraduation.setEditable(false);
+				txfGraduation.setText("");
+				txfModality.setText("");
+				IsUpdate = false;
+				model.limpar();
+			}});
 		
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -260,15 +332,21 @@ public class ModalityFrm extends JInternalFrame {
 				newGraduation.setGraduations(txfGraduation.getText());
 				model.addGraduacao(newGraduation);
 				txfGraduation.setText("");
+				newGraduations.add(newGraduation);
+				
 			}
 		});
 		
 		
 	}
 	
-	public void Update(final Modalidades p) {
+	
+	
+	public void Update(final Modalidades p, final List<Graduacoes> graduation) {
 
 		txfModality.setText(p.getModalidade());
+		model.limpar();
+		model.addListaDeGraduacoes(graduation);
 		updateCampos();
 		IsUpdate = true;
 
@@ -278,26 +356,15 @@ public class ModalityFrm extends JInternalFrame {
 	}
 	
 	public void updateCampos() {
-		txfModality.setEnabled(false);
+		txfModality.setEnabled(true);
+		txfGraduation.setEditable(true);
+		IsUpdate = true;
 	}
 	
 	public void zerarTable() {
 		model.limpar();
 	}
 	
-	public void clearScreen(){
-		lblModality.setEnabled(false);
-		lblGraduate.setEnabled(false);
-		btnOk.setEnabled(false);
-		btnSave.setEnabled(false);
-		btnRemove.setEnabled(false);
-		btnAdd.setEnabled(true);
-		txfModality.setEnabled(false);
-		txfGraduation.setEnabled(false);
-		txfGraduation.setText("");
-		txfModality.setText("");
-		
-	}
 	
 	public void setPosicao() {
 		Dimension d = this.getDesktopPane().getSize();

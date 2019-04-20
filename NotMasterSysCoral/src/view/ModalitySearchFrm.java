@@ -15,8 +15,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import database.ConnectionFactory;
+import database.GraduacoesDAO;
 import database.ModalidadesDAO;
 import database.PlanosDAO;
+import model.Graduacoes;
 import model.Modalidades;
 import model.Plano;
 import table.model.ModalidadeTableModel;
@@ -26,6 +28,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.SystemColor;
@@ -83,7 +88,7 @@ public class ModalitySearchFrm extends JDialog {
 		btnAtualizar.setBackground(SystemColor.menu);
 				btnAtualizar.setBounds(312, 10, 89, 23);
 		getContentPane().add(btnAtualizar);
-		
+		txfSearch.setText("");
 		JPanel painelFundo;
 
 		painelFundo = new JPanel();
@@ -113,14 +118,19 @@ public class ModalitySearchFrm extends JDialog {
 		            System.out.println(" double click" );
 		            
 		            Modalidades p = new Modalidades();
+		            List<Graduacoes> graduationList = new ArrayList<>();
 		            p.setModalidade(tabela.getValueAt(tabela.getSelectedRow(), 0).toString());
+		            try {
+						GraduacoesDAO graduationDAO = new GraduacoesDAO(conn);
+						graduationList = graduationDAO.SelectAll(p.getModalidade().toString());
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 		            
-		            window.Update(p);
+		            window.Update(p,graduationList);
 		           	dispose();
 		           	
-		           	
-		           	
-		            
 		            }
 		         }
 		        } );
@@ -128,10 +138,8 @@ public class ModalitySearchFrm extends JDialog {
 		btnAtualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				zerarTodos();
-				txfSearch.setText("");
 				try {
-					//// ??????????
-
+					
 					model.addListaDeModalidades(new ModalidadesDAO(conn).SelectAll(txfSearch.getText().toString()));
 				
 				} catch (Exception e1) {
@@ -145,9 +153,6 @@ public class ModalitySearchFrm extends JDialog {
 		});
 
 	}
-	public void mostrarTodos() {
-			}
-
 	public void zerarTodos() {
 		model.limpar();
 	}

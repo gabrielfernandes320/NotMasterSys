@@ -13,7 +13,8 @@ import model.Modalidades;
 public class GraduacoesDAO extends MasterDAO{
 		private String is_delete = "delete from graduacoes where graduacao = ?";
 		private String is_selectAll = "select * from graduacoes order by graduacoes";
-		private String is_select = "select * from graduacoes where graduacao = ? and modalidade = ? order by graduacoes";
+		private String is_selectAllgraduationsByModality = "select * from graduacoes where modalidade =?";
+		private String is_select = "select * from graduacoes where graduacao = ? and modalidade = ?";
 		private String is_insert = "INSERT INTO graduacoes		"
 									+" (					"
 									+"		modalidade,		"
@@ -28,6 +29,7 @@ public class GraduacoesDAO extends MasterDAO{
 								 + " SET graduacao = ? where graduacoes = ?";
 		
 		private PreparedStatement pst_selectAll;
+		private PreparedStatement pst_selectAllgraduationsByModality;
 		private PreparedStatement pst_select;
 		private PreparedStatement pst_insert;
 		private PreparedStatement pst_update;
@@ -43,8 +45,28 @@ public class GraduacoesDAO extends MasterDAO{
 		pst_insert = connection.prepareStatement(is_insert);	
 		pst_delete = connection.prepareStatement(is_delete);
 		pst_update = connection.prepareStatement(is_update);
+		pst_selectAllgraduationsByModality = connection.prepareStatement(is_selectAllgraduationsByModality);
 		
 	}
+	
+	public List<Graduacoes> SelectAll(final String pesquisa) throws SQLException {
+		List<Graduacoes> arlgraduacao = new ArrayList<Graduacoes>();
+		
+		Set(pst_selectAllgraduationsByModality, 1, pesquisa);
+		
+		ResultSet rst = pst_selectAllgraduationsByModality.executeQuery();
+		 
+		while(rst.next()){
+			Graduacoes model = new Graduacoes();
+			 
+			 model.setId_modality(rst.getString("modalidade"));
+			 model.setGraduations(rst.getString("graduacao"));
+			 arlgraduacao.add(model);
+		 }
+				
+		return arlgraduacao;
+	}
+	
 	
 	
 	@Override
