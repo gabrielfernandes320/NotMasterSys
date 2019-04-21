@@ -22,6 +22,8 @@ import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import javax.swing.JTextField;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class LoginFrm extends JFrame {
 
@@ -50,13 +52,13 @@ public class LoginFrm extends JFrame {
 	 */
 	public LoginFrm() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 327, 212);
+		setBounds(100, 100, 327, 141);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(193, 110, 108, 45);
+		JButton btnNewButton = new JButton("Ok");
+		btnNewButton.setBounds(193, 32, 108, 45);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Usuario user = new Usuario();
@@ -81,13 +83,23 @@ public class LoginFrm extends JFrame {
 		contentPane.add(btnNewButton);
 		
 		tbUser = new JTextField();
-		tbUser.setBounds(33, 135, 150, 20);
+		tbUser.setBounds(59, 57, 124, 20);
 		contentPane.add(tbUser);
 		tbUser.setColumns(10);
 		
 		tbPassword = new JTextField();
-		tbPassword.setBounds(33, 110, 149, 20);
+		tbPassword.setBounds(59, 32, 124, 20);
 		contentPane.add(tbPassword);
 		tbPassword.setColumns(10);
+		
+		JLabel lblUsuario = new JLabel("Usuario:");
+		lblUsuario.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblUsuario.setBounds(10, 32, 54, 14);
+		contentPane.add(lblUsuario);
+		
+		JLabel lblSenha = new JLabel("Senha:");
+		lblSenha.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblSenha.setBounds(10, 59, 54, 14);
+		contentPane.add(lblSenha);
 	}
 }

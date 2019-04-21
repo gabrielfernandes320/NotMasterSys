@@ -11,6 +11,7 @@ import java.awt.event.HierarchyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -186,6 +187,9 @@ public class PrincipalWindow extends JFrame {
 		
 		//Cadastro
 //		
+		
+		
+		
 		itemModalidadesCad.addActionListener(new ActionListener() {
 			
 			@Override
@@ -233,5 +237,33 @@ public class PrincipalWindow extends JFrame {
 		add(desktopPane);
 
 	}
+	
+	private boolean JanelaVerificar(String ls_nome)
+	{
+		//
+		// Pega todas as janelas existentes no Desktop Pane
+		//
+		JInternalFrame[] la_janelas = desktopPane.getAllFrames();
+		
+		//
+		// Varre o array das janelas
+		//
+		for	(JInternalFrame lo_frame : la_janelas) {
+			
+			//
+			// Se encontrou a janela.
+			//
+			if	(lo_frame.getName().equalsIgnoreCase(ls_nome)) {
+				return true;
+			}
+		}
+		
+		//
+		// Se não encontrou a janela
+		//
+		return false;
+	}
+	
+	
 
 }
