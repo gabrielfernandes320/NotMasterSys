@@ -62,6 +62,13 @@ public class UsersFrm extends JInternalFrame {
 			}
 		});
 	}
+	
+	private boolean CheckEmptyFields(){
+		if(tbUser.getText().isEmpty() || tbPassword.getPassword().length == 0 || tbConfirmPassword.getPassword().length == 0) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Create the frame.
@@ -89,6 +96,7 @@ public class UsersFrm extends JInternalFrame {
 		getContentPane().add(btnSalvar);
 		
 		JButton btnRemover = new JButton("Remover");
+		btnRemover.setEnabled(false);
 		
 		
 		btnRemover.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/remover.png")));
@@ -151,6 +159,18 @@ public class UsersFrm extends JInternalFrame {
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					
+					if(CheckEmptyFields() == true) {
+						JOptionPane.showMessageDialog(null,"Por favor preencha todos os campos!","Erro campos", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+					btnSalvar.setEnabled(false);
+					btnAdicionar.setEnabled(true);
+					btnBuscar.setEnabled(true);
+					tbUser.setEnabled(false);
+					tbPassword.setEnabled(false);
+					tbConfirmPassword.setEnabled(false);
+					
 					conn.setAutoCommit(false);
 					System.out.println("Conectado com sucesso!");
 
@@ -161,12 +181,19 @@ public class UsersFrm extends JInternalFrame {
 					usuario.setUsuario(tbUser.getText());
 					usuario.setPassword(tbPassword.getText());
 				try {
+					if(dao.Select(usuario) != null) {
+						JOptionPane.showMessageDialog(null,"Este usuario ja existe.","Erro campos", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
 					dao.CreateRole(usuario);
-					JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!");
+					JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!","",JOptionPane.INFORMATION_MESSAGE);
+					}
 				} catch (SQLException e1) {
+					
 					e1.printStackTrace();
 				  }
 				
+					}
 				    } catch (SQLException e1) {
 					 e1.printStackTrace();
 				      } 
@@ -174,9 +201,11 @@ public class UsersFrm extends JInternalFrame {
 		});
 					
 		btnAdicionar.addActionListener(new ActionListener() {
-			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				btnSalvar.setEnabled(true);
+				btnBuscar.setEnabled(false);
+				btnRemover.setEnabled(false);
+				btnAdicionar.setEnabled(false);
 				tbUser.setEnabled(true);
 				tbPassword.setEnabled(true);
 				tbConfirmPassword.setEnabled(true);
@@ -194,6 +223,11 @@ public class UsersFrm extends JInternalFrame {
 		
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+					btnRemover.setEnabled(true);
+					tbUser.setEnabled(true);
+					tbPassword.setEnabled(true);
+					tbConfirmPassword.setEnabled(true);
+					
 					try {
 						conn.setAutoCommit(false);
 						System.out.println("Conectado com sucesso!");
@@ -219,25 +253,19 @@ public class UsersFrm extends JInternalFrame {
 		 tabela.setCellSelectionEnabled(true);
 		    ListSelectionModel cellSelectionModel = tabela.getSelectionModel();
 		    cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		    
-		   
-		    
-						
-				
-
-				
-					
+		    		
 		btnRemover.addActionListener(new ActionListener() {	
 			public void actionPerformed(ActionEvent e) {
 				try {
 					conn.setAutoCommit(false);
 				
+					if(CheckEmptyFields() == true) {
+						JOptionPane.showMessageDialog(null,"Por favor preencha todos os campos!","Erro campos", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
 					UsuarioDAO dao = new UsuarioDAO(conn);
-					System.out.println("aqui foi");
 					Usuario usuario = new Usuario();
-					System.out.println("aqui tmb");
 				
-						usuario.setPerfil(cbProfile.getSelectedItem().toString());
 						usuario.setUsuario(tbUser.getText());
 							try {
 								dao.Delete(usuario);
@@ -246,12 +274,16 @@ public class UsersFrm extends JInternalFrame {
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
+					}
+							
 				} catch (SQLException e1) {
 					e1.printStackTrace();
-				}
+				  }
 						}
 						
-					});
+			});
+		
+		
 						
 				
 			}
