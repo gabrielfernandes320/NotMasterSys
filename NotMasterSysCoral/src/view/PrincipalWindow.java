@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
+import java.beans.PropertyVetoException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
@@ -45,6 +46,7 @@ public class PrincipalWindow extends JFrame {
 	JMenuItem itemGFFaturamentoProc;
 	JMenuItem itemCFFaturamentoProc;
 	JMenuItem itemGPFaturamentoProc;
+	UsersFrm us;
 
 	JLabel lbUsuarioHora;
 
@@ -58,7 +60,7 @@ public class PrincipalWindow extends JFrame {
 		setTitle("Menu Principal");
 
 		// Seta o layout a ser utilizado (NULL significa que n�o ir� utilizar nenhum).
-		setLayout(null);
+		getContentPane().setLayout(null);
 
 		// Define que n�o poder� ser alterado as dimens�es da tela.
 		setResizable(true);
@@ -70,6 +72,7 @@ public class PrincipalWindow extends JFrame {
 		setLocationRelativeTo(null);
 
 		criarComponentes();
+		AcessController(user);
 	}
 
 	private void criarComponentes() {
@@ -160,6 +163,7 @@ public class PrincipalWindow extends JFrame {
 		menuBar.add(menuProcessos);
 		menuBar.add(menuUtilitarios);
 		menuBar.add(menuAjuda);
+		
 
 		//A��es para os item abaixo
 		//Sistema
@@ -167,10 +171,29 @@ public class PrincipalWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				UsersFrm us = new UsersFrm();
-				us.setLocation(1, 1);
-				desktopPane.add(us);
-				us.setVisible(true);
+				if (JanelaVerificar(UsersFrm.class.getName())) {
+					JanelaFocar(us);
+				}
+				else {
+					us = new UsersFrm();
+					us.setName(UsersFrm.class.getName());
+					us.setLocation(1, 1);
+					desktopPane.add(us);
+					us.setVisible(true);
+				}
+				
+				
+			}
+
+			private void JanelaFocar(UsersFrm us) {
+				try
+				{
+					us.setSelected(true);
+				}
+				catch	(PropertyVetoException	ex) {
+					ex.printStackTrace();
+				}
+				
 			}
 		});
 		
@@ -234,7 +257,7 @@ public class PrincipalWindow extends JFrame {
 		});
 		
 		setJMenuBar(menuBar);
-		add(desktopPane);
+		getContentPane().add(desktopPane);
 
 	}
 	
@@ -264,6 +287,38 @@ public class PrincipalWindow extends JFrame {
 		return false;
 	}
 	
+	private void AcessController(Usuario user){
+		switch (user.getPerfil()) {
+		case "Cadastral":
+			menuBar.getMenu(0).setEnabled(false);
+			menuBar.getMenu(2).setEnabled(false);
+			menuBar.getMenu(3).setEnabled(false);
+			break;
+			
+		case "Matricular":
+			menuBar.getMenu(0).setEnabled(false);
+			menuBar.getMenu(1).setEnabled(false);
+			menuBar.getMenu(3).setEnabled(false);	
+			break;
+			
+		case "Completo":
+			menuBar.getMenu(0).setEnabled(true);
+			menuBar.getMenu(1).setEnabled(true);
+			menuBar.getMenu(2).setEnabled(true);
+			menuBar.getMenu(3).setEnabled(true);
+			menuBar.getMenu(4).setEnabled(true);
+			break;
+			
+		case "Financeiro":
+			menuBar.getMenu(0).setEnabled(false);
+			menuBar.getMenu(1).setEnabled(false);
+			menuBar.getMenu(2).setEnabled(false);	
+			break;
+
+		default:
+			break;
+		}
+	}
 	
 
 }

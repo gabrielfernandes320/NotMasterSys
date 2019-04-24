@@ -11,7 +11,7 @@ import model.Usuario;
 public class UsuariosTableModel extends AbstractTableModel  {
 
 	private List<Usuario> usuarios;
-	private String[] colunas = new String[] { "Usuario", "Perfil" };
+	private String[] colunas = new String[] { "Perfil", "Usuario" };
 	
 	public UsuariosTableModel(List<Usuario> usuarios) {
 		this.usuarios = usuarios;

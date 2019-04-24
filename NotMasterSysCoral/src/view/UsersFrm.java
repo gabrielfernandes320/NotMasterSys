@@ -187,6 +187,7 @@ public class UsersFrm extends JInternalFrame {
 					else {
 					dao.CreateRole(usuario);
 					JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!","",JOptionPane.INFORMATION_MESSAGE);
+					btnBuscar.doClick();
 					}
 				} catch (SQLException e1) {
 					
@@ -227,6 +228,7 @@ public class UsersFrm extends JInternalFrame {
 					tbUser.setEnabled(true);
 					tbPassword.setEnabled(true);
 					tbConfirmPassword.setEnabled(true);
+					cbProfile.setEnabled(true);
 					
 					try {
 						conn.setAutoCommit(false);
@@ -249,15 +251,28 @@ public class UsersFrm extends JInternalFrame {
 							
 			});
 		
+		tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		 
+		    	tbUser.setText(tabela.getModel().getValueAt(tabela.getSelectedRow(), 1).toString()); 
+		    	tbPassword.setText("asdasd");
+		    	tbConfirmPassword.setText("asdasd");
+
+		    }
+		});
 		
-		 tabela.setCellSelectionEnabled(true);
+		
+		
+		//tabela.setCellSelectionEnabled(true);
 		    ListSelectionModel cellSelectionModel = tabela.getSelectionModel();
 		    cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		    tabela.setRowSelectionAllowed(true);
 		    		
 		btnRemover.addActionListener(new ActionListener() {	
 			public void actionPerformed(ActionEvent e) {
 				try {
-					conn.setAutoCommit(false);
+					conn.setAutoCommit(true);
 				
 					if(CheckEmptyFields() == true) {
 						JOptionPane.showMessageDialog(null,"Por favor preencha todos os campos!","Erro campos", JOptionPane.ERROR_MESSAGE);
@@ -271,6 +286,7 @@ public class UsersFrm extends JInternalFrame {
 								dao.Delete(usuario);
 								dao.DropRole(usuario);
 								JOptionPane.showMessageDialog(btnRemover, "Removido com Sucesso!");
+								btnBuscar.doClick();
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
@@ -287,7 +303,7 @@ public class UsersFrm extends JInternalFrame {
 						
 				
 			}
-	
+
 	
 	}
 

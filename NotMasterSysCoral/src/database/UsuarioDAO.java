@@ -142,12 +142,13 @@ public class UsuarioDAO extends MasterDAO {
 
 	@Override
 	public int Delete(Object parameter) throws SQLException {
-
+		int af;
 		Usuario lo_usuario = (Usuario)parameter;
 		//pst_delete.setString(1, lo_usuario.getUsuario());
 		is_delete = is_delete.replace("1?", lo_usuario.getUsuario());
 		pst_delete = io_connection.prepareStatement(is_delete);
-		return pst_delete.executeUpdate();
+		af = pst_delete.executeUpdate();
+		return af;
 		
 	}
 
