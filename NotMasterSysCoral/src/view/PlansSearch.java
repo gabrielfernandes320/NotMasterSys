@@ -46,18 +46,18 @@ public class PlansSearch extends JDialog {
 		this.window = window;
 		
 		setModal(true);
-		setBounds(100, 100, 569, 458);
+		setBounds(100, 100, 602, 458);
 		getContentPane().setLayout(null);
 		
 		txfPesquisa = new JTextField();
-		txfPesquisa.setBounds(173, 27, 167, 20);
+		txfPesquisa.setBounds(196, 27, 159, 20);
 		getContentPane().add(txfPesquisa);
 		txfPesquisa.setColumns(10);
 		
 		
 		
 		JButton btnAtualizar = new JButton("Atualizar");
-		btnAtualizar.setBounds(434, 26, 79, 23);
+		btnAtualizar.setBounds(470, 26, 95, 23);
 		btnAtualizar.addActionListener(new ActionListener() {
 
 			@Override
@@ -76,16 +76,16 @@ public class PlansSearch extends JDialog {
 
 		
 		JLabel lblPesquisaPor = new JLabel("Pesquisa por:");
-		lblPesquisaPor.setBounds(10, 30, 89, 14);
+		lblPesquisaPor.setBounds(25, 30, 89, 14);
 		getContentPane().add(lblPesquisaPor);
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Plano", "Modalidade"}));
-		comboBox.setBounds(84, 27, 79, 20);
+		comboBox.setBounds(107, 27, 79, 20);
 		getContentPane().add(comboBox);
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
-		btnPesquisar.setBounds(350, 26, 79, 23);
+		btnPesquisar.setBounds(365, 26, 95, 23);
 		btnPesquisar.addActionListener(new ActionListener() {
 
 			@Override
@@ -132,9 +132,9 @@ public class PlansSearch extends JDialog {
 		JTable tabela = new JTable(model);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane barraRolagem = new JScrollPane(tabela);
-		barraRolagem.setBounds(0, 0, 489, 330);
+		barraRolagem.setBounds(0, 0, 541, 330);
 		painelFundo.add(barraRolagem);
-		painelFundo.setBounds(25, 60, 489, 330);
+		painelFundo.setBounds(25, 60, 541, 330);
 		getContentPane().add(painelFundo);
 
 		tabela.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
