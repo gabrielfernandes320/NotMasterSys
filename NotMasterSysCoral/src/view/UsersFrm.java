@@ -34,6 +34,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
@@ -163,37 +164,59 @@ public class UsersFrm extends JInternalFrame {
 					if(CheckEmptyFields() == true) {
 						JOptionPane.showMessageDialog(null,"Por favor preencha todos os campos!","Erro campos", JOptionPane.ERROR_MESSAGE);
 					}
-					else {
-					btnSalvar.setEnabled(false);
-					btnAdicionar.setEnabled(true);
-					btnBuscar.setEnabled(true);
-					tbUser.setEnabled(false);
-					tbPassword.setEnabled(false);
-					tbConfirmPassword.setEnabled(false);
-					
-					conn.setAutoCommit(false);
-					System.out.println("Conectado com sucesso!");
+					else if(Arrays.equals(tbPassword.getPassword(), tbConfirmPassword.getPassword())) {
+						btnSalvar.setEnabled(false);
+						btnAdicionar.setEnabled(true);
+						btnBuscar.setEnabled(true);
+						tbUser.setEnabled(false);
+						tbPassword.setEnabled(false);
+						tbConfirmPassword.setEnabled(false);
+						
+						conn.setAutoCommit(false);
+						System.out.println("Conectado com sucesso!");
 
-					UsuarioDAO dao = new UsuarioDAO(conn);
-					Usuario usuario = new Usuario();
-				
-					usuario.setPerfil(cbProfile.getSelectedItem().toString());
-					usuario.setUsuario(tbUser.getText());
-					usuario.setPassword(tbPassword.getText());
-				try {
-					if(dao.Select(usuario) != null) {
-						JOptionPane.showMessageDialog(null,"Este usuario ja existe.","Erro campos", JOptionPane.ERROR_MESSAGE);
-					}
-					else {
-					dao.CreateRole(usuario);
-					JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!","",JOptionPane.INFORMATION_MESSAGE);
-					btnBuscar.doClick();
-					}
-				} catch (SQLException e1) {
+						UsuarioDAO dao = new UsuarioDAO(conn);
+						Usuario usuario = new Usuario();
 					
-					e1.printStackTrace();
-				  }
-				
+						usuario.setPerfil(cbProfile.getSelectedItem().toString());
+						usuario.setUsuario(tbUser.getText());
+						usuario.setPassword(tbPassword.getText());
+					try {
+						if(dao.Select(usuario) != null) {
+							if(tbPassword.getText().length() == 0 && tbConfirmPassword.getText().length() == 0) {
+								JOptionPane.showMessageDialog(null,"Este usuario ja existe.","Erro campos", JOptionPane.ERROR_MESSAGE);
+							}
+							dao.Update(usuario);
+							dao.DropRole(usuario);
+							dao.CreateRole(usuario);
+							JOptionPane.showMessageDialog(null,"Atualizado com sucesso.","Acerto campos", JOptionPane.INFORMATION_MESSAGE);
+							tbUser.setText("");
+							tbPassword.setText("");
+							tbConfirmPassword.setText("");
+							btnSalvar.setEnabled(false);
+							btnRemover.setEnabled(false);
+							btnBuscar.doClick();
+						}
+						else {
+						dao.CreateRole(usuario);
+						dao.Insert(usuario);
+						JOptionPane.showMessageDialog(btnAdicionar, "Adicionado com Sucesso!","",JOptionPane.INFORMATION_MESSAGE);
+						tbUser.setText("");
+						tbPassword.setText("");
+						tbConfirmPassword.setText("");
+						btnSalvar.setEnabled(false);
+						btnRemover.setEnabled(false);
+						btnBuscar.doClick();
+						}
+					} catch (SQLException e1) {
+						
+						e1.printStackTrace();
+					  }
+					
+					}
+					
+					else {
+						JOptionPane.showMessageDialog(null,"As senhas digitadas nao sao iguais!","Erro campos", JOptionPane.ERROR_MESSAGE);
 					}
 				    } catch (SQLException e1) {
 					 e1.printStackTrace();
@@ -211,6 +234,9 @@ public class UsersFrm extends JInternalFrame {
 				tbPassword.setEnabled(true);
 				tbConfirmPassword.setEnabled(true);
 				cbProfile.setEnabled(true);		
+				tbUser.setText("");
+				tbPassword.setText("");
+				tbConfirmPassword.setText("");
 			}
 		});
 		
@@ -225,7 +251,7 @@ public class UsersFrm extends JInternalFrame {
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					btnRemover.setEnabled(true);
-					tbUser.setEnabled(true);
+					tbUser.setEnabled(false);
 					tbPassword.setEnabled(true);
 					tbConfirmPassword.setEnabled(true);
 					cbProfile.setEnabled(true);
@@ -256,11 +282,25 @@ public class UsersFrm extends JInternalFrame {
 		    public void mouseClicked(java.awt.event.MouseEvent evt) {
 		 
 		    	tbUser.setText(tabela.getModel().getValueAt(tabela.getSelectedRow(), 1).toString()); 
-		    	tbPassword.setText("asdasd");
-		    	tbConfirmPassword.setText("asdasd");
+		    	tbUser.setEnabled(false);
+		    	btnSalvar.setEnabled(true);
 
 		    }
 		});
+		
+		tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		 
+		    	JTable table =(JTable) evt.getSource();
+		        Point point = evt.getPoint();
+		        int row = table.rowAtPoint(point);
+		        if (evt.getClickCount() == 2 && table.getSelectedRow() != -1) {
+		            
+		        }
+		    }
+		});
+		
 		
 		
 		
@@ -273,7 +313,8 @@ public class UsersFrm extends JInternalFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					conn.setAutoCommit(true);
-				
+					tbPassword.setText("a");
+					tbConfirmPassword.setText("a");
 					if(CheckEmptyFields() == true) {
 						JOptionPane.showMessageDialog(null,"Por favor preencha todos os campos!","Erro campos", JOptionPane.ERROR_MESSAGE);
 					}
@@ -286,7 +327,11 @@ public class UsersFrm extends JInternalFrame {
 								dao.Delete(usuario);
 								dao.DropRole(usuario);
 								JOptionPane.showMessageDialog(btnRemover, "Removido com Sucesso!");
+								tbPassword.setText("");
+								tbConfirmPassword.setText("");
+								tbUser.setText("");
 								btnBuscar.doClick();
+								btnSalvar.setEnabled(false);
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}

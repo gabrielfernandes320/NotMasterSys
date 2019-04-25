@@ -113,6 +113,7 @@ public class UsuarioDAO extends MasterDAO {
 		
 		Set(pst_update, 1, lo_usuario.getUsuario());
 		Set(pst_update, 2, lo_usuario.getPerfil());
+		Set(pst_update, 3, lo_usuario.getUsuario());
 
 		pst_update.execute();
 		
@@ -160,7 +161,7 @@ public class UsuarioDAO extends MasterDAO {
 		pst_create_role = io_connection.prepareStatement(is_create_role);
 		pst_create_role.execute();
 		
-		Insert(parameter);
+		//Insert(parameter);
 	}
 
 	public void AlterRole(Object parameter) throws SQLException {
