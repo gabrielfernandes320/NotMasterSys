@@ -64,7 +64,7 @@ public class LoginFrm extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Usuario user = new Usuario();
 				user.setUsuario(tbUser.getText());
-				Connection conn = ConnectionFactory.getConnection("master", tbUser.getText().toString(), tbPassword.getPassword().toString());
+				Connection conn = ConnectionFactory.getConnection("master", tbUser.getText().toString(), tbPassword.getText());
 				System.out.println("Deu certo");
 				try {
 					UsuarioDAO dao = new UsuarioDAO(conn);

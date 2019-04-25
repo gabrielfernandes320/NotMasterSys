@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,7 +33,7 @@ public class PlansFrm extends JInternalFrame {
 	private JTextField txfPlano;
 	private JTextField txfValor;
 	private JComboBox cbxModalidade;
-	private String[] modalidades;
+	private String[] modalidades = null;
 	private JButton btnBuscar;
 	private JButton btnAdicionar;
 	private JButton btnSalvar;
@@ -110,6 +112,7 @@ public class PlansFrm extends JInternalFrame {
 		// PlanosDAO pla = new PlanosDAO(conn);
 
 		ModalidadesDAO mod;
+
 		try {
 			mod = new ModalidadesDAO(conn);
 			modalidades = mod.SelectAllModalidade();
@@ -117,7 +120,6 @@ public class PlansFrm extends JInternalFrame {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-
 		cbxModalidade = new JComboBox(modalidades);
 		cbxModalidade.setBounds(113, 78, 328, 20);
 		cbxModalidade.setSelectedItem("");
@@ -135,8 +137,16 @@ public class PlansFrm extends JInternalFrame {
 
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (cbxModalidade.getSelectedItem() == null) {
+
+					JOptionPane.showMessageDialog(null, "Nenhuma modalidade cadastrada!");
+
+				} else
+
 				if (txfPlano.getText().isEmpty() || txfValor.getText().isEmpty()) {
+
 					JOptionPane.showMessageDialog(null, "Algum campo de texto pode estar vazio!");
+
 				} else {
 
 					if (IsUpdate) {
@@ -286,9 +296,13 @@ public class PlansFrm extends JInternalFrame {
 	public void esvaziarCampos() {
 		txfPlano.setText("");
 		txfValor.setText("");
-		cbxModalidade.setSelectedIndex(0);
+		try {
+			cbxModalidade.setSelectedIndex(0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
 
 	public void updateCampos() {
 		txfPlano.setEnabled(false);
