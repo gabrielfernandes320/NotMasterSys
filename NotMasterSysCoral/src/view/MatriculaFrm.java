@@ -66,22 +66,25 @@ public class MatriculaFrm extends JInternalFrame {
 		btnRemover.setIcon(new ImageIcon(MatriculaFrm.class.getResource("/view/images/remover.png")));
 		btnRemover.setBounds(325, 11, 124, 35);
 		getContentPane().add(btnRemover);
+		btnRemover.setEnabled(false);
 		
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.setEnabled(false);
 		btnSalvar.setIcon(new ImageIcon(MatriculaFrm.class.getResource("/view/images/salvar.png")));
 		btnSalvar.setBounds(459, 11, 89, 35);
 		getContentPane().add(btnSalvar);
+		btnSalvar.setEnabled(false);
 		
-		JLabel lblMatrcula = new JLabel("Matr\u00EDcula:");
-		lblMatrcula.setBounds(10, 69, 79, 14);
-		getContentPane().add(lblMatrcula);
+		JLabel lblMatricula = new JLabel("Matricula:");
+		lblMatricula.setBounds(10, 69, 79, 14);
+		getContentPane().add(lblMatricula);		
 		
 		txtMatricula = new JTextField();
 		txtMatricula.setEnabled(false);
 		txtMatricula.setBounds(129, 57, 104, 29);
 		getContentPane().add(txtMatricula);
 		txtMatricula.setColumns(10);
+		txtMatricula.setEnabled(false);
 		
 		JLabel lblAluno = new JLabel("Aluno:");
 		lblAluno.setBounds(10, 103, 46, 14);
@@ -92,34 +95,8 @@ public class MatriculaFrm extends JInternalFrame {
 		txtAluno.setBounds(129, 96, 104, 29);
 		getContentPane().add(txtAluno);
 		txtAluno.setColumns(10);
-
-		txtAluno.addKeyListener(new KeyListener() {
-
-			public void keyPressed(KeyEvent e) {
-
-				if (e.getKeyCode() == KeyEvent.VK_F9) {
-					
-					//TODO: TELA DE MATRICULA EM NOVA MODALIDADE
-					
-				}
-			}
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-			
+		txtAluno.setEnabled(false);
 	
-	
-		
 		textField = new JTextField();
 		textField.setEnabled(false);
 		textField.setBounds(243, 96, 305, 29);
@@ -149,7 +126,40 @@ public class MatriculaFrm extends JInternalFrame {
 		JButton btnAdicionarModalidade = new JButton("Adicionar Modalidade");
 		btnAdicionarModalidade.setBounds(10, 176, 202, 23);
 		getContentPane().add(btnAdicionarModalidade);
+		btnAdicionarModalidade.setEnabled(false);
 
+		btnAdicionar.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Adicionar Aluno");
+				
+				txtMatricula.setEnabled(true);
+				txtAluno.setEnabled(true);
+				txtDataMatricula.setEnabled(true);
+				txtVencimento.setEnabled(true);
+				btnAdicionarModalidade.setEnabled(true);
+				
+				txtAluno.addKeyListener(new KeyListener() {
+					public void keyPressed(KeyEvent e) {
+						if (e.getKeyCode() == KeyEvent.VK_F9) {
+							
+							System.out.println("Buscando por " + txtAluno.getText() + ".");								
+						}
+					}
+
+					@Override
+					public void keyReleased(KeyEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void keyTyped(KeyEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+			}
+		});
 	}
-	
 }
