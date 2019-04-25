@@ -47,6 +47,7 @@ public class PrincipalWindow extends JFrame {
 	JMenuItem itemCFFaturamentoProc;
 	JMenuItem itemGPFaturamentoProc;
 	UsersFrm us;
+	ModalityFrm mo;
 
 	JLabel lbUsuarioHora;
 
@@ -217,10 +218,26 @@ public class PrincipalWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ModalityFrm us = new ModalityFrm();
-				desktopPane.add(us);
-				us.setVisible(true);
-				us.setPosicao();
+				if (JanelaVerificar(UsersFrm.class.getName())) {
+					JanelaFocar(mo);
+				}
+				else {
+					mo = new ModalityFrm();
+					desktopPane.add(mo);
+					mo.setVisible(true);
+					mo.setPosicao();
+				}
+			}
+			
+			private void JanelaFocar(ModalityFrm mo) {
+				try
+				{
+					mo.setSelected(true);
+				}
+				catch	(PropertyVetoException	ex) {
+					ex.printStackTrace();
+				}
+				
 			}
 				});	
 		itemPlanosCad.addActionListener(new ActionListener() {
