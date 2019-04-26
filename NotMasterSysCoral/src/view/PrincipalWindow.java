@@ -48,6 +48,7 @@ public class PrincipalWindow extends JFrame {
 	JMenuItem itemGPFaturamentoProc;
 	UsersFrm us;
 	ModalityFrm mo;
+	GenerateInvoicesFrm gi;
 
 	JLabel lbUsuarioHora;
 
@@ -270,6 +271,32 @@ public class PrincipalWindow extends JFrame {
 				us.setLocation(1, 1);
 				desktopPane.add(us);
 				us.setVisible(true);
+			}
+		});
+		
+		itemGFFaturamentoProc.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				if (JanelaVerificar(UsersFrm.class.getName())) {
+					JanelaFocar(gi);
+				}
+				else {
+					gi = new GenerateInvoicesFrm();
+					desktopPane.add(gi);
+					gi.setVisible(true);
+					gi.setPosicao();
+				}
+			}
+			
+			private void JanelaFocar(GenerateInvoicesFrm gi) {
+				try
+				{
+					gi.setSelected(true);
+				}
+				catch	(PropertyVetoException	ex) {
+					ex.printStackTrace();
+				}
+				
 			}
 		});
 		
