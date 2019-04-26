@@ -8,13 +8,26 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+
+import lib.MasterMonthChooser;
+
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import java.awt.Font;
+import javax.swing.DropMode;
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.Insets;
 
-public class studentControlFrm extends JInternalFrame {
+public class studentControlFrm extends JDialog {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1826784769218740550L;
 	private JTextField txfNumMatricula;
 	private JTextField txfNomeAluno;
 	private JTable tblConsulta;
@@ -22,28 +35,24 @@ public class studentControlFrm extends JInternalFrame {
 	private JTable tblCosultaAl;
 	private JTable tblAssiduidade;
 	private JPanel pnlData;
+	private MasterMonthChooser mmcData;
+	private JTextField txfSituaçãoRegular;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
+
 					studentControlFrm frame = new studentControlFrm();
 					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+
 	}
 
 	/**
 	 * Create the frame.
 	 */
 	public studentControlFrm() {
-		setIconifiable(true);
+//		setIconifiable(true);
 		setTitle("Controle de Alunos");
 		setBounds(100, 100, 696, 538);
 		getContentPane().setLayout(null);
@@ -69,10 +78,23 @@ public class studentControlFrm extends JInternalFrame {
 		getContentPane().add(tblConsulta);
 		
 		txfSituacaoColsulta = new JTextField();
+		txfSituacaoColsulta.setVisible(false);
+		txfSituacaoColsulta.setMargin(new Insets(2, 110, 2, 2));
+		txfSituacaoColsulta.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 19));
+		txfSituacaoColsulta.setText("Aguardando Consulta ...");
 		txfSituacaoColsulta.setEditable(false);
 		txfSituacaoColsulta.setColumns(10);
 		txfSituacaoColsulta.setBounds(230, 166, 431, 54);
-		getContentPane().add(txfSituacaoColsulta);
+//		getContentPane().add(txfSituacaoColsulta);
+		
+		txfSituaçãoRegular = new JTextField();
+		txfSituaçãoRegular.setText("Situação Regular!!");
+		txfSituaçãoRegular.setMargin(new Insets(2, 110, 2, 2));
+		txfSituaçãoRegular.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 19));
+		txfSituaçãoRegular.setEditable(false);
+		txfSituaçãoRegular.setColumns(10);
+		txfSituaçãoRegular.setBounds(230, 166, 431, 54);
+		getContentPane().add(txfSituaçãoRegular);
 		
 		JButton btnAcsAluno = new JButton("Acessar dados do Aluno");
 		btnAcsAluno.setBounds(230, 236, 210, 30);
@@ -90,9 +112,9 @@ public class studentControlFrm extends JInternalFrame {
 		tblAssiduidade.setBounds(22, 277, 181, 220);
 		getContentPane().add(tblAssiduidade);
 		
-		pnlData = new JPanel();
-		pnlData.setBounds(22, 236, 181, 30);
-		getContentPane().add(pnlData);
+		mmcData = new MasterMonthChooser();
+		mmcData.setBounds(22, 236, 181, 30);
+		getContentPane().add(mmcData);
 
 	}
 }
