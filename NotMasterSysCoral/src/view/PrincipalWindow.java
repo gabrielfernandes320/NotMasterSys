@@ -20,6 +20,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import model.Usuario;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PrincipalWindow extends JFrame {
 
@@ -47,8 +49,6 @@ public class PrincipalWindow extends JFrame {
 	JMenuItem itemCFFaturamentoProc;
 	JMenuItem itemGPFaturamentoProc;
 	UsersFrm us;
-	ModalityFrm mo;
-	GenerateInvoicesFrm gi;
 
 	JLabel lbUsuarioHora;
 
@@ -210,6 +210,17 @@ public class PrincipalWindow extends JFrame {
 			}
 		});
 		
+		itemCFFaturamentoProc.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				InvoiceCheckFrm us = new InvoiceCheckFrm();
+				us.setLocation(1, 1);
+				desktopPane.add(us);
+				us.setVisible(true);
+			}
+		});
+		
 		//Cadastro
 //		
 		
@@ -219,26 +230,10 @@ public class PrincipalWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (JanelaVerificar(UsersFrm.class.getName())) {
-					JanelaFocar(mo);
-				}
-				else {
-					mo = new ModalityFrm();
-					desktopPane.add(mo);
-					mo.setVisible(true);
-					mo.setPosicao();
-				}
-			}
-			
-			private void JanelaFocar(ModalityFrm mo) {
-				try
-				{
-					mo.setSelected(true);
-				}
-				catch	(PropertyVetoException	ex) {
-					ex.printStackTrace();
-				}
-				
+				ModalityFrm us = new ModalityFrm();
+				desktopPane.add(us);
+				us.setVisible(true);
+				us.setPosicao();
 			}
 				});	
 		itemPlanosCad.addActionListener(new ActionListener() {
@@ -271,32 +266,6 @@ public class PrincipalWindow extends JFrame {
 				us.setLocation(1, 1);
 				desktopPane.add(us);
 				us.setVisible(true);
-			}
-		});
-		
-		itemGFFaturamentoProc.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				if (JanelaVerificar(UsersFrm.class.getName())) {
-					JanelaFocar(gi);
-				}
-				else {
-					gi = new GenerateInvoicesFrm();
-					desktopPane.add(gi);
-					gi.setVisible(true);
-					gi.setPosicao();
-				}
-			}
-			
-			private void JanelaFocar(GenerateInvoicesFrm gi) {
-				try
-				{
-					gi.setSelected(true);
-				}
-				catch	(PropertyVetoException	ex) {
-					ex.printStackTrace();
-				}
-				
 			}
 		});
 		
@@ -343,6 +312,7 @@ public class PrincipalWindow extends JFrame {
 			menuBar.getMenu(0).setEnabled(false);
 			menuBar.getMenu(1).setEnabled(false);
 			menuBar.getMenu(3).setEnabled(false);	
+			menuBar.getMenu(2).getMenuComponent(1).setEnabled(false);
 			break;
 			
 		case "Completo":
@@ -356,7 +326,8 @@ public class PrincipalWindow extends JFrame {
 		case "Financeiro":
 			menuBar.getMenu(0).setEnabled(false);
 			menuBar.getMenu(1).setEnabled(false);
-			menuBar.getMenu(2).setEnabled(false);	
+			menuBar.getMenu(2).getMenuComponent(0).setEnabled(false);
+			menuBar.getMenu(3).setEnabled(false);
 			break;
 
 		default:

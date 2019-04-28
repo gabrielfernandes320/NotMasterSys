@@ -280,7 +280,6 @@ public class ModalityFrm extends JInternalFrame {
 				btnSave.setEnabled(false);
 				btnRemove.setEnabled(false);
 				btnSearch.setEnabled(true);
-				btnAdd.setEnabled(true);
 				txfModality.setEditable(false);
 				txfGraduation.setEditable(false);
 				txfGraduation.setText("");
@@ -296,11 +295,10 @@ public class ModalityFrm extends JInternalFrame {
 				if( (txfModality.getText()).isEmpty() ) {
 					JOptionPane.showMessageDialog(null,"Uma modalidade deve ser selecionada!");
 				}else {
+					Modalidades modalityModel = new Modalidades();
+					modalityModel.setModalidade(txfModality.getText().toString());
+					
 						try {
-							conn.setAutoCommit(false);
-							
-							Modalidades modalityModel = new Modalidades();
-							modalityModel.setModalidade(txfModality.getText().toString());
 							ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
 							GraduacoesDAO  graduationDao = new GraduacoesDAO(conn);
 							
@@ -308,17 +306,16 @@ public class ModalityFrm extends JInternalFrame {
 								graduationDao.Delete(model.getGraduacao(i));
 							}
 							modalityDao.Delete(modalityModel);
-							JOptionPane.showMessageDialog(null,"Deletado com sucesso!");
+							
 						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
 							e1.printStackTrace();
-							JOptionPane.showMessageDialog(null,"Delete o(s) plano(s) desta modalidade primeiro!");
 						}
-						
+						JOptionPane.showMessageDialog(null,"Deletado com sucesso!");
 				}
 				btnOk.setEnabled(false);
 				btnSave.setEnabled(false);
 				btnRemove.setEnabled(false);
-				btnAdd.setEnabled(true);
 				btnSearch.setEnabled(true);
 				txfModality.setEditable(false);
 				txfGraduation.setEditable(false);
@@ -338,7 +335,9 @@ public class ModalityFrm extends JInternalFrame {
 				newGraduations.add(newGraduation);
 				
 			}
-		});	
+		});
+		
+		
 	}
 	
 	
@@ -351,6 +350,9 @@ public class ModalityFrm extends JInternalFrame {
 		updateCampos();
 		IsUpdate = true;
 
+//	while()
+//	cbxModalidade.setSelectedIndex();
+//		
 	}
 	
 	public void updateCampos() {
