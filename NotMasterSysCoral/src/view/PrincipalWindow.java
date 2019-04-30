@@ -214,7 +214,7 @@ public class PrincipalWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				InvoiceCheckFrm us = new InvoiceCheckFrm();
+//				InvoiceCheckFrm us = new InvoiceCheckFrm();
 				us.setLocation(1, 1);
 				desktopPane.add(us);
 				us.setVisible(true);
@@ -244,6 +244,8 @@ public class PrincipalWindow extends JFrame {
 				us.setLocation(1, 1);
 				desktopPane.add(us);
 				us.setVisible(true);
+				us.setPosicao();
+				
 			}
 		});
 		itemAlunosCad.addActionListener(new ActionListener() {
