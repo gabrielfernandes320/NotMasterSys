@@ -1,5 +1,6 @@
 package database;
 
+import model.Invoice;
 import model.Usuario;
 
 import java.sql.Connection;
@@ -18,13 +19,16 @@ public class Teste2 {
 			//conn.setAutoCommit(false);
 			System.out.println("Conectado com sucesso!");
 
-			UsuarioDAO dao = new UsuarioDAO(conn);
 			Usuario model = new Usuario();
 
 			//Insert OK
 			model.setPerfil("Cadastral");
 			model.setUsuario("testeagora");
 			model.setPassword("testeagora4");
+			
+			List<Invoice> in = new ArrayList<Invoice>();
+			in = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectAll();
+			
 			//dao.Insert(model);y
 			//InsertRole
 			//dao.Insert(model);
@@ -40,10 +44,9 @@ public class Teste2 {
 			
 			
 			//Select OK
-			//model.setUsuario("teste");
-			
-			dao.DropRole(model);
+			//model.setUsuario("teste")
 			System.out.println("ok");
+			System.out.println(in.get(0).getData_vencimento() );
 			
 		} catch (Exception e) {
 			e.printStackTrace();

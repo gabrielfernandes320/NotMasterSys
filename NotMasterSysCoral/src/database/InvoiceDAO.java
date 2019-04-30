@@ -61,13 +61,16 @@ public class InvoiceDAO extends MasterDAO{
 		while (rst.next()) {
 			
 			Invoice model = new Invoice();
-			model.setCodigo_matricula(rst.getInt("")("usuario"));
-			model.setUsuario(rst.getString("perfil"));
-			arlUsuario.add(model);
+			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setData_vencimento(rst.getDate("data_vencimento"));
+			model.setData_cancelamento(rst.getDate("data_cancelamento"));
+			model.setValor(rst.getDouble("valor"));
+			model.setData_pagamento(rst.getDate("data_pagamento"));
+			arInvoice.add(model);
 			
 		}
 		
-		return arlUsuario;
+		return arInvoice;
 	}
 
 	@Override
