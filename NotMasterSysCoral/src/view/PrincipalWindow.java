@@ -49,6 +49,7 @@ public class PrincipalWindow extends JFrame {
 	JMenuItem itemCFFaturamentoProc;
 	JMenuItem itemGPFaturamentoProc;
 	UsersFrm us;
+	InvoiceCheckFrm icf;
 
 	JLabel lbUsuarioHora;
 
@@ -214,10 +215,16 @@ public class PrincipalWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				InvoiceCheckFrm us = new InvoiceCheckFrm();
-				us.setLocation(1, 1);
-				desktopPane.add(us);
-				us.setVisible(true);
+				if (JanelaVerificar(UsersFrm.class.getName())) {
+					
+				}
+				else {
+					icf = new InvoiceCheckFrm();
+					icf.setName(UsersFrm.class.getName());
+					icf.setLocation(1, 1);
+					desktopPane.add(icf);
+					icf.setVisible(true);
+				}
 			}
 		});
 		
