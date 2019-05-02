@@ -95,7 +95,9 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JScrollPane scrollPane = new JScrollPane(tabela);
-		//scrollPane.setBounds(10, 173, 427, 155);
+		scrollPane.setSize(0, 0);
+		scrollPane.setLocation(0, 0);
+		scrollPane.setBounds(10, 42, 721, 307);
 		getContentPane().add(scrollPane);
 		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 		JButton button = new JButton("Buscar");
