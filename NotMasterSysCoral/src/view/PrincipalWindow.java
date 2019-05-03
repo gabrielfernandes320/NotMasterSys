@@ -49,8 +49,9 @@ public class PrincipalWindow extends JFrame {
 	JMenuItem itemCFFaturamentoProc;
 	JMenuItem itemGPFaturamentoProc;
 	UsersFrm us;
+	ModalityFrm mod;
 	InvoiceCheckFrm icf;
-
+	GenerateInvoicesFrm gif;
 	JLabel lbUsuarioHora;
 
 	public PrincipalWindow(Usuario user) {
@@ -228,6 +229,24 @@ public class PrincipalWindow extends JFrame {
 			}
 		});
 		
+		itemGFFaturamentoProc.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JanelaVerificar(GenerateInvoicesFrm.class.getName())) {
+					
+				}
+				else {
+					gif = new GenerateInvoicesFrm();
+					gif.setName(GenerateInvoicesFrm.class.getName());
+					desktopPane.add(gif);
+					gif.setPosicao();
+					gif.setVisible(true);
+				}
+			}
+		});
+
+		
 		//Cadastro
 //		
 		
@@ -237,10 +256,21 @@ public class PrincipalWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ModalityFrm us = new ModalityFrm();
-				desktopPane.add(us);
-				us.setVisible(true);
-				us.setPosicao();
+				
+				if (JanelaVerificar(ModalityFrm.class.getName())) {
+					
+				}
+				else {
+					mod = new ModalityFrm();
+					desktopPane.add(mod);
+					mod.setVisible(true);
+					mod.setPosicao();
+					mod.setName(ModalityFrm.class.getName());
+					
+				}
+				
+				
+				
 			}
 				});	
 		itemPlanosCad.addActionListener(new ActionListener() {
