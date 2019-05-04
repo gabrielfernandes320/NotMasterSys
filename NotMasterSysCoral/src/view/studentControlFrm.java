@@ -1,49 +1,72 @@
 package view;
 
 import java.awt.EventQueue;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.GregorianCalendar;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+
+import database.AssiduidadeDAO;
+import database.ConnectionFactory;
+import lib.MasterMonthChooser;
+import model.Assiduidade;
+import table.model.AssiduidadeTableModel;
+import table.model.PlansTableModel;
+
 import java.awt.Color;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 
-public class studentControlFrm extends JInternalFrame {
+public class studentControlFrm extends JDialog {
+	private GregorianCalendar teste;
+	private AssiduidadeTableModel assModel;
 	private JTextField txfNumMatricula;
 	private JTextField txfNomeAluno;
-	private JTable tblConsulta;
 	private JTextField txfSituacaoColsulta;
+	private JTable tblConsulta;
 	private JTable tblCosultaAl;
 	private JTable tblAssiduidade;
-	private JPanel pnlData;
+	private JPanel pnlConsulta;
+	private JPanel pnlCosultaAl;
+	private JPanel pnlAssiduidade;
+	private JScrollPane scpConsulta;
+	private JScrollPane scpCosultaAl;
+	private JScrollPane scpAssiduidade;
+	private MasterMonthChooser mmcData;
 
 	/**
 	 * Launch the application.
+	 * @throws SQLException 
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
+	public static void main(String[] args) throws SQLException {
+		
+		
+		
+		
 					studentControlFrm frame = new studentControlFrm();
 					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	
 	}
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public studentControlFrm() {
-		setIconifiable(true);
+	public studentControlFrm() throws SQLException {
+	//	setIconifiable(true);
 		setTitle("Controle de Alunos");
 		setBounds(100, 100, 696, 538);
 		getContentPane().setLayout(null);
@@ -82,17 +105,42 @@ public class studentControlFrm extends JInternalFrame {
 		btnAcsMatricula.setBounds(450, 236, 210, 30);
 		getContentPane().add(btnAcsMatricula);
 		
+		//Tabela Consulta
 		tblCosultaAl = new JTable();
 		tblCosultaAl.setBounds(230, 53, 431, 102);
 		getContentPane().add(tblCosultaAl);
 		
-		tblAssiduidade = new JTable();
-		tblAssiduidade.setBounds(22, 277, 181, 220);
-		getContentPane().add(tblAssiduidade);
 		
-		pnlData = new JPanel();
-		pnlData.setBounds(22, 236, 181, 30);
-		getContentPane().add(pnlData);
+		//Tabela Assiduidade
+		pnlAssiduidade = new JPanel();
+		assModel = new AssiduidadeTableModel();
+		pnlAssiduidade.setLayout(null);
 
+		tblAssiduidade = new JTable(assModel);
+		tblAssiduidade.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scpAssiduidade = new JScrollPane(tblAssiduidade);
+		scpAssiduidade.setBounds(0, 0, 181, 220);
+		pnlAssiduidade.add(scpAssiduidade);
+		pnlAssiduidade.setBounds(22, 277, 181, 220);
+		getContentPane().add(pnlAssiduidade);
+		
+		mmcData = new MasterMonthChooser();
+		mmcData.setBounds(22, 236, 181, 30);
+		getContentPane().add(mmcData);
+		
+//		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+//		conn.setAutoCommit(false);
+//			AssiduidadeDAO ass = new AssiduidadeDAO(conn);
+//			Assiduidade model = new Assiduidade();
+//			
+//			model.setCodigo_matricula(100);
+//			teste = new GregorianCalendar();
+//			model.setData_entrada((Date) teste.getTime());
+//			
+//			ass.Insert(model);
+		
+		
+		
+		
 	}
 }
