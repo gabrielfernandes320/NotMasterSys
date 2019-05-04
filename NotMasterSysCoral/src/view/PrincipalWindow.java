@@ -49,9 +49,10 @@ public class PrincipalWindow extends JFrame {
 	JMenuItem itemCFFaturamentoProc;
 	JMenuItem itemGPFaturamentoProc;
 	UsersFrm us;
+	StudentFrm studentFrm;
 	ModalityFrm mod;
-	InvoiceCheckFrm icf;
-	GenerateInvoicesFrm gif;
+	//InvoiceCheckFrm icf;
+	//GenerateInvoicesFrm gif;
 	JLabel lbUsuarioHora;
 
 	public PrincipalWindow(Usuario user) {
@@ -87,7 +88,7 @@ public class PrincipalWindow extends JFrame {
 //			@Override
 //			public void ancestorResized(HierarchyEvent e) {
 //				Dimension d = getSize();
-//				lbUsuarioHora.setBounds(((int) d.getWidth()) - 370, ((int) d.getHeight()) - 85, 350, 20);
+//				lbUsuarioHora.setBounds(((i/nt) d.getWidth()) - 370, ((int) d.getHeight()) - 85, 350, 20);
 //			}
 //
 //			@Override
@@ -289,11 +290,23 @@ public class PrincipalWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				StudentFrm us = new StudentFrm();
-				us.setLocation(1, 1);
-				desktopPane.add(us);
-				us.setVisible(true);
-			}
+
+				
+				if (JanelaVerificar(StudentFrm.class.getName())) {
+					
+				}
+				else {
+					
+					studentFrm = new StudentFrm();
+					desktopPane.add(studentFrm);
+					studentFrm.setVisible(true);
+					studentFrm.setName(StudentFrm.class.getName());
+					
+				}
+				
+				
+				
+			}			
 		});
 		
 		//Matrícula
