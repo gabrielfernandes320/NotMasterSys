@@ -12,7 +12,8 @@ import database.InvoiceDAO;
 import database.UsuarioDAO;
 import model.Invoice;
 import model.Usuario;
-import table.model.InvoiceCheckTableModel;
+import table.model.InvoicesCheckTableModel;
+import table.model.InvoicesCheckTableModel;
 import table.model.UsuariosTableModel;
 
 import java.awt.Font;
@@ -35,7 +36,7 @@ import java.awt.event.ActionEvent;
 public class InvoiceCheckFrm extends JInternalFrame {
 	private JTextField tbInitialDate;
 	private JTextField tbFinalDate;
-	private InvoiceCheckTableModel model;
+	private InvoicesCheckTableModel model;
 
 	/**
 	 * Launch the application.
@@ -90,7 +91,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		cbSituation.setBounds(402, 11, 115, 20);
 		getContentPane().add(cbSituation);
 		
-		model = new InvoiceCheckTableModel();
+		model = new InvoicesCheckTableModel();
 		JTable tabela = new JTable(model);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
@@ -110,9 +111,9 @@ public class InvoiceCheckFrm extends JInternalFrame {
 
 					InvoiceDAO dao = new InvoiceDAO(conn);
 					Invoice invoice = new Invoice();
-					List<Invoice> invoicesList = new ArrayList<Invoice>();
-					invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectAll();
-					model.addListaDeInvoices(invoicesList);
+					List<Usuario> invoicesList = new ArrayList<Usuario>();
+					invoicesList = (List<Usuario>)(List<?>) new UsuarioDAO(conn).SelectAll();
+					model.addListaDeUsuarios(invoicesList);
 				
 				  } catch (SQLException e1) {
 					 e1.printStackTrace();
