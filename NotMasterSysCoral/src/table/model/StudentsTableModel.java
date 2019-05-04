@@ -1,5 +1,6 @@
 package table.model;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import model.Aluno;
 public class StudentsTableModel extends AbstractTableModel  {
 
 	private List<Aluno> alunos;
-	private String[] colunas = new String[] { "Nome", "Aluno" };
+	private String[] colunas = new String[] {"Aluno", "Data de Nascimento", "Observação"};
 	
 	public StudentsTableModel(List<Aluno> alunos) {
 		this.alunos = alunos;
@@ -37,13 +38,17 @@ public class StudentsTableModel extends AbstractTableModel  {
 	}
 
 	public void setValueAt(Aluno aValue, int rowIndex) {
+		
 		Aluno Aluno = alunos.get(rowIndex);
 
 		Aluno.setAluno(aValue.getAluno());
-		Aluno.setPerfil(aValue.getPerfil());
+		Aluno.setData_nascimento(aValue.getData_nascimento());
+		Aluno.setObservacao(aValue.getObservacao());
 
 		fireTableCellUpdated(rowIndex, 0);
 		fireTableCellUpdated(rowIndex, 1);
+		fireTableCellUpdated(rowIndex, 3);
+		
 	}
 
 	@Override
@@ -53,8 +58,13 @@ public class StudentsTableModel extends AbstractTableModel  {
 		switch (columnIndex) {
 		case 0:
 			Aluno.setAluno(aValue.toString());
+			break;
 		case 1:
-			Aluno.setPerfil(aValue.toString());
+			Aluno.setData_nascimento((Date)aValue);
+			break;
+		case 2:
+			Aluno.setObservacao(aValue.toString());
+			break;
 		default:
 			System.err.println("Índice da coluna inválido");
 		}
@@ -69,7 +79,10 @@ public class StudentsTableModel extends AbstractTableModel  {
 			valueObject = alunoselecionado.getAluno();
 			break;
 		case 1:
-			valueObject = alunoselecionado.getPerfil();
+			valueObject = alunoselecionado.getData_nascimento().toString();
+			break;
+		case 2:
+			valueObject = alunoselecionado.getObservacao();
 			break;
 		default:
 			System.err.println("Índice inválido para propriedade do bean Aluno.class");
