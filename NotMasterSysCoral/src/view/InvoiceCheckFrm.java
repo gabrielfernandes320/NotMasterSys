@@ -113,19 +113,23 @@ public class InvoiceCheckFrm extends JInternalFrame {
 
 					InvoiceDAO dao = new InvoiceDAO(conn);
 					Invoice invoice = new Invoice();
+					invoice.setInitial_date(tbInitialDate.getText());
+					invoice.setFinal_date(tbFinalDate.getText());
+					
 					List<Invoice> invoicesList = new ArrayList<Invoice>();
 					switch (cbSituation.getSelectedIndex()) {
 					case 0:
-						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectAll();
+						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectAll(invoice);
+						
 						break;
 					case 1:
-						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectPendigInvoices();
+						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectPendigInvoices(invoice);
 						break;
 					case 2:
-						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectPayedInvoices();
+						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectPayedInvoices(invoice);
 						break;
 					case 3:
-						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectCanceledInvoices();
+						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectCanceledInvoices(invoice);
 						break;
 					default:
 						break;

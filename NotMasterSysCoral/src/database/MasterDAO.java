@@ -17,17 +17,17 @@ public abstract class MasterDAO {
 	Object				Select(Object parameter)
 		throws			SQLException;
 	
-	public abstract
-	void				Update(Object parameter)
-		throws			SQLException;
+	public abstract void Update(Object parameter) throws SQLException;
 	
-	public abstract
-	void				Insert(Object parameter)
-		throws			SQLException;
+	public abstract void Insert(Object parameter) throws SQLException;
 	
 	public abstract
 	int				Delete(Object parameter)
 		throws			SQLException;
+	
+	public List<Object> SelectAll(Object parameter) throws SQLException {
+		return null;
+	}
 	
 	public
 	void		Set(PreparedStatement pst, int position, Object value) 
@@ -57,6 +57,8 @@ public abstract class MasterDAO {
 			pst.setDouble(position, (Double) value);
 		}
 	}
+
+	
 
 }
 
