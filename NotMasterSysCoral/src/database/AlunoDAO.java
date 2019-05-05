@@ -20,7 +20,7 @@ public class AlunoDAO extends MasterDAO {
 			"       celular=?, email=?, observacao=?, endereco=?, numero=?, complemento=?, \r\n" + 
 			"       bairro=?, cidade=?, estado=?, pais=?, cep=? \r\n" + 
 			" WHERE aluno=?";
-	private String is_selectAll = "select * from alunos order by aluno";
+	private String is_selectAll = "select * from alunos where aluno like ? ";
 	private String is_delete = "delete from alunos where aluno =?";
 	private String is_select = "select * from alunos where aluno = ? order by aluno";
 	private String is_insert = "INSERT INTO alunos			"
@@ -82,10 +82,12 @@ public class AlunoDAO extends MasterDAO {
 		
 	}
 
-	@Override
-	public List<Object> SelectAll() throws SQLException {
+
+	public List<Aluno> SelectAll(final String pesquisa) throws SQLException {
 		
-		List<Object> arlAluno = new ArrayList<Object>();
+		List<Aluno> arlAluno = new ArrayList<Aluno>();
+		
+		pst_selectAll.setString(1, "%"+ pesquisa + "%");
 		
 		ResultSet rst = pst_selectAll.executeQuery();
 		
@@ -231,5 +233,12 @@ public class AlunoDAO extends MasterDAO {
         return affectedrows;
 
     }
+
+
+	@Override
+	public List<Object> SelectAll() throws SQLException {	
+		
+		return null;
+	}
 	
 }

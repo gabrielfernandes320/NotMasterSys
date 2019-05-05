@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -51,6 +52,15 @@ public class StudentFrm extends JInternalFrame {
 	private JTextField AdressNumField;
 	private JTextField CityField;
 	private JTextField CountryField;
+	@SuppressWarnings("rawtypes")
+	private JComboBox SexCmb;
+	private JTextArea ObservationField;
+	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	private JFormattedTextField BirthdateField;
+	private JButton btnSearch;
+	private JButton btnAdd;
+	private JButton btnRemove;
+	private JButton btnUpdate;
 
 	/**
 	 * Create the frame.
@@ -62,22 +72,22 @@ public class StudentFrm extends JInternalFrame {
 		setBounds(100, 100, 470, 510);
 		getContentPane().setLayout(null);
 
-		JButton btnSearch = new JButton("Buscar");
+		btnSearch = new JButton("Buscar");
 		btnSearch.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/localizar.png")));
 		btnSearch.setBounds(10, 11, 100, 36);
 		getContentPane().add(btnSearch);
 
-		JButton btnAdd = new JButton("Adicionar");
+		btnAdd = new JButton("Adicionar");
 		btnAdd.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/adicionar.png")));
 		btnAdd.setBounds(109, 11, 115, 36);
 		getContentPane().add(btnAdd);
 
-		JButton btnRemove = new JButton("Remover");
+		btnRemove = new JButton("Remover");
 		btnRemove.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/remover.png")));
 		btnRemove.setBounds(223, 11, 115, 36);
 		getContentPane().add(btnRemove);
 
-		JButton btnUpdate = new JButton("Salvar");
+		btnUpdate = new JButton("Salvar");
 		btnUpdate.setIcon(new ImageIcon(StudentFrm.class.getResource("/view/images/salvar.png")));
 		btnUpdate.setBounds(337, 11, 100, 36);
 		getContentPane().add(btnUpdate);
@@ -122,7 +132,7 @@ public class StudentFrm extends JInternalFrame {
 		lblNewLabel_4.setBounds(263, 104, 46, 14);
 		getContentPane().add(lblNewLabel_4);
 
-		JComboBox SexCmb = new JComboBox();
+		SexCmb = new JComboBox();
 		SexCmb.setModel(new DefaultComboBoxModel(new String[] { "", "Masculino", "Feminino" }));
 		SexCmb.setBounds(319, 101, 118, 20);
 		getContentPane().add(SexCmb);
@@ -142,7 +152,7 @@ public class StudentFrm extends JInternalFrame {
 		lblObservaoes.setBounds(10, 177, 100, 14);
 		getContentPane().add(lblObservaoes);
 
-		JTextArea ObservationField = new JTextArea();
+		ObservationField = new JTextArea();
 		ObservationField.setTabSize(5);
 		ObservationField.setLineWrap(true);
 		ObservationField.setRows(5);
@@ -246,11 +256,12 @@ public class StudentFrm extends JInternalFrame {
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		JFormattedTextField BirthdateField = new JFormattedTextField(df);
+		BirthdateField = new JFormattedTextField(df);
 		BirthdateField.setBounds(138, 101, 115, 20);
 		getContentPane().add(BirthdateField);
 		maskData.install(BirthdateField);
+
+		cleanFields();
 
 		// COISAS IMPORTANTES: BOTOES E CONEXAO
 
@@ -270,11 +281,10 @@ public class StudentFrm extends JInternalFrame {
 							|| StateField.getText().trim().equals("") || CountryField.getText().trim().equals("")
 							|| CepField.getText().trim().equals("")) {
 
-						JOptionPane.showMessageDialog(getContentPane(), "Campos em Branco!", "Erro no cadastro:",
+						JOptionPane.showMessageDialog(getContentPane(), "Campos em branco!", "Erro!",
 								JOptionPane.INFORMATION_MESSAGE);
 
-					}
-					else {
+					} else {
 
 						try {
 
@@ -310,22 +320,7 @@ public class StudentFrm extends JInternalFrame {
 								dao.Insert(model);
 								JOptionPane.showMessageDialog(null, "Sucesso! Aluno Cadastrado");
 
-								StudentField.setText(null);
-								BirthdateField.setText(null);
-								TelephoneField.setText(null);
-								SexCmb.setSelectedIndex(0);
-								PhoneField.setText(null);
-								EmailField.setText(null);
-								ObservationField.setText(null);
-								AdressField.setText(null);
-								AdressNumField.setText(null);
-								AdressComplementField.setText(null);
-								NeighbhField.setText(null);
-								CityField.setText(null);
-								StateField.setText(null);
-								CountryField.setText(null);
-								CepField.setText(null);
-								btnAdd.setEnabled(true);
+								cleanFields();
 								model = null;
 
 							}
@@ -342,42 +337,56 @@ public class StudentFrm extends JInternalFrame {
 
 					}
 
-
-
 				} else {
 
-					try {
+					if (StudentField.getText().trim().equals("") || BirthdateField.getText().trim().equals("")
+							|| TelephoneField.getText().trim().equals("") || PhoneField.getText().trim().equals("")
+							|| EmailField.getText().trim().equals("") || ObservationField.getText().trim().equals("")
+							|| AdressField.getText().trim().equals("") || AdressNumField.getText().trim().equals("")
+							|| AdressComplementField.getText().trim().equals("") || SexCmb.getSelectedIndex() == -1
+							|| NeighbhField.getText().trim().equals("") || CityField.getText().trim().equals("")
+							|| StateField.getText().trim().equals("") || CountryField.getText().trim().equals("")
+							|| CepField.getText().trim().equals("")) {
 
-						conn.setAutoCommit(false);
+						JOptionPane.showMessageDialog(getContentPane(), "Campos em branco!", "Erro!",
+								JOptionPane.INFORMATION_MESSAGE);
 
-						AlunoDAO dao = new AlunoDAO(conn);
-						Aluno model = new Aluno();
+					} else {
 
-						model.setAluno(StudentField.getText());
-						model = dao.Select(model);
+						try {
 
-						Date data = new Date(df.parse(BirthdateField.getText()).getTime());
-						model.setAluno(StudentField.getText());
-						model.setData_nascimento(data);
-						model.setTelefone(TelephoneField.getText());
-						model.setCelular(PhoneField.getText());
-						model.setEmail(EmailField.getText());
-						model.setObservacao(ObservationField.getText());
-						model.setEndereco(AdressField.getText());
-						model.setNumero(AdressNumField.getText());
-						model.setComplemento(AdressComplementField.getText());
-						model.setBairro(NeighbhField.getText());
-						model.setCidade(CityField.getText());
-						model.setEstado(StateField.getText());
-						model.setPais(CountryField.getText());
-						model.setCep(CepField.getText());
+							conn.setAutoCommit(false);
 
-						dao.Update(model);
-						JOptionPane.showMessageDialog(getContentPane(), "Alterações Salvas.");
+							AlunoDAO dao = new AlunoDAO(conn);
+							Aluno model = new Aluno();
 
-					} catch (SQLException | ParseException e1) {
+							model.setAluno(StudentField.getText());
+							model = dao.Select(model);
 
-						e1.printStackTrace();
+							Date data = new Date(df.parse(BirthdateField.getText()).getTime());
+							model.setAluno(StudentField.getText());
+							model.setData_nascimento(data);
+							model.setTelefone(TelephoneField.getText());
+							model.setCelular(PhoneField.getText());
+							model.setEmail(EmailField.getText());
+							model.setObservacao(ObservationField.getText());
+							model.setEndereco(AdressField.getText());
+							model.setNumero(AdressNumField.getText());
+							model.setComplemento(AdressComplementField.getText());
+							model.setBairro(NeighbhField.getText());
+							model.setCidade(CityField.getText());
+							model.setEstado(StateField.getText());
+							model.setPais(CountryField.getText());
+							model.setCep(CepField.getText());
+
+							dao.Update(model);
+							JOptionPane.showMessageDialog(getContentPane(), "Alterações Salvas.");
+
+						} catch (SQLException | ParseException e1) {
+
+							e1.printStackTrace();
+
+						}
 
 					}
 
@@ -388,54 +397,53 @@ public class StudentFrm extends JInternalFrame {
 
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-												
-				try {
 
-					conn.setAutoCommit(false);
-					AlunoDAO dao = new AlunoDAO(conn);
-					Aluno model = new Aluno();
+				if (StudentField.getText().trim().equals("")) {
 
-					model.setAluno(StudentField.getText());
+					JOptionPane.showMessageDialog(getContentPane(), "Você deve procurar um aluno primeiro!.", "Erro!",
+							JOptionPane.INFORMATION_MESSAGE);
 
-					if (JOptionPane.showConfirmDialog(getContentPane(), "Confirmar exclusão?", "Aviso:",
-							JOptionPane.YES_NO_OPTION) == 0) {
+				}
 
-						if (dao.Delete(model) == 1) {
+				else {
 
-							JOptionPane.showMessageDialog(getContentPane(), "Cadastro deletado.", "Sucesso!",
-									JOptionPane.INFORMATION_MESSAGE);
+					try {
 
-							StudentField.setText(null);
-							BirthdateField.setText(null);
-							TelephoneField.setText(null);
-							SexCmb.setSelectedIndex(0);
-							PhoneField.setText(null);
-							EmailField.setText(null);
-							ObservationField.setText(null);
-							AdressField.setText(null);
-							AdressNumField.setText(null);
-							AdressComplementField.setText(null);
-							NeighbhField.setText(null);
-							CityField.setText(null);
-							StateField.setText(null);
-							CountryField.setText(null);
-							CepField.setText(null);
+						conn.setAutoCommit(false);
+						AlunoDAO dao = new AlunoDAO(conn);
+						Aluno model = new Aluno();
 
-							model = null;
+						model.setAluno(StudentField.getText());
+
+						if (JOptionPane.showConfirmDialog(getContentPane(), "Confirmar exclusão?", "Aviso:",
+								JOptionPane.YES_NO_OPTION) == 0) {
+
+							if (dao.Delete(model) == 1) {
+
+								JOptionPane.showMessageDialog(getContentPane(), "Cadastro deletado.", "Sucesso!",
+										JOptionPane.INFORMATION_MESSAGE);
+
+								cleanFields();
+								model = null;
+
+							}
+
+							else {
+
+								JOptionPane.showMessageDialog(getContentPane(), null, "Erro: Aluno não encontrado!",
+										JOptionPane.INFORMATION_MESSAGE);
+								cleanFields();
+								model = null;
+
+							}
 
 						}
 
-						else
+					} catch (SQLException e1) {
 
-							JOptionPane.showMessageDialog(getContentPane(), null, "Erro: Aluno não encontrado!",
-									JOptionPane.INFORMATION_MESSAGE);
-						model = null;
+						e1.printStackTrace();
 
 					}
-
-				} catch (SQLException e1) {
-
-					e1.printStackTrace();
 
 				}
 
@@ -445,100 +453,24 @@ public class StudentFrm extends JInternalFrame {
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				try {
+				enableSearchingFields();
 
-					btnAdd.setEnabled(true);
-					btnRemove.setEnabled(true);
-					StudentField.setText(null);
-					StudentField.setEnabled(false);
-					BirthdateField.setText(null);
-					TelephoneField.setText(null);
-					SexCmb.setSelectedIndex(0);
-					PhoneField.setText(null);
-					EmailField.setText(null);
-					ObservationField.setText(null);
-					AdressField.setText(null);
-					AdressNumField.setText(null);
-					AdressComplementField.setText(null);
-					NeighbhField.setText(null);
-					CityField.setText(null);
-					StateField.setText(null);
-					CountryField.setText(null);
-					CepField.setText(null);
-
-					AlunoDAO dao = new AlunoDAO(conn);
-					Aluno model = new Aluno();
-
-					model.setAluno(JOptionPane.showInternalInputDialog(getContentPane(), null, "Nome do Aluno(a)",
-							JOptionPane.QUESTION_MESSAGE));
-
-					if (dao.Select(model) == null) {
-
-						JOptionPane.showMessageDialog(getContentPane(), "Aluno não encontrado!");
-
-					}
-
-					model = dao.Select(model);
-
-					StudentField.setText(model.getAluno());
-					BirthdateField.setText(df.format(model.getData_nascimento()));
-					TelephoneField.setText(model.getTelefone());
-
-					if (model.getSexo() == 'M')
-						SexCmb.setSelectedIndex(1);
-					else
-						SexCmb.setSelectedIndex(2);
-
-					PhoneField.setText(model.getCelular());
-					EmailField.setText(model.getEmail());
-					ObservationField.setText(model.getObservacao());
-					AdressField.setText(model.getEndereco());
-					AdressNumField.setText(model.getNumero());
-					AdressComplementField.setText(model.getComplemento());
-					NeighbhField.setText(model.getBairro());
-					CityField.setText(model.getCidade());
-					StateField.setText(model.getEstado());
-					CountryField.setText(model.getPais());
-					CepField.setText(model.getCep());
-
-				} catch (SQLException e1) {
-
-					JOptionPane.showMessageDialog(getContentPane(), "Aluno não encontrado!");
-					e1.printStackTrace();
-
-				}
+				StudentSearchFrm searchForm = new StudentSearchFrm(StudentFrm.this);
+				searchForm.setVisible(true);
 
 			}
 
 		});
 
 		btnAdd.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 
 				if (StudentField.isEnabled() == false) {
 
-					StudentField.setEnabled(true);
-					StudentField.setText(null);
-					BirthdateField.setText(null);
-					TelephoneField.setText(null);
-					SexCmb.setSelectedIndex(0);
-					PhoneField.setText(null);
-					EmailField.setText(null);
-					ObservationField.setText(null);
-					AdressField.setText(null);
-					AdressNumField.setText(null);
-					AdressComplementField.setText(null);
-					NeighbhField.setText(null);
-					CityField.setText(null);
-					StateField.setText(null);
-					CountryField.setText(null);
-					CepField.setText(null);
-					btnAdd.setEnabled(false);
-					btnRemove.setEnabled(false);
+					enableAddingFields();
 
-				}
-
-				else {
+				} else {
 
 					try {
 
@@ -573,23 +505,7 @@ public class StudentFrm extends JInternalFrame {
 
 							dao.Insert(model);
 							JOptionPane.showMessageDialog(getContentPane(), "Sucesso! Aluno Cadastrado");
-
-							StudentField.setText(null);
-							BirthdateField.setText(null);
-							TelephoneField.setText(null);
-							SexCmb.setSelectedIndex(0);
-							PhoneField.setText(null);
-							EmailField.setText(null);
-							ObservationField.setText(null);
-							AdressField.setText(null);
-							AdressNumField.setText(null);
-							AdressComplementField.setText(null);
-							NeighbhField.setText(null);
-							CityField.setText(null);
-							StateField.setText(null);
-							CountryField.setText(null);
-							CepField.setText(null);
-
+							cleanFields();
 							model = null;
 
 						}
@@ -610,6 +526,111 @@ public class StudentFrm extends JInternalFrame {
 
 		});
 
+	}
+
+	void updateFields(Aluno aluno) {
+
+		StudentField.setText(aluno.getAluno());
+		BirthdateField.setText(df.format(aluno.getData_nascimento()));
+		TelephoneField.setText(aluno.getTelefone());
+
+		if (aluno.getSexo() == 'M')
+			SexCmb.setSelectedIndex(1);
+		else
+			SexCmb.setSelectedIndex(2);
+
+		PhoneField.setText(aluno.getCelular());
+		EmailField.setText(aluno.getEmail());
+		ObservationField.setText(aluno.getObservacao());
+		AdressField.setText(aluno.getEndereco());
+		AdressNumField.setText(aluno.getNumero());
+		AdressComplementField.setText(aluno.getComplemento());
+		NeighbhField.setText(aluno.getBairro());
+		CityField.setText(aluno.getCidade());
+		StateField.setText(aluno.getEstado());
+		CountryField.setText(aluno.getPais());
+		CepField.setText(aluno.getCep());
+		StudentField.setEnabled(false);
+
+	}
+
+	void cleanFields() {
+
+		btnSearch.setEnabled(true);
+		btnRemove.setEnabled(false);
+		btnAdd.setEnabled(true);
+		btnUpdate.setEnabled(false);
+
+		StudentField.setEnabled(false);
+
+		StudentField.setText(null);
+		BirthdateField.setText(null);
+		TelephoneField.setText(null);
+		SexCmb.setSelectedIndex(0);
+		PhoneField.setText(null);
+		EmailField.setText(null);
+		ObservationField.setText(null);
+		AdressField.setText(null);
+		AdressNumField.setText(null);
+		AdressComplementField.setText(null);
+		NeighbhField.setText(null);
+		CityField.setText(null);
+		StateField.setText(null);
+		CountryField.setText(null);
+		CepField.setText(null);
+
+	}
+
+	void enableSearchingFields() {
+
+		btnAdd.setEnabled(true);
+		btnRemove.setEnabled(true);
+		btnUpdate.setEnabled(true);
+		btnSearch.setEnabled(true);
+
+		StudentField.setEnabled(false);
+
+		StudentField.setText(null);
+		BirthdateField.setText(null);
+		TelephoneField.setText(null);
+		SexCmb.setSelectedIndex(0);
+		PhoneField.setText(null);
+		EmailField.setText(null);
+		ObservationField.setText(null);
+		AdressField.setText(null);
+		AdressNumField.setText(null);
+		AdressComplementField.setText(null);
+		NeighbhField.setText(null);
+		CityField.setText(null);
+		StateField.setText(null);
+		CountryField.setText(null);
+		CepField.setText(null);
+
+	}
+
+	void enableAddingFields() {
+
+		btnAdd.setEnabled(false);
+		btnRemove.setEnabled(false);
+		btnUpdate.setEnabled(true);
+		btnSearch.setEnabled(true);
+		StudentField.setEnabled(true);
+
+		StudentField.setText(null);
+		BirthdateField.setText(null);
+		TelephoneField.setText(null);
+		SexCmb.setSelectedIndex(0);
+		PhoneField.setText(null);
+		EmailField.setText(null);
+		ObservationField.setText(null);
+		AdressField.setText(null);
+		AdressNumField.setText(null);
+		AdressComplementField.setText(null);
+		NeighbhField.setText(null);
+		CityField.setText(null);
+		StateField.setText(null);
+		CountryField.setText(null);
+		CepField.setText(null);
 	}
 
 }
