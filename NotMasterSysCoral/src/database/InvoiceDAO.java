@@ -72,6 +72,66 @@ public class InvoiceDAO extends MasterDAO{
 		
 		return arInvoice;
 	}
+	
+	public List<Object> SelectPayedInvoices() throws SQLException {
+		List<Object> arInvoice = new ArrayList<Object>();
+		
+		ResultSet rst = pst_selectPayed.executeQuery();
+		
+		while (rst.next()) {
+			
+			Invoice model = new Invoice();
+			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setData_vencimento(rst.getDate("data_vencimento"));
+			model.setData_cancelamento(rst.getDate("data_cancelamento"));
+			model.setValor(rst.getDouble("valor"));
+			model.setData_pagamento(rst.getDate("data_pagamento"));
+			arInvoice.add(model);
+			
+		}
+		
+		return arInvoice;
+	}
+	
+	public List<Object> SelectCanceledInvoices() throws SQLException {
+		List<Object> arInvoice = new ArrayList<Object>();
+		
+		ResultSet rst = pst_selectCanceled.executeQuery();
+		
+		while (rst.next()) {
+			
+			Invoice model = new Invoice();
+			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setData_vencimento(rst.getDate("data_vencimento"));
+			model.setData_cancelamento(rst.getDate("data_cancelamento"));
+			model.setValor(rst.getDouble("valor"));
+			model.setData_pagamento(rst.getDate("data_pagamento"));
+			arInvoice.add(model);
+			
+		}
+		
+		return arInvoice;
+	}
+	
+	public List<Object> SelectPendigInvoices() throws SQLException {
+		List<Object> arInvoice = new ArrayList<Object>();
+		
+		ResultSet rst = pst_selectPendings.executeQuery();
+		
+		while (rst.next()) {
+			
+			Invoice model = new Invoice();
+			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setData_vencimento(rst.getDate("data_vencimento"));
+			model.setData_cancelamento(rst.getDate("data_cancelamento"));
+			model.setValor(rst.getDouble("valor"));
+			model.setData_pagamento(rst.getDate("data_pagamento"));
+			arInvoice.add(model);
+			
+		}
+		
+		return arInvoice;
+	}
 
 	@Override
 	public Object Select(Object parameter) throws SQLException {

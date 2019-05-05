@@ -51,8 +51,8 @@ public class PrincipalWindow extends JFrame {
 	UsersFrm us;
 	StudentFrm studentFrm;
 	ModalityFrm mod;
-	//InvoiceCheckFrm icf;
-	//GenerateInvoicesFrm gif;
+	InvoiceCheckFrm icf;
+	GenerateInvoicesFrm gif;
 	JLabel lbUsuarioHora;
 
 	public PrincipalWindow(Usuario user) {

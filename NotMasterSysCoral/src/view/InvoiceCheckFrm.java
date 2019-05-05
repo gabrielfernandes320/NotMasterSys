@@ -7,6 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import com.sun.org.apache.bcel.internal.generic.Select;
+
 import database.ConnectionFactory;
 import database.InvoiceDAO;
 import database.UsuarioDAO;
@@ -14,8 +16,6 @@ import model.Invoice;
 import model.Usuario;
 import table.model.InvoicesCheckTableModel;
 import table.model.InvoicesCheckTableModel;
-import table.model.UsuariosTableModel;
-
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class InvoiceCheckFrm extends JInternalFrame {
 	private JTextField tbInitialDate;
@@ -88,6 +89,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		getContentPane().add(lblSituao);
 		
 		JComboBox cbSituation = new JComboBox();
+		cbSituation.setModel(new DefaultComboBoxModel(new String[] {"Todas", "Em Aberto", "Pagas", "Canceladas"}));
 		cbSituation.setBounds(402, 11, 115, 20);
 		getContentPane().add(cbSituation);
 		
@@ -111,9 +113,25 @@ public class InvoiceCheckFrm extends JInternalFrame {
 
 					InvoiceDAO dao = new InvoiceDAO(conn);
 					Invoice invoice = new Invoice();
-					List<Usuario> invoicesList = new ArrayList<Usuario>();
-					invoicesList = (List<Usuario>)(List<?>) new UsuarioDAO(conn).SelectAll();
-					model.addListaDeUsuarios(invoicesList);
+					List<Invoice> invoicesList = new ArrayList<Invoice>();
+					switch (cbSituation.getSelectedIndex()) {
+					case 0:
+						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectAll();
+						break;
+					case 1:
+						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectPendigInvoices();
+						break;
+					case 2:
+						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectPayedInvoices();
+						break;
+					case 3:
+						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectCanceledInvoices();
+						break;
+					default:
+						break;
+					}
+					
+					model.addListaDeInvoice(invoicesList);
 				
 				  } catch (SQLException e1) {
 					 e1.printStackTrace();

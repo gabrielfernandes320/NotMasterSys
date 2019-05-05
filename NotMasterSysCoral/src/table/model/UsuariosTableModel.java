@@ -38,18 +38,18 @@ public class UsuariosTableModel extends AbstractTableModel  {
 	}
 
 	public void setValueAt(Usuario aValue, int rowIndex) {
-		Usuario usuario = usuarios.get(rowIndex);
+		/*Usuario usuario = usuarios.get(rowIndex);
 
 		usuario.setUsuario(aValue.getUsuario());
 		usuario.setPerfil(aValue.getPerfil());
 
 		fireTableCellUpdated(rowIndex, 0);
-		fireTableCellUpdated(rowIndex, 1);
+		fireTableCellUpdated(rowIndex, 1);*/
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		Usuario usuario = usuarios.get(rowIndex);
+		/*Usuario usuario = usuarios.get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:
@@ -59,12 +59,13 @@ public class UsuariosTableModel extends AbstractTableModel  {
 		default:
 			System.err.println("Índice da coluna inválido");
 		}
-		fireTableCellUpdated(rowIndex, columnIndex);
+		fireTableCellUpdated(rowIndex, columnIndex);*/
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Usuario usuarioSelecionado = usuarios.get(rowIndex);
 		String valueObject = null;
+		Usuario usuarioSelecionado = usuarios.get(rowIndex);
+		
 		switch (columnIndex) {
 		case 0:
 			valueObject = usuarioSelecionado.getUsuario();
