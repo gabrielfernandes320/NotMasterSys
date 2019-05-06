@@ -90,7 +90,12 @@ public class StudentSearchFrm extends JDialog {
 						e1.printStackTrace();
 					}
 		            
-		            window.updateFields(p);
+		            try {
+						window.updateFields(p);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 		           	dispose();
 		           	
 		            }

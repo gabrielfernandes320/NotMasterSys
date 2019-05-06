@@ -39,7 +39,7 @@ import model.Usuario;
 import java.awt.Color;
 import javax.swing.JFormattedTextField;
 
-public class StudentFrm extends JInternalFrame {
+public class StudentFrm extends JInternalFrame implements ActionListener{
 
 	private int SearchMode;
 	private JTextField StudentField;
@@ -245,7 +245,7 @@ public class StudentFrm extends JInternalFrame {
 		AdressNumField.setColumns(10);
 
 		StateCmb = new JComboBox(new DefaultComboBoxModel(loadStatesComboBox()));
-		StateCmb.addActionListener(StateCmb);
+		StateCmb.addActionListener(this);
 		StateCmb.setBounds(299, 110, 118, 20);
 		EnderecoPanel.add(StateCmb);
 		
@@ -491,10 +491,12 @@ public class StudentFrm extends JInternalFrame {
         
     }
 	
-	void updateFields(Aluno aluno) {
+	void updateFields(Aluno aluno) throws SQLException {
 
 		model = aluno;
 
+		CityCmb.setModel(new DefaultComboBoxModel(loadCitiesComboBox(aluno.getEstado())));
+		
 		StudentField.setText(aluno.getAluno());
 		BirthdateField.setText(df.format(aluno.getData_nascimento()));
 		TelephoneField.setText(aluno.getTelefone());
@@ -512,8 +514,8 @@ public class StudentFrm extends JInternalFrame {
 		AdressComplementField.setText(aluno.getComplemento());
 		NeighbhField.setText(aluno.getBairro());
 
-		CityCmb.setSelectedItem(aluno.getCidade());
 		StateCmb.setSelectedItem(aluno.getEstado());
+		CityCmb.setSelectedItem(aluno.getCidade());
 		CountryCmb.setSelectedItem(aluno.getPais());
 
 		CepField.setText(aluno.getCep());
