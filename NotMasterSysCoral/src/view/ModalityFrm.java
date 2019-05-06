@@ -74,7 +74,7 @@ public class ModalityFrm extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public ModalityFrm() {
-		setTitle("Modalidades");
+		setTitle("Modalidades e Graduações");
 		setClosable(true);
 		setBounds(100, 100, 475, 318);
 		getContentPane().setLayout(null);
