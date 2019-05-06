@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
 import java.beans.PropertyVetoException;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
@@ -297,7 +298,12 @@ public class PrincipalWindow extends JFrame {
 				}
 				else {
 					
-					studentFrm = new StudentFrm();
+					try {
+						studentFrm = new StudentFrm();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					desktopPane.add(studentFrm);
 					studentFrm.setVisible(true);
 					studentFrm.setName(StudentFrm.class.getName());

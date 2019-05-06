@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
@@ -40,6 +41,7 @@ import javax.swing.JFormattedTextField;
 
 public class StudentFrm extends JInternalFrame {
 
+	private int SearchMode;
 	private JTextField StudentField;
 	private JTextField TelephoneField;
 	private JTextField EmailField;
@@ -47,13 +49,16 @@ public class StudentFrm extends JInternalFrame {
 	private JTextField AdressField;
 	private JTextField AdressComplementField;
 	private JTextField NeighbhField;
-	private JTextField StateField;
 	private JTextField CepField;
 	private JTextField AdressNumField;
-	private JTextField CityField;
-	private JTextField CountryField;
 	@SuppressWarnings("rawtypes")
 	private JComboBox SexCmb;
+	@SuppressWarnings("rawtypes")
+	private JComboBox CityCmb;
+	@SuppressWarnings("rawtypes")
+	private JComboBox CountryCmb;
+	@SuppressWarnings("rawtypes")
+	private JComboBox StateCmb;
 	private JTextArea ObservationField;
 	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	private JFormattedTextField BirthdateField;
@@ -62,10 +67,14 @@ public class StudentFrm extends JInternalFrame {
 	private JButton btnRemove;
 	private JButton btnUpdate;
 
+	Aluno model = new Aluno();
+
 	/**
 	 * Create the frame.
+	 * 
+	 * @throws SQLException
 	 */
-	public StudentFrm() {
+	public StudentFrm() throws SQLException {
 
 		setClosable(true);
 		setTitle("Cadastro de Alunos");
@@ -178,12 +187,12 @@ public class StudentFrm extends JInternalFrame {
 
 		JLabel lblCep = new JLabel("Estado:");
 		lblCep.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCep.setBounds(10, 111, 94, 14);
+		lblCep.setBounds(242, 111, 94, 14);
 		EnderecoPanel.add(lblCep);
 
 		JLabel lblCep_1 = new JLabel("CEP:");
 		lblCep_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCep_1.setBounds(10, 136, 94, 14);
+		lblCep_1.setBounds(242, 136, 94, 14);
 		EnderecoPanel.add(lblCep_1);
 
 		JLabel lblComplemento = new JLabel("Complemento:");
@@ -206,13 +215,8 @@ public class StudentFrm extends JInternalFrame {
 		EnderecoPanel.add(NeighbhField);
 		NeighbhField.setColumns(10);
 
-		StateField = new JTextField();
-		StateField.setBounds(114, 110, 118, 20);
-		EnderecoPanel.add(StateField);
-		StateField.setColumns(10);
-
 		CepField = new JTextField();
-		CepField.setBounds(114, 135, 118, 20);
+		CepField.setBounds(299, 135, 118, 20);
 		EnderecoPanel.add(CepField);
 		CepField.setColumns(10);
 
@@ -227,12 +231,12 @@ public class StudentFrm extends JInternalFrame {
 
 		JLabel lblCidade = new JLabel("Cidade:");
 		lblCidade.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCidade.setBounds(242, 86, 94, 14);
+		lblCidade.setBounds(10, 136, 94, 14);
 		EnderecoPanel.add(lblCidade);
 
 		JLabel lblPais = new JLabel("Pais:");
 		lblPais.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblPais.setBounds(242, 111, 94, 14);
+		lblPais.setBounds(10, 111, 94, 14);
 		EnderecoPanel.add(lblPais);
 
 		AdressNumField = new JTextField();
@@ -240,15 +244,18 @@ public class StudentFrm extends JInternalFrame {
 		EnderecoPanel.add(AdressNumField);
 		AdressNumField.setColumns(10);
 
-		CityField = new JTextField();
-		CityField.setBounds(298, 85, 119, 20);
-		EnderecoPanel.add(CityField);
-		CityField.setColumns(10);
+		StateCmb = new JComboBox(new DefaultComboBoxModel(loadStatesComboBox()));
+		StateCmb.addActionListener(StateCmb);
+		StateCmb.setBounds(299, 110, 118, 20);
+		EnderecoPanel.add(StateCmb);
+		
+		CityCmb = new JComboBox(new DefaultComboBoxModel(new String[] { ""}));
+		CityCmb.setBounds(114, 135, 118, 20);
+		EnderecoPanel.add(CityCmb);
 
-		CountryField = new JTextField();
-		CountryField.setBounds(298, 110, 119, 20);
-		EnderecoPanel.add(CountryField);
-		CountryField.setColumns(10);
+		CountryCmb = new JComboBox(new DefaultComboBoxModel(new String[] { "", "Brasil" }));
+		CountryCmb.setBounds(114, 110, 118, 20);
+		EnderecoPanel.add(CountryCmb);
 
 		MaskFormatter maskData = null;
 		try {
@@ -277,8 +284,8 @@ public class StudentFrm extends JInternalFrame {
 							|| EmailField.getText().trim().equals("") || ObservationField.getText().trim().equals("")
 							|| AdressField.getText().trim().equals("") || AdressNumField.getText().trim().equals("")
 							|| AdressComplementField.getText().trim().equals("") || SexCmb.getSelectedIndex() == -1
-							|| NeighbhField.getText().trim().equals("") || CityField.getText().trim().equals("")
-							|| StateField.getText().trim().equals("") || CountryField.getText().trim().equals("")
+							|| NeighbhField.getText().trim().equals("") || CityCmb.getSelectedIndex() == -1
+							|| StateCmb.getSelectedIndex() == -1 || StateCmb.getSelectedIndex() == -1
 							|| CepField.getText().trim().equals("")) {
 
 						JOptionPane.showMessageDialog(getContentPane(), "Campos em branco!", "Erro!",
@@ -287,10 +294,9 @@ public class StudentFrm extends JInternalFrame {
 					} else {
 
 						try {
-
+							
 							conn.setAutoCommit(false);
 							AlunoDAO dao = new AlunoDAO(conn);
-							Aluno model = new Aluno();
 
 							Date data = new Date(df.parse(BirthdateField.getText()).getTime());
 							// CHECANDO SE SEXO ESTÁ NULO
@@ -310,9 +316,9 @@ public class StudentFrm extends JInternalFrame {
 							model.setNumero(AdressNumField.getText());
 							model.setComplemento(AdressComplementField.getText());
 							model.setBairro(NeighbhField.getText());
-							model.setCidade(CityField.getText());
-							model.setEstado(StateField.getText());
-							model.setPais(CountryField.getText());
+							model.setCidade((String) CityCmb.getSelectedItem());
+							model.setEstado((String) StateCmb.getSelectedItem());
+							model.setPais((String) CountryCmb.getSelectedItem());
 							model.setCep(CepField.getText());
 
 							if (dao.Select(model) == null) {
@@ -321,13 +327,13 @@ public class StudentFrm extends JInternalFrame {
 								JOptionPane.showMessageDialog(null, "Sucesso! Aluno Cadastrado");
 
 								cleanFields();
-								model = null;
 
 							}
 
 							else
 								JOptionPane.showMessageDialog(null, "Erro no Cadastro! Nome de aluno já existente!");
-							model = null;
+
+							cleanFields();
 
 						} catch (SQLException | ParseException e1) {
 
@@ -344,8 +350,8 @@ public class StudentFrm extends JInternalFrame {
 							|| EmailField.getText().trim().equals("") || ObservationField.getText().trim().equals("")
 							|| AdressField.getText().trim().equals("") || AdressNumField.getText().trim().equals("")
 							|| AdressComplementField.getText().trim().equals("") || SexCmb.getSelectedIndex() == -1
-							|| NeighbhField.getText().trim().equals("") || CityField.getText().trim().equals("")
-							|| StateField.getText().trim().equals("") || CountryField.getText().trim().equals("")
+							|| NeighbhField.getText().trim().equals("") || CityCmb.getSelectedIndex() == -1
+							|| StateCmb.getSelectedIndex() == -1 || StateCmb.getSelectedIndex() == -1
 							|| CepField.getText().trim().equals("")) {
 
 						JOptionPane.showMessageDialog(getContentPane(), "Campos em branco!", "Erro!",
@@ -358,29 +364,29 @@ public class StudentFrm extends JInternalFrame {
 							conn.setAutoCommit(false);
 
 							AlunoDAO dao = new AlunoDAO(conn);
-							Aluno model = new Aluno();
 
-							model.setAluno(StudentField.getText());
-							model = dao.Select(model);
+							Aluno tempModel = dao.Select(model);
 
 							Date data = new Date(df.parse(BirthdateField.getText()).getTime());
-							model.setAluno(StudentField.getText());
-							model.setData_nascimento(data);
-							model.setTelefone(TelephoneField.getText());
-							model.setCelular(PhoneField.getText());
-							model.setEmail(EmailField.getText());
-							model.setObservacao(ObservationField.getText());
-							model.setEndereco(AdressField.getText());
-							model.setNumero(AdressNumField.getText());
-							model.setComplemento(AdressComplementField.getText());
-							model.setBairro(NeighbhField.getText());
-							model.setCidade(CityField.getText());
-							model.setEstado(StateField.getText());
-							model.setPais(CountryField.getText());
-							model.setCep(CepField.getText());
+							tempModel.setAluno(StudentField.getText());
+							tempModel.setData_nascimento(data);
+							tempModel.setTelefone(TelephoneField.getText());
+							tempModel.setCelular(PhoneField.getText());
+							tempModel.setEmail(EmailField.getText());
+							tempModel.setObservacao(ObservationField.getText());
+							tempModel.setEndereco(AdressField.getText());
+							tempModel.setNumero(AdressNumField.getText());
+							tempModel.setComplemento(AdressComplementField.getText());
+							tempModel.setBairro(NeighbhField.getText());
+							tempModel.setCidade((String) CityCmb.getSelectedItem());
+							tempModel.setEstado((String) StateCmb.getSelectedItem());
+							tempModel.setPais((String) CountryCmb.getSelectedItem());
+							tempModel.setCep(CepField.getText());
 
-							dao.Update(model);
+							dao.Update(tempModel);
 							JOptionPane.showMessageDialog(getContentPane(), "Alterações Salvas.");
+
+							cleanFields();
 
 						} catch (SQLException | ParseException e1) {
 
@@ -411,9 +417,6 @@ public class StudentFrm extends JInternalFrame {
 
 						conn.setAutoCommit(false);
 						AlunoDAO dao = new AlunoDAO(conn);
-						Aluno model = new Aluno();
-
-						model.setAluno(StudentField.getText());
 
 						if (JOptionPane.showConfirmDialog(getContentPane(), "Confirmar exclusão?", "Aviso:",
 								JOptionPane.YES_NO_OPTION) == 0) {
@@ -424,7 +427,6 @@ public class StudentFrm extends JInternalFrame {
 										JOptionPane.INFORMATION_MESSAGE);
 
 								cleanFields();
-								model = null;
 
 							}
 
@@ -433,7 +435,6 @@ public class StudentFrm extends JInternalFrame {
 								JOptionPane.showMessageDialog(getContentPane(), null, "Erro: Aluno não encontrado!",
 										JOptionPane.INFORMATION_MESSAGE);
 								cleanFields();
-								model = null;
 
 							}
 
@@ -466,59 +467,9 @@ public class StudentFrm extends JInternalFrame {
 
 			public void actionPerformed(ActionEvent e) {
 
-				if (StudentField.isEnabled() == false) {
-
+				if (SearchMode != 0) {
+				
 					enableAddingFields();
-
-				} else {
-
-					try {
-
-						conn.setAutoCommit(false);
-						AlunoDAO dao = new AlunoDAO(conn);
-						Aluno model = new Aluno();
-
-						Date data = new Date(df.parse(BirthdateField.getText()).getTime());
-						// CHECANDO SE SEXO ESTÁ NULO
-						if (SexCmb.getSelectedItem() == "Masculino")
-							model.setSexo('M');
-						else if (SexCmb.getSelectedItem() == "Feminino")
-							model.setSexo('F');
-						else
-							JOptionPane.showMessageDialog(null, "Erro: Sexo em branco");
-						model.setAluno(StudentField.getText());
-						model.setData_nascimento(data);
-						model.setTelefone(TelephoneField.getText());
-						model.setCelular(PhoneField.getText());
-						model.setEmail(EmailField.getText());
-						model.setObservacao(ObservationField.getText());
-						model.setEndereco(AdressField.getText());
-						model.setNumero(AdressNumField.getText());
-						model.setComplemento(AdressComplementField.getText());
-						model.setBairro(NeighbhField.getText());
-						model.setCidade(CityField.getText());
-						model.setEstado(StateField.getText());
-						model.setPais(CountryField.getText());
-						model.setCep(CepField.getText());
-
-						if (dao.Select(model) == null) {
-
-							dao.Insert(model);
-							JOptionPane.showMessageDialog(getContentPane(), "Sucesso! Aluno Cadastrado");
-							cleanFields();
-							model = null;
-
-						}
-
-						else
-							JOptionPane.showMessageDialog(null, "Erro no Cadastro! Nome de aluno já existente!");
-						model = null;
-
-					} catch (SQLException | ParseException e1) {
-
-						e1.printStackTrace();
-
-					}
 
 				}
 
@@ -528,7 +479,21 @@ public class StudentFrm extends JInternalFrame {
 
 	}
 
+    public void actionPerformed(ActionEvent e)
+    {
+    	
+        try {
+			CityCmb.setModel(new DefaultComboBoxModel(loadCitiesComboBox(StateCmb.getSelectedItem().toString())));
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+    }
+	
 	void updateFields(Aluno aluno) {
+
+		model = aluno;
 
 		StudentField.setText(aluno.getAluno());
 		BirthdateField.setText(df.format(aluno.getData_nascimento()));
@@ -546,22 +511,23 @@ public class StudentFrm extends JInternalFrame {
 		AdressNumField.setText(aluno.getNumero());
 		AdressComplementField.setText(aluno.getComplemento());
 		NeighbhField.setText(aluno.getBairro());
-		CityField.setText(aluno.getCidade());
-		StateField.setText(aluno.getEstado());
-		CountryField.setText(aluno.getPais());
+
+		CityCmb.setSelectedItem(aluno.getCidade());
+		StateCmb.setSelectedItem(aluno.getEstado());
+		CountryCmb.setSelectedItem(aluno.getPais());
+
 		CepField.setText(aluno.getCep());
-		StudentField.setEnabled(false);
 
 	}
 
 	void cleanFields() {
-
+		
+		SearchMode = 2;
+		
 		btnSearch.setEnabled(true);
 		btnRemove.setEnabled(false);
 		btnAdd.setEnabled(true);
 		btnUpdate.setEnabled(false);
-
-		StudentField.setEnabled(false);
 
 		StudentField.setText(null);
 		BirthdateField.setText(null);
@@ -574,22 +540,23 @@ public class StudentFrm extends JInternalFrame {
 		AdressNumField.setText(null);
 		AdressComplementField.setText(null);
 		NeighbhField.setText(null);
-		CityField.setText(null);
-		StateField.setText(null);
-		CountryField.setText(null);
 		CepField.setText(null);
+
+		model = new Aluno();
 
 	}
 
 	void enableSearchingFields() {
+
+		cleanFields();
+		
+		SearchMode = 1;
 
 		btnAdd.setEnabled(true);
 		btnRemove.setEnabled(true);
 		btnUpdate.setEnabled(true);
 		btnSearch.setEnabled(true);
 
-		StudentField.setEnabled(false);
-
 		StudentField.setText(null);
 		BirthdateField.setText(null);
 		TelephoneField.setText(null);
@@ -601,20 +568,23 @@ public class StudentFrm extends JInternalFrame {
 		AdressNumField.setText(null);
 		AdressComplementField.setText(null);
 		NeighbhField.setText(null);
-		CityField.setText(null);
-		StateField.setText(null);
-		CountryField.setText(null);
+		CityCmb.setSelectedIndex(0);
+		StateCmb.setSelectedIndex(0);
+		CountryCmb.setSelectedIndex(0);
 		CepField.setText(null);
 
 	}
 
 	void enableAddingFields() {
 
+		cleanFields();
+		
+		SearchMode = 0;
+
 		btnAdd.setEnabled(false);
 		btnRemove.setEnabled(false);
 		btnUpdate.setEnabled(true);
 		btnSearch.setEnabled(true);
-		StudentField.setEnabled(true);
 
 		StudentField.setText(null);
 		BirthdateField.setText(null);
@@ -627,10 +597,31 @@ public class StudentFrm extends JInternalFrame {
 		AdressNumField.setText(null);
 		AdressComplementField.setText(null);
 		NeighbhField.setText(null);
-		CityField.setText(null);
-		StateField.setText(null);
-		CountryField.setText(null);
+		CityCmb.setSelectedIndex(0);
+		StateCmb.setSelectedIndex(0);
+		CountryCmb.setSelectedIndex(0);
 		CepField.setText(null);
 	}
 
+	String[] loadCitiesComboBox(String estado) throws SQLException {
+
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+
+		AlunoDAO dao = new AlunoDAO(conn);
+		String[] Cities = dao.selectAllCities(estado);
+
+		return Cities;
+
+	}
+
+	String[] loadStatesComboBox() throws SQLException {
+
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+
+		AlunoDAO dao = new AlunoDAO(conn);
+		String[] States = dao.selectAllStates();
+
+		return States;
+
+	}
 }

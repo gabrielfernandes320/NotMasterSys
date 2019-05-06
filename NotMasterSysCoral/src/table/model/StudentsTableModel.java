@@ -11,7 +11,7 @@ import model.Aluno;
 public class StudentsTableModel extends AbstractTableModel  {
 
 	private List<Aluno> alunos;
-	private String[] colunas = new String[] {"Aluno", "Data de Nascimento", "Observação"};
+	private String[] colunas = new String[] {"Codigo", "Aluno", "Data de Nascimento", "Observação"};
 	
 	public StudentsTableModel(List<Aluno> alunos) {
 		this.alunos = alunos;
@@ -41,6 +41,7 @@ public class StudentsTableModel extends AbstractTableModel  {
 		
 		Aluno Aluno = alunos.get(rowIndex);
 
+		Aluno.setCodigo_aluno(aValue.getCodigo_aluno());
 		Aluno.setAluno(aValue.getAluno());
 		Aluno.setData_nascimento(aValue.getData_nascimento());
 		Aluno.setObservacao(aValue.getObservacao());
@@ -48,6 +49,7 @@ public class StudentsTableModel extends AbstractTableModel  {
 		fireTableCellUpdated(rowIndex, 0);
 		fireTableCellUpdated(rowIndex, 1);
 		fireTableCellUpdated(rowIndex, 3);
+		fireTableCellUpdated(rowIndex, 4);
 		
 	}
 
@@ -57,14 +59,17 @@ public class StudentsTableModel extends AbstractTableModel  {
 
 		switch (columnIndex) {
 		case 0:
-			Aluno.setAluno(aValue.toString());
+			Aluno.setCodigo_aluno((int) aValue);
 			break;
 		case 1:
-			Aluno.setData_nascimento((Date)aValue);
+			Aluno.setAluno(aValue.toString());
 			break;
 		case 2:
-			Aluno.setObservacao(aValue.toString());
+			Aluno.setData_nascimento((Date)aValue);
 			break;
+		case 3:
+			Aluno.setObservacao(aValue.toString());
+			break;	
 		default:
 			System.err.println("Índice da coluna inválido");
 		}
@@ -76,12 +81,15 @@ public class StudentsTableModel extends AbstractTableModel  {
 		String valueObject = null;
 		switch (columnIndex) {
 		case 0:
-			valueObject = alunoselecionado.getAluno();
+			valueObject = Integer.toString(alunoselecionado.getCodigo_aluno());
 			break;
 		case 1:
-			valueObject = alunoselecionado.getData_nascimento().toString();
+			valueObject = alunoselecionado.getAluno();
 			break;
 		case 2:
+			valueObject = alunoselecionado.getData_nascimento().toString();
+			break;
+		case 3:
 			valueObject = alunoselecionado.getObservacao();
 			break;
 		default:

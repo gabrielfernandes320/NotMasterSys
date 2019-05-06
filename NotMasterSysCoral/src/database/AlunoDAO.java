@@ -3,10 +3,12 @@ package database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.RowId;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.javafx.iio.ios.IosDescriptor;
 import com.sun.org.apache.bcel.internal.generic.CASTORE;
 import com.sun.xml.internal.bind.v2.model.core.ID;
 
@@ -15,14 +17,16 @@ import model.Aluno;
 public class AlunoDAO extends MasterDAO {
 	
 	// Cria as variaveis contendo o select a ser feito.
+	private String is_StateSelect = "select DISTINCT estado from cidades";
+	private String is_CitiesSelect = "select cidade from cidades where estado = ?";
 	private String is_update = "UPDATE alunos\r\n" + 
-			"   SET data_nascimento=?, sexo=?, telefone=?, \r\n" + 
+			"   SET aluno=?, data_nascimento=?, sexo=?, telefone=?, \r\n" + 
 			"       celular=?, email=?, observacao=?, endereco=?, numero=?, complemento=?, \r\n" + 
 			"       bairro=?, cidade=?, estado=?, pais=?, cep=? \r\n" + 
-			" WHERE aluno=?";
+			" WHERE codigo_aluno=?";
 	private String is_selectAll = "select * from alunos where aluno like ? ";
-	private String is_delete = "delete from alunos where aluno =?";
-	private String is_select = "select * from alunos where aluno = ? order by aluno";
+	private String is_delete = "delete from alunos where codigo_aluno =?";
+	private String is_select = "select * from alunos where codigo_aluno = ? order by aluno";
 	private String is_insert = "INSERT INTO alunos			"
 								+"	(						" 
 								+"		codigo_aluno, 		"
@@ -62,12 +66,15 @@ public class AlunoDAO extends MasterDAO {
 								+"		?"
 								+"	)";
 	
+	
 	private PreparedStatement pst_selectAll;
 	private PreparedStatement pst_select;
 	private PreparedStatement pst_insert;
 	private PreparedStatement pst_delete;
 	private PreparedStatement pst_update;
-	
+	private PreparedStatement pst_selectCities;
+	private PreparedStatement pst_selectStates;
+		
 	Connection io_connection;
 		
 	public AlunoDAO(Connection connection) 
@@ -79,6 +86,8 @@ public class AlunoDAO extends MasterDAO {
 		pst_insert = connection.prepareStatement(is_insert);
 		pst_delete = connection.prepareStatement(is_delete);
 		pst_update = connection.prepareStatement(is_update);
+		pst_selectCities = connection.prepareStatement(is_CitiesSelect);
+		pst_selectStates = connection.prepareStatement(is_StateSelect);
 		
 	}
 
@@ -123,8 +132,8 @@ public class AlunoDAO extends MasterDAO {
 		Aluno aluno = null;
 		
 		Aluno lo_aluno = (Aluno)parameter;
-		
-		Set(pst_select, 1, lo_aluno.getAluno());
+				
+		pst_select.setInt(1, lo_aluno.getCodigo_aluno());
 		
 		ResultSet rst = pst_select.executeQuery();
 		
@@ -163,21 +172,23 @@ public class AlunoDAO extends MasterDAO {
 		
 		Aluno lo_aluno = (Aluno)parameter;
 		
-		Set(pst_update, 1, lo_aluno.getData_nascimento());
-		Set(pst_update, 2, lo_aluno.getSexo());
-		Set(pst_update, 3, lo_aluno.getTelefone());
-		Set(pst_update, 4, lo_aluno.getCelular());
-		Set(pst_update, 5, lo_aluno.getEmail());
-		Set(pst_update, 6, lo_aluno.getObservacao());
-		Set(pst_update, 7, lo_aluno.getEndereco());
-		Set(pst_update, 8, lo_aluno.getNumero());
-		Set(pst_update, 9, lo_aluno.getComplemento());
-		Set(pst_update, 10, lo_aluno.getBairro());
-		Set(pst_update, 11, lo_aluno.getCidade());
-		Set(pst_update, 12, lo_aluno.getEstado());
-		Set(pst_update, 13, lo_aluno.getPais());
-		Set(pst_update, 14, lo_aluno.getCep());
-		Set(pst_update, 15, lo_aluno.getAluno());
+		Set(pst_update, 1, lo_aluno.getAluno());
+		Set(pst_update, 2, lo_aluno.getData_nascimento());
+		Set(pst_update, 3, lo_aluno.getSexo());
+		Set(pst_update, 4, lo_aluno.getTelefone());
+		Set(pst_update, 5, lo_aluno.getCelular());
+		Set(pst_update, 6, lo_aluno.getEmail());
+		Set(pst_update, 7, lo_aluno.getObservacao());
+		Set(pst_update, 8, lo_aluno.getEndereco());
+		Set(pst_update, 9, lo_aluno.getNumero());
+		Set(pst_update, 10, lo_aluno.getComplemento());
+		Set(pst_update, 11, lo_aluno.getBairro());
+		Set(pst_update, 12, lo_aluno.getCidade());
+		Set(pst_update, 13, lo_aluno.getEstado());
+		Set(pst_update, 14, lo_aluno.getPais());
+		Set(pst_update, 15, lo_aluno.getCep());
+		pst_update.setInt(16, lo_aluno.getCodigo_aluno());
+		
 
 		pst_update.execute();
 		
@@ -225,7 +236,7 @@ public class AlunoDAO extends MasterDAO {
         
         Aluno lo_aluno = (Aluno)parameter;
 
-        Set(pst_delete, 1, lo_aluno.getAluno());
+        pst_delete.setInt(1, lo_aluno.getCodigo_aluno());
 
         affectedrows = pst_delete.executeUpdate();
         io_connection.commit();
@@ -234,7 +245,46 @@ public class AlunoDAO extends MasterDAO {
 
     }
 
-
+	public String[] selectAllCities(String state) throws SQLException {
+		
+		pst_selectCities.setString(1, state);
+		
+		ResultSet rst = pst_selectCities.executeQuery();	
+		ArrayList<String> list = new ArrayList<String>();
+		
+		list.add("");
+		
+		while (rst.next()) {
+			
+			list.add (rst.getString ("cidade"));
+			
+		}
+		
+		String[] Cidades = (String[]) list.toArray (new String[list.size()]);
+		
+		return Cidades;
+		
+	}
+	
+	public String[] selectAllStates() throws SQLException {
+		
+		ResultSet rst = pst_selectStates.executeQuery();	
+		ArrayList<String> list = new ArrayList<String>();
+		
+		list.add("");
+		
+		while (rst.next()) {
+			
+			list.add (rst.getString ("estado"));
+			
+		}
+		
+		String[] Estados = (String[]) list.toArray (new String[list.size()]);
+		
+		return Estados;
+		
+	}
+	
 	@Override
 	public List<Object> SelectAll() throws SQLException {	
 		

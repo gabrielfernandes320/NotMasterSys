@@ -81,7 +81,7 @@ public class StudentSearchFrm extends JDialog {
 		            System.out.println(" double click" );
 		            
 		            Aluno p = new Aluno();		          
-		            p.setAluno(tabela.getValueAt(tabela.getSelectedRow(), 0).toString());
+		            p.setCodigo_aluno(Integer.parseInt((String) tabela.getValueAt(tabela.getSelectedRow(), 0)));
 		            try {
 						AlunoDAO AlunoDAO = new AlunoDAO(conn);
 						p = AlunoDAO.Select(p);
