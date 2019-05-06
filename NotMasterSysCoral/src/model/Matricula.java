@@ -9,8 +9,13 @@ public class Matricula {
 	private int dia_vencimento;
 	private Date data_encerramento;
 	
-	public Matricula(int codigo_matricula, int codigo_aluno, Date data_matricula, int dia_vencimento,
-			Date data_encerramento) {
+	//TODO: data_matrica e data_encerramento to date
+	
+	public Matricula() {
+		
+	}
+	
+	public Matricula(int codigo_matricula, int codigo_aluno, Date data_matricula, int dia_vencimento, Date data_encerramento) {
 		super();
 		this.codigo_matricula = codigo_matricula;
 		this.codigo_aluno = codigo_aluno;
@@ -18,6 +23,7 @@ public class Matricula {
 		this.dia_vencimento = dia_vencimento;
 		this.data_encerramento = data_encerramento;
 	}
+
 
 	public int getCodigo_matricula() {
 		return codigo_matricula;
