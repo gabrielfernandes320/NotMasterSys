@@ -17,16 +17,16 @@ import com.sun.prism.paint.Color;
 import javafx.util.converter.DateTimeStringConverter;
 import model.Invoice;
 
-public class InvoicesCheckTableModel extends AbstractTableModel  {
+public class InvoicesPaymentTableModel extends AbstractTableModel  {
 
 	private List<Invoice> invoices;
-	private String[] colunas = new String[] { "Codigo Matricula", "Nome Aluno",  "Data de vencimento", "Valor", "Data de pagamento", "Data de Cancelamento" };
+	private String[] colunas = new String[] { "Codigo Matricula", "Nome Aluno",  "Data de vencimento", "Valor"};
 	
-	public InvoicesCheckTableModel(List<Invoice> invoices) {
+	public InvoicesPaymentTableModel(List<Invoice> invoices) {
 		this.invoices = invoices;
 	}
 	
-	public InvoicesCheckTableModel() {
+	public InvoicesPaymentTableModel() {
 		this.invoices = new ArrayList<Invoice>();
 	}
 	
@@ -53,15 +53,13 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 		invoice.setNome_aluno(aValue.getNome_aluno());
 		invoice.setData_vencimento(aValue.getData_vencimento());
 		invoice.setValor(aValue.getValor());
-		invoice.setData_pagamento(aValue.getData_pagamento());
-		invoice.setData_cancelamento(aValue.getData_cancelamento());		
+	
 
 		fireTableCellUpdated(rowIndex, 0);
 		fireTableCellUpdated(rowIndex, 1);
 		fireTableCellUpdated(rowIndex, 2);
 		fireTableCellUpdated(rowIndex, 3);
-		fireTableCellUpdated(rowIndex, 4);
-		fireTableCellUpdated(rowIndex, 5);
+
 	}
 
 	@Override
@@ -74,26 +72,8 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 			break;
 		case 1:
 			invoice.setNome_aluno(aValue.toString());
-			break;
 		case 3:
 			invoice.setValor(Double.parseDouble(aValue.toString()));
-			break;
-		case 5:
-			try {
-				invoice.setData_cancelamento(formatter.parse(aValue.toString()));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
-		case 4:
-			try {
-				invoice.setData_pagamento(formatter.parse(aValue.toString()));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
 		case 2:
 			try {
 				invoice.setData_vencimento(formatter.parse(aValue.toString()));
@@ -101,7 +81,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			break;
+		
 		default:
 			System.err.println("Índice da coluna inválido");
 		}
@@ -124,12 +104,6 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 		case 3:
 			valueObject = String.valueOf(invoiceSelecionado.getValor());
 			break;
-		case 4:
-			valueObject = String.valueOf(invoiceSelecionado.getData_pagamento());
-			break;
-		case 5:
-			valueObject = String.valueOf(invoiceSelecionado.getData_cancelamento());
-			break;	
 		default:
 			System.err.println("Índice inválido para propriedade do bean Invoice.class");
 		}

@@ -71,26 +71,26 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		setClosable(true);
 		setBounds(100, 100, 757, 390);
 		getContentPane().setLayout(null);
-		
+
 		JLabel lblDe = new JLabel("De:");
 		lblDe.setFont(new Font("Arial", Font.BOLD, 12));
 		lblDe.setBounds(27, 13, 28, 14);
 		getContentPane().add(lblDe);
-		
+
 		MaskFormatter maskData = null;
 		try {
 			maskData = new MaskFormatter("##/##/####");
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		MaskFormatter maskData2 = null;
 		try {
 			maskData2 = new MaskFormatter("##/##/####");
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		tbInitialDate = new JFormattedTextField(df);
 		tbInitialDate.setBounds(51, 11, 102, 20);
 		getContentPane().add(tbInitialDate);
@@ -110,16 +110,16 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		lblSituao.setFont(new Font("Arial", Font.BOLD, 12));
 		lblSituao.setBounds(326, 13, 66, 14);
 		getContentPane().add(lblSituao);
-		
+
 		JComboBox cbSituation = new JComboBox();
-		cbSituation.setModel(new DefaultComboBoxModel(new String[] {"Todas", "Em Aberto", "Pagas", "Canceladas"}));
+		cbSituation.setModel(new DefaultComboBoxModel(new String[] { "Todas", "Em Aberto", "Pagas", "Canceladas" }));
 		cbSituation.setBounds(402, 11, 115, 20);
 		getContentPane().add(cbSituation);
-		
+
 		model = new InvoicesCheckTableModel();
 		JTable tabela = new JTable(model);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
+
 		JScrollPane scrollPane = new JScrollPane(tabela);
 		scrollPane.setSize(0, 0);
 		scrollPane.setLocation(0, 0);
@@ -129,52 +129,49 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		JButton button = new JButton("Buscar");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				try {
 					conn.setAutoCommit(false);
 					System.out.println("Conectado com sucesso!");
-
+						
 					Date dataInicial = new Date(df.parse(tbInitialDate.getText()).getTime());
 					Date dataFinal = new Date(df.parse(tbFinalDate.getText()).getTime());
-					
+
 					InvoiceDAO dao = new InvoiceDAO(conn);
 					Invoice invoice = new Invoice();
 					invoice.setInitial_date(dataInicial);
 					invoice.setFinal_date(dataFinal);
-					
+
 					List<Invoice> invoicesList = new ArrayList<Invoice>();
 					switch (cbSituation.getSelectedIndex()) {
 					case 0:
-						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectAll(invoice);
-						
+						invoicesList = (List<Invoice>) (List<?>) new InvoiceDAO(conn).SelectAll(invoice);
 						break;
 					case 1:
-						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectPendigInvoices(invoice);
+						invoicesList = (List<Invoice>) (List<?>) new InvoiceDAO(conn).SelectPendigInvoices(invoice);
 						break;
 					case 2:
-						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectPayedInvoices(invoice);
+						invoicesList = (List<Invoice>) (List<?>) new InvoiceDAO(conn).SelectPayedInvoices(invoice);
 						break;
 					case 3:
-						invoicesList = (List<Invoice>)(List<?>) new InvoiceDAO(conn).SelectCanceledInvoices(invoice);
+						invoicesList = (List<Invoice>) (List<?>) new InvoiceDAO(conn).SelectCanceledInvoices(invoice);
 						break;
 					default:
 						break;
 					}
-					
+
 					model.addListaDeInvoice(invoicesList);
-				
-					
-					
+
 					for (int i = 0; i < model.getRowCount(); i++) {
-						if(model.getValueAt(i, 3) != null) {
+						if (model.getValueAt(i, 3) != null) {
 							model.setRowColour(1, Color.RED);
-							
+
 						}
 					}
-				
-				  } catch (SQLException | ParseException e1) {
-					 e1.printStackTrace();
-			}
+
+				} catch (SQLException | ParseException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		button.setIcon(new ImageIcon(InvoiceCheckFrm.class.getResource("/view/images/localizar.png")));
@@ -182,17 +179,16 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		button.setBackground(SystemColor.menu);
 		button.setBounds(580, 6, 137, 31);
 		getContentPane().add(button);
-		
+
 	}
-	
-	
+
 	private void checkRows(InvoicesCheckTableModel table) {
 		for (int i = 0; i < table.getRowCount(); i++) {
-			if(table.getValueAt(i, 3) != null) {
+			if (table.getValueAt(i, 3) != null) {
 				table.setRowColour(1, Color.RED);
-				
+
 			}
 		}
-		
+
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.MaskFormatter;
@@ -16,7 +17,7 @@ import database.ConnectionFactory;
 import database.InvoiceDAO;
 import model.Aluno;
 import model.Invoice;
-import table.model.InvoicesCheckTableModel;
+import table.model.InvoicesPaymentTableModel;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -44,9 +45,11 @@ import javax.swing.DefaultComboBoxModel;
 public class InvoicePaymentFrm extends JInternalFrame {
 	private JFormattedTextField tbInitialDate;
 	private JFormattedTextField tbFinalDate;
-	private InvoicesCheckTableModel model;
+	private InvoicesPaymentTableModel model;
 	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
+	Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+	
+	
 	public InvoicePaymentFrm() {
 		setTitle("Pagamento de Faturas");
 		setClosable(true);
@@ -87,7 +90,7 @@ public class InvoicePaymentFrm extends JInternalFrame {
 		getContentPane().add(tbFinalDate);
 		maskData2.install(tbFinalDate);
 
-		model = new InvoicesCheckTableModel();
+		model = new InvoicesPaymentTableModel();
 		JTable tabela = new JTable(model);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -105,24 +108,83 @@ public class InvoicePaymentFrm extends JInternalFrame {
 		button.setBounds(580, 6, 137, 31);
 		getContentPane().add(button);
 
-		JPopupMenu RightClickMenu = new JPopupMenu();
+
 		JMenuItem payInvoice = new JMenuItem("Pagar Fatura");
 		JMenuItem cancelInvoice = new JMenuItem("Cancelar Fatura");
 		JMenuItem changeInvoice = new JMenuItem("Desconto/Acrescimo");
 
-		RightClickMenu.add(payInvoice);
-		RightClickMenu.add(cancelInvoice);
-		RightClickMenu.add(changeInvoice);
+        tabela.addMouseListener( new MouseAdapter()
+        {
+            public void mousePressed(MouseEvent e)
+            {
+                System.out.println("pressed");
+                
+                
+            }
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                int r = tabela.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < tabela.getRowCount()) {
+                	tabela.setRowSelectionInterval(r, r);
+                } else {
+                	tabela.clearSelection();
+                }
 
-		tabela.setComponentPopupMenu(RightClickMenu);
+                int rowindex = tabela.getSelectedRow();
+                if (rowindex < 0)
+                    return;
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+            		JPopupMenu RightClickMenu = new JPopupMenu();
+            		RightClickMenu.add(payInvoice);
+            		RightClickMenu.add(cancelInvoice);
+            		RightClickMenu.add(changeInvoice);
+                	RightClickMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+	
 
+        
 		// FUNÇOES IMPORTANTES E ETC
 
 		payInvoice.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Right-click performed on table and choose DELETE");
+                
+            	Invoice inv = new Invoice();           	
+            	
+            	inv.setCodigo_matricula(Integer.parseInt(String.valueOf((tabela.getValueAt(tabela.getSelectedRow(), 0)))));
+            	inv.setValor(Double.parseDouble((String) tabela.getValueAt(tabela.getSelectedRow(), 3)));
+            	
+            	try {
+            		
+					InvoiceDAO invDAO = new InvoiceDAO(conn);
+					
+					if (invDAO.PayInvoice(inv) == 1) {
+						
+						JOptionPane.showMessageDialog(getContentPane(), "Pagamento de fatura realizado.", "Sucesso!",
+								JOptionPane.INFORMATION_MESSAGE);
+						
+					}
+					else {
+						
+						JOptionPane.showMessageDialog(getContentPane(), "Problema no pagamento!", "Erro!",
+								JOptionPane.INFORMATION_MESSAGE);
+						
+					}
+					
+					
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+            	
+            	
+            	
             }
         });
 		
@@ -130,7 +192,39 @@ public class InvoicePaymentFrm extends JInternalFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Right-click performed on table and choose DELETE");
+                
+            	Invoice inv = new Invoice();
+            	
+            	inv.setCodigo_matricula(Integer.parseInt(String.valueOf((tabela.getValueAt(tabela.getSelectedRow(), 0)))));
+            	inv.setValor(Double.parseDouble((String) tabela.getValueAt(tabela.getSelectedRow(), 3)));
+            	
+            	try {
+            		
+					InvoiceDAO invDAO = new InvoiceDAO(conn);
+					
+					if (invDAO.CancelInvoice(inv) == 1) {
+						
+						JOptionPane.showMessageDialog(getContentPane(), "Cancelamento de fatura realizado.", "Sucesso!",
+								JOptionPane.INFORMATION_MESSAGE);
+						
+					}
+					else {
+						
+						JOptionPane.showMessageDialog(getContentPane(), "Problema no cancelamento!", "Erro!",
+								JOptionPane.INFORMATION_MESSAGE);
+						
+					}
+					
+					
+					
+				} catch (SQLException e1) {
+					
+					e1.printStackTrace();
+				}
+            	
+            	
+            	
+            	
             }
         });
 		
@@ -138,7 +232,40 @@ public class InvoicePaymentFrm extends JInternalFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Right-click performed on table and choose DELETE");
+                
+            	Invoice inv = new Invoice();
+            	
+            	Double newvalue = Double.valueOf(JOptionPane.showInputDialog(tabela, "Novo valor:", "", JOptionPane.INFORMATION_MESSAGE));
+            	inv.setCodigo_matricula(Integer.parseInt(String.valueOf((tabela.getValueAt(tabela.getSelectedRow(), 0)))));
+            	inv.setValor(Double.parseDouble((String) tabela.getValueAt(tabela.getSelectedRow(), 3)));
+            	
+            	try {
+            		
+					InvoiceDAO invDAO = new InvoiceDAO(conn);
+					
+					if (invDAO.ChangeInvoicePrice(inv, newvalue) == 1) {
+						
+						JOptionPane.showMessageDialog(getContentPane(), "Alteração de fatura realizada.", "Sucesso!",
+								JOptionPane.INFORMATION_MESSAGE);
+						
+					}
+					else {
+						
+						JOptionPane.showMessageDialog(getContentPane(), "Problema na alteração!", "Erro!",
+								JOptionPane.INFORMATION_MESSAGE);
+						
+					}
+					
+					
+					
+				} catch (SQLException e1) {
+					
+					e1.printStackTrace();
+				}
+            	
+            	
+            	
+            	
             }
         });
 				
@@ -175,7 +302,7 @@ public class InvoicePaymentFrm extends JInternalFrame {
 
 	}
 
-	private void checkRows(InvoicesCheckTableModel table) {
+	private void checkRows(InvoicesPaymentTableModel table) {
 		for (int i = 0; i < table.getRowCount(); i++) {
 			if (table.getValueAt(i, 3) != null) {
 				table.setRowColour(1, Color.RED);

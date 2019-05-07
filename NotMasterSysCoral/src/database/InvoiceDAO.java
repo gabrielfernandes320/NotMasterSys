@@ -11,79 +11,81 @@ import java.util.List;
 import model.Invoice;
 import model.Usuario;
 
-public class InvoiceDAO extends MasterDAO{
+public class InvoiceDAO extends MasterDAO {
+
+	private String is_delete = "";
+	private String is_selectAll = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento FROM faturas_matriculas  INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula  INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno WHERE faturas_matriculas.data_vencimento BETWEEN ? AND ?";
+
+	private String is_select = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n"
+			+ "  FROM public.faturas_matriculas";
+
+	private String is_select_pendigns_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \r\n"
+			+ "FROM faturas_matriculas  \r\n"
+			+ "INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula \r\n"
+			+ "INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno\r\n"
+			+ "WHERE faturas_matriculas.data_pagamento is null AND faturas_matriculas.data_cancelamento is null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?\r\n"
+			+ "																";
+	private String is_select_payeid_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento FROM faturas_matriculas  INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula  INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno WHERE faturas_matriculas.data_pagamento is not null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?";
+
+	private String is_select_canceled_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento FROM faturas_matriculas  INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula  INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno WHERE faturas_matriculas.data_cancelamento is not null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?";
+
+	private String is_insert = "";
+
+	private String is_update = "";
+
+	private String is_payment = "UPDATE public.faturas_matriculas\r\n" + "   SET data_pagamento = CURRENT_TIMESTAMP\r\n"
+			+ " WHERE codigo_matricula = ? and valor = ?";
 	
-	 
-		private String is_delete = "";
-		private String is_selectAll = "SELECT fm.codigo_matricula,a.aluno ,fm.data_vencimento, fm.valor, fm.data_pagamento, fm.data_cancelamento\r\n" + 
-				"  FROM public.faturas_matriculas fm\r\n" + 
-				"  INNER JOIN alunos a ON fm.codigo_matricula = a.codigo_aluno\r\n" + 
-				"\r\n" + 
-				" WHERE data_vencimento BETWEEN '1?' AND '2?'";
-		
-		private String is_select = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n" + 
-				"  FROM public.faturas_matriculas";
-		
-		private String is_select_pendigns_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \r\n" + 
-				"FROM faturas_matriculas  \r\n" + 
-				"INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula \r\n" + 
-				"INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno\r\n" + 
-				"WHERE faturas_matriculas.data_pagamento is null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?\r\n" + 
-				"																";
-		
-		private String is_select_payeid_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \\r\\n\" + \r\n" + 
-				"				\"FROM faturas_matriculas  \\r\\n\" + \r\n" + 
-				"				\"INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula \\r\\n\" + \r\n" + 
-				"				\"INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno\\r\\n\" + \r\n" + 
-				"				\"WHERE faturas_matriculas.data_pagamento is not null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?\\r\\n";
-		
-		private String is_select_canceled_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \\r\\n\" + \r\n" + 
-				"				\"FROM faturas_matriculas  \\r\\n\" + \r\n" + 
-				"				\"INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula \\r\\n\" + \r\n" + 
-				"				\"INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno\\r\\n\" + \r\n" + 
-				"				\"WHERE faturas_matriculas.data_cancelamento is not null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?\\r\\n";
-		
-		private String is_insert = "";
-		
-		private String is_update = "";
-		
-		private PreparedStatement pst_selectAll;
-		private PreparedStatement pst_select;
-		private PreparedStatement pst_selectPendings;
-		private PreparedStatement pst_selectCanceled;
-		private PreparedStatement pst_selectPayed;
-		private PreparedStatement pst_insert;
-		private PreparedStatement pst_update;
-		private PreparedStatement pst_delete;
-		
-		Connection io_connection;
-		
-		public InvoiceDAO(Connection connection) throws SQLException {
-			
-			io_connection = connection;
-			//pst_selectAll = connection.prepareStatement(is_selectAll);
-			pst_selectCanceled = connection.prepareStatement(is_select_canceled_invocies);
-			pst_selectPayed = connection.prepareStatement(is_select_payeid_invocies);
-			pst_selectPendings = connection.prepareStatement(is_select_pendigns_invocies);
-			pst_insert = connection.prepareStatement(is_insert);	
-			pst_delete = connection.prepareStatement(is_delete);
-			pst_update = connection.prepareStatement(is_update);
-			
-			
-		}
+	private String is_canceling = "UPDATE public.faturas_matriculas\r\n" + "   SET data_cancelamento = CURRENT_TIMESTAMP\r\n"
+			+ " WHERE codigo_matricula = ? and valor = ?";
+	
+	private String is_changevalue = "UPDATE public.faturas_matriculas\r\n" + "   SET valor = ?\r\n"
+			+ " WHERE codigo_matricula = ? and valor = ?";
+	
+
+	private PreparedStatement pst_selectAll;
+	private PreparedStatement pst_select;
+	private PreparedStatement pst_selectPendings;
+	private PreparedStatement pst_selectCanceled;
+	private PreparedStatement pst_selectPayed;
+	private PreparedStatement pst_insert;
+	private PreparedStatement pst_update;
+	private PreparedStatement pst_delete;
+	private PreparedStatement pst_payment;
+	private PreparedStatement pst_cancel;
+	private PreparedStatement pst_changevalue;
+	
+	Connection io_connection;
+
+	public InvoiceDAO(Connection connection) throws SQLException {
+
+		io_connection = connection;
+		pst_selectAll = connection.prepareStatement(is_selectAll);
+		pst_selectCanceled = connection.prepareStatement(is_select_canceled_invocies);
+		pst_selectPayed = connection.prepareStatement(is_select_payeid_invocies);
+		pst_selectPendings = connection.prepareStatement(is_select_pendigns_invocies);
+		pst_insert = connection.prepareStatement(is_insert);
+		pst_delete = connection.prepareStatement(is_delete);
+		pst_update = connection.prepareStatement(is_update);
+		pst_payment = connection.prepareStatement(is_payment);
+		pst_cancel = connection.prepareStatement(is_canceling);
+		pst_changevalue = connection.prepareStatement(is_changevalue);
+
+	}
 
 	@Override
 	public List<Object> SelectAll(Object parameter) throws SQLException {
- 		List<Object> arInvoice = new ArrayList<Object>();
-		Invoice lo_invoice = (Invoice)parameter;
-		
+
+		List<Object> arInvoice = new ArrayList<Object>();
+		Invoice lo_invoice = (Invoice) parameter;
+
 		pst_selectAll.setDate(1, (Date) lo_invoice.getInitial_date());
 		pst_selectAll.setDate(2, (Date) lo_invoice.getFinal_date());
-		ResultSet rst = pst_selectAll.executeQuery();;
+		ResultSet rst = pst_selectAll.executeQuery();
+		;
 
-		
 		while (rst.next()) {
-			
+
 			Invoice model = new Invoice();
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
 			model.setNome_aluno(rst.getString("aluno"));
@@ -92,22 +94,23 @@ public class InvoiceDAO extends MasterDAO{
 			model.setValor(rst.getDouble("valor"));
 			model.setData_pagamento(rst.getDate("data_pagamento"));
 			arInvoice.add(model);
-			
+
 		}
-		
+
 		return arInvoice;
 	}
-	
+
 	public List<Object> SelectPayedInvoices(Object parameter) throws SQLException {
 		List<Object> arInvoice = new ArrayList<Object>();
-		Invoice lo_invoice = (Invoice)parameter;
-		
+		Invoice lo_invoice = (Invoice) parameter;
+
 		pst_selectPayed.setDate(1, (Date) lo_invoice.getInitial_date());
 		pst_selectPayed.setDate(2, (Date) lo_invoice.getFinal_date());
-		ResultSet rst = pst_selectPayed.executeQuery();;
-		
+		ResultSet rst = pst_selectPayed.executeQuery();
+		;
+
 		while (rst.next()) {
-			
+
 			Invoice model = new Invoice();
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
 			model.setNome_aluno(rst.getString("aluno"));
@@ -116,22 +119,23 @@ public class InvoiceDAO extends MasterDAO{
 			model.setValor(rst.getDouble("valor"));
 			model.setData_pagamento(rst.getDate("data_pagamento"));
 			arInvoice.add(model);
-			
+
 		}
-		
+
 		return arInvoice;
 	}
-	
+
 	public List<Object> SelectCanceledInvoices(Object parameter) throws SQLException {
 		List<Object> arInvoice = new ArrayList<Object>();
-		Invoice lo_invoice = (Invoice)parameter;
-		
+		Invoice lo_invoice = (Invoice) parameter;
+
 		pst_selectCanceled.setDate(1, (Date) lo_invoice.getInitial_date());
 		pst_selectCanceled.setDate(2, (Date) lo_invoice.getFinal_date());
-		ResultSet rst = pst_selectCanceled.executeQuery();;
-		
+		ResultSet rst = pst_selectCanceled.executeQuery();
+		;
+
 		while (rst.next()) {
-			
+
 			Invoice model = new Invoice();
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
 			model.setNome_aluno(rst.getString("aluno"));
@@ -140,23 +144,24 @@ public class InvoiceDAO extends MasterDAO{
 			model.setValor(rst.getDouble("valor"));
 			model.setData_pagamento(rst.getDate("data_pagamento"));
 			arInvoice.add(model);
-			
+
 		}
-		
+
 		return arInvoice;
 	}
-	
+
 	public List<Object> SelectPendigInvoices(Object parameter) throws SQLException {
-		
+
 		List<Object> arInvoice = new ArrayList<Object>();
-		Invoice lo_invoice = (Invoice)parameter;
-		
+		Invoice lo_invoice = (Invoice) parameter;
+
 		pst_selectPendings.setDate(1, (Date) lo_invoice.getInitial_date());
 		pst_selectPendings.setDate(2, (Date) lo_invoice.getFinal_date());
-		ResultSet rst = pst_selectPendings.executeQuery();;
-		
+		ResultSet rst = pst_selectPendings.executeQuery();
+		;
+
 		while (rst.next()) {
-			
+
 			Invoice model = new Invoice();
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
 			model.setNome_aluno(rst.getString("aluno"));
@@ -165,10 +170,59 @@ public class InvoiceDAO extends MasterDAO{
 			model.setValor(rst.getDouble("valor"));
 			model.setData_pagamento(rst.getDate("data_pagamento"));
 			arInvoice.add(model);
-			
+
 		}
-		
+
 		return arInvoice;
+	}
+
+	public int PayInvoice(Invoice parameter) throws SQLException {
+
+		int IsPaymentSucessfull = 0;
+		
+		Invoice lo_invoice = (Invoice) parameter;
+
+		Set(pst_payment, 1, lo_invoice.getCodigo_matricula());
+		Set(pst_payment, 2, lo_invoice.getValor());
+
+		IsPaymentSucessfull = pst_payment.executeUpdate();
+		io_connection.commit();
+		
+		return IsPaymentSucessfull;
+
+	}
+	
+	public int CancelInvoice(Invoice parameter) throws SQLException {
+
+		int IsCancellingSucessfull = 0;
+		
+		Invoice lo_invoice = (Invoice) parameter;
+
+		Set(pst_cancel, 1, lo_invoice.getCodigo_matricula());
+		Set(pst_cancel, 2, lo_invoice.getValor());
+
+		IsCancellingSucessfull = pst_cancel.executeUpdate();
+		io_connection.commit();
+		
+		return IsCancellingSucessfull;
+
+	}
+	
+	public int ChangeInvoicePrice(Invoice parameter, Double newvalue) throws SQLException {
+
+		int IsChangeSucessfull = 0;
+		
+		Invoice lo_invoice = (Invoice) parameter;
+
+		Set(pst_changevalue, 1, newvalue);
+		Set(pst_changevalue, 2, lo_invoice.getCodigo_matricula());
+		Set(pst_changevalue, 3, lo_invoice.getValor());
+
+		IsChangeSucessfull = pst_changevalue.executeUpdate();
+		io_connection.commit();
+		
+		return IsChangeSucessfull;
+
 	}
 
 	@Override
@@ -180,13 +234,13 @@ public class InvoiceDAO extends MasterDAO{
 	@Override
 	public void Update(Object parameter) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void Insert(Object parameter) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -200,6 +254,5 @@ public class InvoiceDAO extends MasterDAO{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
 }
