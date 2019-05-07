@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -9,17 +7,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.MaskFormatter;
-
 import com.sun.prism.paint.Color;
-
-import database.AlunoDAO;
 import database.ConnectionFactory;
 import database.InvoiceDAO;
-import model.Aluno;
 import model.Invoice;
 import table.model.InvoicesPaymentTableModel;
 import java.awt.Font;
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JButton;
 import java.awt.SystemColor;
@@ -27,7 +20,6 @@ import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,10 +29,11 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import javax.swing.DefaultComboBoxModel;
 
 public class InvoicePaymentFrm extends JInternalFrame {
 	private JFormattedTextField tbInitialDate;
@@ -315,8 +308,21 @@ public class InvoicePaymentFrm extends JInternalFrame {
 			conn.setAutoCommit(false);
 			System.out.println("Conectado com sucesso!");
 
-			Date dataInicial = new Date(df.parse(tbInitialDate.getText()).getTime());
-			Date dataFinal = new Date(df.parse(tbFinalDate.getText()).getTime());
+			LocalDate data = LocalDate.parse("2000-01-01");
+			Date dataInicial = Date.valueOf(data);
+			data = LocalDate.parse("2999-01-01");
+			Date dataFinal = Date.valueOf(data);
+
+			if (tbInitialDate.getText().replace(" ", "").length() >= 8) {
+
+				dataInicial = new Date(df.parse(tbInitialDate.getText()).getTime());
+
+			}
+			if (tbFinalDate.getText().replace(" ", "").length() >= 8) {
+
+				dataFinal = new Date(df.parse(tbFinalDate.getText()).getTime());
+
+			}
 
 			InvoiceDAO dao = new InvoiceDAO(conn);
 			Invoice invoice = new Invoice();
@@ -324,8 +330,8 @@ public class InvoicePaymentFrm extends JInternalFrame {
 			invoice.setFinal_date(dataFinal);
 			List<Invoice> invoicesList = new ArrayList<Invoice>();
 			invoicesList = (List<Invoice>) (List<?>) new InvoiceDAO(conn).SelectPendigInvoices(invoice);
-			model.addListaDeInvoice(invoicesList);
-
+			model.addListaDeInvoice(invoicesList);			
+			
 			for (int i = 0; i < model.getRowCount(); i++) {
 				if (model.getValueAt(i, 3) != null) {
 					model.setRowColour(1, Color.RED);

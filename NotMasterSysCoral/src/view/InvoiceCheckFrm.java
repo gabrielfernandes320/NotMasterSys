@@ -1,22 +1,14 @@
 package view;
 
 import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.MaskFormatter;
-
-import com.sun.org.apache.bcel.internal.generic.Select;
 import com.sun.prism.paint.Color;
-
 import database.ConnectionFactory;
 import database.InvoiceDAO;
-import database.UsuarioDAO;
 import model.Invoice;
-import model.Usuario;
-import table.model.InvoicesCheckTableModel;
 import table.model.InvoicesCheckTableModel;
 import java.awt.Font;
 import javax.swing.JComboBox;
@@ -27,8 +19,6 @@ import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
-import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.Date;
@@ -36,6 +26,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -133,9 +124,22 @@ public class InvoiceCheckFrm extends JInternalFrame {
 				try {
 					conn.setAutoCommit(false);
 					System.out.println("Conectado com sucesso!");
-						
-					Date dataInicial = new Date(df.parse(tbInitialDate.getText()).getTime());
-					Date dataFinal = new Date(df.parse(tbFinalDate.getText()).getTime());
+
+					LocalDate data = LocalDate.parse("2000-01-01");
+					Date dataInicial = Date.valueOf(data);
+					data = LocalDate.parse("2999-01-01");
+					Date dataFinal = Date.valueOf(data);
+
+					if (tbInitialDate.getText().replace(" ", "").length() >= 8) {
+
+						dataInicial = new Date(df.parse(tbInitialDate.getText()).getTime());
+
+					}
+					if (tbFinalDate.getText().replace(" ", "").length() >= 8) {
+
+						dataFinal = new Date(df.parse(tbFinalDate.getText()).getTime());
+
+					}
 
 					InvoiceDAO dao = new InvoiceDAO(conn);
 					Invoice invoice = new Invoice();
@@ -161,7 +165,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 					}
 
 					model.addListaDeInvoice(invoicesList);
-
+					
 					for (int i = 0; i < model.getRowCount(); i++) {
 						if (model.getValueAt(i, 3) != null) {
 							model.setRowColour(1, Color.RED);
