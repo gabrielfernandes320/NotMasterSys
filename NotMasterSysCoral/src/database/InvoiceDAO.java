@@ -186,7 +186,6 @@ public class InvoiceDAO extends MasterDAO {
 		Set(pst_payment, 2, lo_invoice.getValor());
 
 		IsPaymentSucessfull = pst_payment.executeUpdate();
-		io_connection.commit();
 		
 		return IsPaymentSucessfull;
 
@@ -202,7 +201,6 @@ public class InvoiceDAO extends MasterDAO {
 		Set(pst_cancel, 2, lo_invoice.getValor());
 
 		IsCancellingSucessfull = pst_cancel.executeUpdate();
-		io_connection.commit();
 		
 		return IsCancellingSucessfull;
 
@@ -219,7 +217,6 @@ public class InvoiceDAO extends MasterDAO {
 		Set(pst_changevalue, 3, lo_invoice.getValor());
 
 		IsChangeSucessfull = pst_changevalue.executeUpdate();
-		io_connection.commit();
 		
 		return IsChangeSucessfull;
 
