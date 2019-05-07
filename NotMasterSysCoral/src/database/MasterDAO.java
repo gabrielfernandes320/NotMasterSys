@@ -70,6 +70,9 @@ public abstract class MasterDAO {
 		else if (value instanceof Double) {
 			pst.setDouble(position, (Double) value);
 		}
+		else if (value instanceof Integer) {
+			pst.setInt(position, (Integer) value);
+		}
 	}
 
 	
