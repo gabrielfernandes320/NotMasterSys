@@ -53,6 +53,7 @@ public class PrincipalWindow extends JFrame {
 	StudentFrm studentFrm;
 	ModalityFrm mod;
 	InvoiceCheckFrm icf;
+	InvoicePaymentFrm ipf;
 	GenerateInvoicesFrm gif;
 	JLabel lbUsuarioHora;
 
@@ -248,6 +249,22 @@ public class PrincipalWindow extends JFrame {
 			}
 		});
 
+		itemGPFaturamentoProc.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JanelaVerificar(UsersFrm.class.getName())) {
+					
+				}
+				else {
+					ipf = new InvoicePaymentFrm();
+					ipf.setName(UsersFrm.class.getName());
+					ipf.setLocation(1, 1);
+					desktopPane.add(ipf);
+					ipf.setVisible(true);
+				}
+			}
+		});
 		
 		//Cadastro
 //		

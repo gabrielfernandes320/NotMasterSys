@@ -283,9 +283,9 @@ public class StudentFrm extends JInternalFrame implements ActionListener{
 							|| TelephoneField.getText().trim().equals("") || PhoneField.getText().trim().equals("")
 							|| EmailField.getText().trim().equals("") || ObservationField.getText().trim().equals("")
 							|| AdressField.getText().trim().equals("") || AdressNumField.getText().trim().equals("")
-							|| AdressComplementField.getText().trim().equals("") || SexCmb.getSelectedIndex() == -1
+							|| AdressComplementField.getText().trim().equals("") || SexCmb.getSelectedIndex() == 0
 							|| NeighbhField.getText().trim().equals("") || CityCmb.getSelectedIndex() == -1
-							|| StateCmb.getSelectedIndex() == -1 || StateCmb.getSelectedIndex() == -1
+							|| StateCmb.getSelectedIndex() == 0 || StateCmb.getSelectedIndex() == 0
 							|| CepField.getText().trim().equals("")) {
 
 						JOptionPane.showMessageDialog(getContentPane(), "Campos em branco!", "Erro!",

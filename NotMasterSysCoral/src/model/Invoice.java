@@ -9,11 +9,11 @@ public class Invoice {
 	private double valor;
 	private Date data_pagamento;
 	private Date data_cancelamento;
-	private String initial_date;
-	private String final_date;
+	private Date initial_date;
+	private Date final_date;
 	
 	public Invoice(int codigo_matricula, String nome_aluno, Date data_vencimento, double valor, Date data_pagamento,
-			Date data_cancelamento, String initial_date, String final_date) {
+			Date data_cancelamento, Date initial_date, Date final_date) {
 		super();
 		this.codigo_matricula = codigo_matricula;
 		this.nome_aluno = nome_aluno;
@@ -77,19 +77,19 @@ public class Invoice {
 		this.data_cancelamento = data_cancelamento;
 	}
 
-	public String getInitial_date() {
+	public Date getInitial_date() {
 		return initial_date;
 	}
 
-	public void setInitial_date(String initial_date) {
+	public void setInitial_date(Date initial_date) {
 		this.initial_date = initial_date;
 	}
 
-	public String getFinal_date() {
+	public Date getFinal_date() {
 		return final_date;
 	}
 
-	public void setFinal_date(String final_date) {
+	public void setFinal_date(Date final_date) {
 		this.final_date = final_date;
 	}
 	

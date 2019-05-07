@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,20 +24,24 @@ public class InvoiceDAO extends MasterDAO{
 		private String is_select = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n" + 
 				"  FROM public.faturas_matriculas";
 		
-		private String is_select_pendigns_invocies = "SELECT fm.codigo_matricula,a.aluno ,fm.data_vencimento, fm.valor, fm.data_pagamento, fm.data_cancelamento\\r\\n\" + \r\n" + 
-				"				\"  FROM public.faturas_matriculas fm\\r\\n\" + \r\n" + 
-				"				\"  INNER JOIN alunos a ON fm.codigo_matricula = a.codigo_aluno\\r\\n\" + \r\n" + 
-				"				\"\\r\\n WHERE data_pagamento is null AND data_vencimento BETWEEN '1?' AND '2?'";
+		private String is_select_pendigns_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \r\n" + 
+				"FROM faturas_matriculas  \r\n" + 
+				"INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula \r\n" + 
+				"INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno\r\n" + 
+				"WHERE faturas_matriculas.data_pagamento is null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?\r\n" + 
+				"																";
 		
-		private String is_select_payeid_invocies = "SELECT fm.codigo_matricula,a.aluno ,fm.data_vencimento, fm.valor, fm.data_pagamento, fm.data_cancelamento\\r\\n\" + \r\n" + 
-				"				\"  FROM public.faturas_matriculas fm\\r\\n\" + \r\n" + 
-				"				\"  INNER JOIN alunos a ON fm.codigo_matricula = a.codigo_aluno\\r\\n\" + \r\n" + 
-				"				\"\\r\\n WHERE data_pagamento is not null AND data_vencimento BETWEEN '1?' AND '2?'";
+		private String is_select_payeid_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \\r\\n\" + \r\n" + 
+				"				\"FROM faturas_matriculas  \\r\\n\" + \r\n" + 
+				"				\"INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula \\r\\n\" + \r\n" + 
+				"				\"INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno\\r\\n\" + \r\n" + 
+				"				\"WHERE faturas_matriculas.data_pagamento is not null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?\\r\\n";
 		
-		private String is_select_canceled_invocies = "SELECT fm.codigo_matricula,a.aluno ,fm.data_vencimento, fm.valor, fm.data_pagamento, fm.data_cancelamento\\r\\n\" + \r\n" + 
-				"				\"  FROM public.faturas_matriculas fm\\r\\n\" + \r\n" + 
-				"				\"  INNER JOIN alunos a ON fm.codigo_matricula = a.codigo_aluno\\r\\n\" + \r\n" + 
-				"				\"\\r\\n WHERE data_cancelamento is not null AND data_vencimento BETWEEN '1?' AND '2?'";
+		private String is_select_canceled_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \\r\\n\" + \r\n" + 
+				"				\"FROM faturas_matriculas  \\r\\n\" + \r\n" + 
+				"				\"INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula \\r\\n\" + \r\n" + 
+				"				\"INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno\\r\\n\" + \r\n" + 
+				"				\"WHERE faturas_matriculas.data_cancelamento is not null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?\\r\\n";
 		
 		private String is_insert = "";
 		
@@ -72,10 +77,10 @@ public class InvoiceDAO extends MasterDAO{
  		List<Object> arInvoice = new ArrayList<Object>();
 		Invoice lo_invoice = (Invoice)parameter;
 		
-		is_selectAll = is_selectAll.replace("1?",lo_invoice.getInitial_date());
-		is_selectAll = is_selectAll.replace("2?",lo_invoice.getFinal_date());
-		pst_selectAll = io_connection.prepareStatement(is_selectAll);
+		pst_selectAll.setDate(1, (Date) lo_invoice.getInitial_date());
+		pst_selectAll.setDate(2, (Date) lo_invoice.getFinal_date());
 		ResultSet rst = pst_selectAll.executeQuery();;
+
 		
 		while (rst.next()) {
 			
@@ -97,9 +102,8 @@ public class InvoiceDAO extends MasterDAO{
 		List<Object> arInvoice = new ArrayList<Object>();
 		Invoice lo_invoice = (Invoice)parameter;
 		
-		is_select_payeid_invocies = is_select_payeid_invocies.replace("1?",lo_invoice.getInitial_date());
-		is_select_payeid_invocies = is_select_payeid_invocies.replace("2?",lo_invoice.getFinal_date());
-		pst_selectPayed = io_connection.prepareStatement(is_select_payeid_invocies);
+		pst_selectPayed.setDate(1, (Date) lo_invoice.getInitial_date());
+		pst_selectPayed.setDate(2, (Date) lo_invoice.getFinal_date());
 		ResultSet rst = pst_selectPayed.executeQuery();;
 		
 		while (rst.next()) {
@@ -122,9 +126,8 @@ public class InvoiceDAO extends MasterDAO{
 		List<Object> arInvoice = new ArrayList<Object>();
 		Invoice lo_invoice = (Invoice)parameter;
 		
-		is_select_canceled_invocies = is_select_canceled_invocies.replace("1?",lo_invoice.getInitial_date());
-		is_select_canceled_invocies = is_select_canceled_invocies.replace("2?",lo_invoice.getFinal_date());
-		pst_selectCanceled = io_connection.prepareStatement(is_select_canceled_invocies);
+		pst_selectCanceled.setDate(1, (Date) lo_invoice.getInitial_date());
+		pst_selectCanceled.setDate(2, (Date) lo_invoice.getFinal_date());
 		ResultSet rst = pst_selectCanceled.executeQuery();;
 		
 		while (rst.next()) {
@@ -144,12 +147,12 @@ public class InvoiceDAO extends MasterDAO{
 	}
 	
 	public List<Object> SelectPendigInvoices(Object parameter) throws SQLException {
+		
 		List<Object> arInvoice = new ArrayList<Object>();
 		Invoice lo_invoice = (Invoice)parameter;
 		
-		is_select_pendigns_invocies = is_select_pendigns_invocies.replace("1?",lo_invoice.getInitial_date());
-		is_select_pendigns_invocies = is_select_pendigns_invocies.replace("2?",lo_invoice.getFinal_date());
-		pst_selectPendings = io_connection.prepareStatement(is_select_pendigns_invocies);
+		pst_selectPendings.setDate(1, (Date) lo_invoice.getInitial_date());
+		pst_selectPendings.setDate(2, (Date) lo_invoice.getFinal_date());
 		ResultSet rst = pst_selectPendings.executeQuery();;
 		
 		while (rst.next()) {
