@@ -2,6 +2,7 @@ package table.model;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class AssiduidadeTableModel extends AbstractTableModel{
 
 	switch (columnIndex) {
 		case 0:
-		aluno.setData_entrada(Timestamp.valueOf(aValue.toString()));
+			aluno.setData_entrada(Timestamp.valueOf(aValue.toString()));
 		default:
 			System.err.println("Índice da coluna inválido");
 		}
@@ -113,6 +114,14 @@ public class AssiduidadeTableModel extends AbstractTableModel{
 
 	public boolean isEmpty() {
 		return assiduidade.isEmpty();
+	}
+	public String formatar(Timestamp timeS) {
+		Date data=new Date(timeS.getTime());
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "dd-MMM-yyyy HH:mm:ss"); 
+		String date = dateFormat.format(data); 
+		return date;
 	}
 
 }

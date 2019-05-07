@@ -1,8 +1,12 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
@@ -17,6 +21,7 @@ import javax.swing.border.EtchedBorder;
 
 import database.AssiduidadeDAO;
 import database.ConnectionFactory;
+import database.PlanosDAO;
 import lib.MasterMonthChooser;
 import model.Assiduidade;
 import table.model.AssiduidadeTableModel;
@@ -46,6 +51,8 @@ public class studentControlFrm extends JDialog {
 	private JScrollPane scpCosultaAl;
 	private JScrollPane scpAssiduidade;
 	private MasterMonthChooser mmcData;
+
+	Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 
 	/**
 	 * Launch the application.
@@ -80,6 +87,70 @@ public class studentControlFrm extends JDialog {
 		txfNumMatricula.setBounds(230, 22, 100, 20);
 		getContentPane().add(txfNumMatricula);
 		txfNumMatricula.setColumns(10);
+		txfNumMatricula.addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyPressed(KeyEvent e) {
+	            if(e.getKeyCode() == KeyEvent.VK_ENTER){
+	            	String aux = txfNumMatricula.getText();
+	            	
+	            	
+	            	
+	            		assModel.limpar();
+						try {
+							try {
+								conn.setAutoCommit(false);
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							AssiduidadeDAO ass = null;
+							try {
+								ass = new AssiduidadeDAO(conn);
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							Assiduidade model = null;
+							Timestamp ts;
+							try {
+								model = new Assiduidade();
+
+								Date date = new Date();
+								long time = date.getTime();
+								ts = new Timestamp(time);
+
+								model.setCodigo_matricula(Integer.parseInt(aux));
+								model.setData_entrada(ts);
+							} catch (NumberFormatException e2) {
+								// TODO Auto-generated catch block
+								e2.printStackTrace();
+							}
+							
+							zerarTodos();
+							try {
+								ass.Insert(model);
+								assModel.addListaDeAssiduidades(
+										new AssiduidadeDAO(conn).SelectAllP(Integer.parseInt(aux)));
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+								System.out.println(e1);
+							}
+						} catch (NumberFormatException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} 
+					}
+	        			
+	        			
+	        			
+	                
+	            }
+	        
+
+	    });
+		
+		
 		
 		txfNomeAluno = new JTextField();
 		txfNomeAluno.setEditable(false);
@@ -128,19 +199,9 @@ public class studentControlFrm extends JDialog {
 		mmcData.setBounds(22, 236, 181, 30);
 		getContentPane().add(mmcData);
 		
-//		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
-//		conn.setAutoCommit(false);
-//			AssiduidadeDAO ass = new AssiduidadeDAO(conn);
-//			Assiduidade model = new Assiduidade();
-//			
-//			model.setCodigo_matricula(100);
-//			teste = new GregorianCalendar();
-//			model.setData_entrada((Date) teste.getTime());
-//			
-//			ass.Insert(model);
 		
-		
-		
-		
+	}
+	public void zerarTodos() {
+		assModel.limpar();
 	}
 }
