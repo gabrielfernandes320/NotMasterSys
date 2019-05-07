@@ -14,20 +14,29 @@ public class InvoiceDAO extends MasterDAO{
 	
 	 
 		private String is_delete = "";
-		private String is_selectAll = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n" + 
-				"  FROM public.faturas_matriculas WHERE data_vencimento BETWEEN '1?' AND '2?'";
+		private String is_selectAll = "SELECT fm.codigo_matricula,a.aluno ,fm.data_vencimento, fm.valor, fm.data_pagamento, fm.data_cancelamento\r\n" + 
+				"  FROM public.faturas_matriculas fm\r\n" + 
+				"  INNER JOIN alunos a ON fm.codigo_matricula = a.codigo_aluno\r\n" + 
+				"\r\n" + 
+				" WHERE data_vencimento BETWEEN '1?' AND '2?'";
 		
 		private String is_select = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n" + 
 				"  FROM public.faturas_matriculas";
 		
-		private String is_select_pendigns_invocies = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n" + 
-				"  FROM public.faturas_matriculas WHERE data_pagamento is null AND data_vencimento BETWEEN '1?' AND '2?'";
+		private String is_select_pendigns_invocies = "SELECT fm.codigo_matricula,a.aluno ,fm.data_vencimento, fm.valor, fm.data_pagamento, fm.data_cancelamento\\r\\n\" + \r\n" + 
+				"				\"  FROM public.faturas_matriculas fm\\r\\n\" + \r\n" + 
+				"				\"  INNER JOIN alunos a ON fm.codigo_matricula = a.codigo_aluno\\r\\n\" + \r\n" + 
+				"				\"\\r\\n WHERE data_pagamento is null AND data_vencimento BETWEEN '1?' AND '2?'";
 		
-		private String is_select_payeid_invocies = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n" + 
-				"  FROM public.faturas_matriculas WHERE data_pagamento is not null AND data_vencimento BETWEEN '1?' AND '2?'";
+		private String is_select_payeid_invocies = "SELECT fm.codigo_matricula,a.aluno ,fm.data_vencimento, fm.valor, fm.data_pagamento, fm.data_cancelamento\\r\\n\" + \r\n" + 
+				"				\"  FROM public.faturas_matriculas fm\\r\\n\" + \r\n" + 
+				"				\"  INNER JOIN alunos a ON fm.codigo_matricula = a.codigo_aluno\\r\\n\" + \r\n" + 
+				"				\"\\r\\n WHERE data_pagamento is not null AND data_vencimento BETWEEN '1?' AND '2?'";
 		
-		private String is_select_canceled_invocies = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n" + 
-				"  FROM public.faturas_matriculas WHERE data_cancelamento is not null AND data_vencimento BETWEEN '1?' AND '2?'";
+		private String is_select_canceled_invocies = "SELECT fm.codigo_matricula,a.aluno ,fm.data_vencimento, fm.valor, fm.data_pagamento, fm.data_cancelamento\\r\\n\" + \r\n" + 
+				"				\"  FROM public.faturas_matriculas fm\\r\\n\" + \r\n" + 
+				"				\"  INNER JOIN alunos a ON fm.codigo_matricula = a.codigo_aluno\\r\\n\" + \r\n" + 
+				"				\"\\r\\n WHERE data_cancelamento is not null AND data_vencimento BETWEEN '1?' AND '2?'";
 		
 		private String is_insert = "";
 		
@@ -72,6 +81,7 @@ public class InvoiceDAO extends MasterDAO{
 			
 			Invoice model = new Invoice();
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setNome_aluno(rst.getString("aluno"));
 			model.setData_vencimento(rst.getDate("data_vencimento"));
 			model.setData_cancelamento(rst.getDate("data_cancelamento"));
 			model.setValor(rst.getDouble("valor"));
@@ -96,6 +106,7 @@ public class InvoiceDAO extends MasterDAO{
 			
 			Invoice model = new Invoice();
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setNome_aluno(rst.getString("aluno"));
 			model.setData_vencimento(rst.getDate("data_vencimento"));
 			model.setData_cancelamento(rst.getDate("data_cancelamento"));
 			model.setValor(rst.getDouble("valor"));
@@ -120,6 +131,7 @@ public class InvoiceDAO extends MasterDAO{
 			
 			Invoice model = new Invoice();
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setNome_aluno(rst.getString("aluno"));
 			model.setData_vencimento(rst.getDate("data_vencimento"));
 			model.setData_cancelamento(rst.getDate("data_cancelamento"));
 			model.setValor(rst.getDouble("valor"));
@@ -144,6 +156,7 @@ public class InvoiceDAO extends MasterDAO{
 			
 			Invoice model = new Invoice();
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setNome_aluno(rst.getString("aluno"));
 			model.setData_vencimento(rst.getDate("data_vencimento"));
 			model.setData_cancelamento(rst.getDate("data_cancelamento"));
 			model.setValor(rst.getDouble("valor"));

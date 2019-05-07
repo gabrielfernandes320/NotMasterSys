@@ -49,7 +49,7 @@ public class UsuariosTableModel extends AbstractTableModel  {
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		/*Usuario usuario = usuarios.get(rowIndex);
+		Usuario usuario = usuarios.get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:
@@ -59,7 +59,7 @@ public class UsuariosTableModel extends AbstractTableModel  {
 		default:
 			System.err.println("Índice da coluna inválido");
 		}
-		fireTableCellUpdated(rowIndex, columnIndex);*/
+		fireTableCellUpdated(rowIndex, columnIndex);
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {

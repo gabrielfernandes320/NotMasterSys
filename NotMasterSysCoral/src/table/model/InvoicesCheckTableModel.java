@@ -20,7 +20,7 @@ import model.Invoice;
 public class InvoicesCheckTableModel extends AbstractTableModel  {
 
 	private List<Invoice> invoices;
-	private String[] colunas = new String[] { "Codigo Matricula", "Data de vencimento", "Valor", "Data de pagamento", "Data de Cancelamento" };
+	private String[] colunas = new String[] { "Codigo Matricula", "Nome Aluno",  "Data de vencimento", "Valor", "Data de pagamento", "Data de Cancelamento" };
 	
 	public InvoicesCheckTableModel(List<Invoice> invoices) {
 		this.invoices = invoices;
@@ -50,6 +50,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 		Invoice invoice = invoices.get(rowIndex);
 
 		invoice.setCodigo_matricula(aValue.getCodigo_matricula());
+		invoice.setNome_aluno(aValue.getNome_aluno());
 		invoice.setData_vencimento(aValue.getData_vencimento());
 		invoice.setValor(aValue.getValor());
 		invoice.setData_pagamento(aValue.getData_pagamento());
@@ -60,6 +61,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 		fireTableCellUpdated(rowIndex, 2);
 		fireTableCellUpdated(rowIndex, 3);
 		fireTableCellUpdated(rowIndex, 4);
+		fireTableCellUpdated(rowIndex, 5);
 	}
 
 	@Override
@@ -70,22 +72,24 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 		case 0:
 			invoice.setCodigo_matricula(Integer.parseInt(aValue.toString()));
 		case 1:
-			invoice.setValor(Double.parseDouble(aValue.toString()));
+			invoice.setNome_aluno(aValue.toString());
 		case 2:
+			invoice.setValor(Double.parseDouble(aValue.toString()));
+		case 3:
 			try {
 				invoice.setData_cancelamento(formatter.parse(aValue.toString()));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		case 3:
+		case 4:
 			try {
 				invoice.setData_pagamento(formatter.parse(aValue.toString()));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		case 4:
+		case 5:
 			try {
 				invoice.setData_vencimento(formatter.parse(aValue.toString()));
 			} catch (ParseException e) {
@@ -107,15 +111,18 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 			valueObject = String.valueOf(invoiceSelecionado.getCodigo_matricula());
 			break;
 		case 1:
-			valueObject = String.valueOf(invoiceSelecionado.getData_cancelamento());
+			valueObject = String.valueOf(invoiceSelecionado.getNome_aluno());
 			break;
 		case 2:
-			valueObject = String.valueOf(invoiceSelecionado.getValor());
+			valueObject = String.valueOf(invoiceSelecionado.getData_cancelamento());
 			break;
 		case 3:
-			valueObject = String.valueOf(invoiceSelecionado.getData_pagamento());
+			valueObject = String.valueOf(invoiceSelecionado.getValor());
 			break;
 		case 4:
+			valueObject = String.valueOf(invoiceSelecionado.getData_pagamento());
+			break;
+		case 5:
 			valueObject = String.valueOf(invoiceSelecionado.getData_cancelamento());
 			break;	
 		default:

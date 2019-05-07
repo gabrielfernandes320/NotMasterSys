@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Invoice {
 	private int codigo_matricula;
+	private String nome_aluno;
 	private Date data_vencimento;
 	private double valor;
 	private Date data_pagamento;
@@ -11,10 +12,11 @@ public class Invoice {
 	private String initial_date;
 	private String final_date;
 	
-	public Invoice(int codigo_matricula, Date data_vencimento, double valor, Date data_pagamento,
+	public Invoice(int codigo_matricula, String nome_aluno, Date data_vencimento, double valor, Date data_pagamento,
 			Date data_cancelamento, String initial_date, String final_date) {
 		super();
 		this.codigo_matricula = codigo_matricula;
+		this.nome_aluno = nome_aluno;
 		this.data_vencimento = data_vencimento;
 		this.valor = valor;
 		this.data_pagamento = data_pagamento;
@@ -33,6 +35,14 @@ public class Invoice {
 
 	public void setCodigo_matricula(int codigo_matricula) {
 		this.codigo_matricula = codigo_matricula;
+	}
+
+	public String getNome_aluno() {
+		return nome_aluno;
+	}
+
+	public void setNome_aluno(String nome_aluno) {
+		this.nome_aluno = nome_aluno;
 	}
 
 	public Date getData_vencimento() {
