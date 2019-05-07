@@ -3,6 +3,7 @@ package database;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Date;
 import java.util.List;
@@ -40,10 +41,23 @@ public abstract class MasterDAO {
 		else if (value instanceof String) {
 			pst.setString(position, (String) value);
 		}
+		
+		else if (value instanceof Integer) {
+			pst.setInt(position, (Integer) value);
+		}
+		
+		else if (value instanceof Timestamp) {
+			//pst.setDate(position, new java.sql.Date(((Date)value).getTime()));			
+			pst.setTimestamp(position, new Timestamp(((java.util.Date) value).getTime())); 
+			//pst.setTimestamp(position,((Timestamp)value));
+		}
+		
 		else if (value instanceof Date) {
 			pst.setDate(position, new java.sql.Date(((Date)value).getTime()));			
 			// pst.setTimestamp(position, new Timestamp(((java.util.Date) value).getTime()));
+			//	pst.setTimestamp(position,((Timestamp)value));
 		}
+		
 		else if (value instanceof Character) {
 			pst.setString(position,((Character)value).toString());
 		}

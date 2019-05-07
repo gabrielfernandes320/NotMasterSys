@@ -14,7 +14,7 @@ public class AssiduidadeDAO extends MasterDAO{
 	// Cria as variaveis contendo o select a ser feito.
 			
 			private String is_selectAll = "select * from assiduidade order by data_entrada";
-			private String is_selectAllPesquisa = "select * from assiduidade where codigo_matricula like ? order by data_entrada";
+			private String is_selectAllPesquisa = "select * from assiduidade where codigo_matricula = ? order by data_entrada";
 			private String is_select = "select * from assiduidade where codigo_matricula = ? order by data_entrada";
 			private String is_insert = "INSERT INTO assiduidade	"
 										+" (					"
@@ -30,7 +30,7 @@ public class AssiduidadeDAO extends MasterDAO{
 									"   SET codigo_matricula=? where data_entrada = ?";
 			
 			private PreparedStatement pst_selectAll;
-			private PreparedStatement pst_selectAllPesquis;
+			private PreparedStatement pst_selectAllPesquisa;
 			private PreparedStatement pst_select;
 			private PreparedStatement pst_insert;
 			private PreparedStatement pst_update;
@@ -42,7 +42,7 @@ public class AssiduidadeDAO extends MasterDAO{
 				
 				io_connection = connection;
 				pst_selectAll = connection.prepareStatement(is_selectAll);
-				pst_selectAllPesquis = connection.prepareStatement(is_selectAllPesquisa);
+				pst_selectAllPesquisa = connection.prepareStatement(is_selectAllPesquisa);
 				pst_select = connection.prepareStatement(is_select);
 				pst_insert = connection.prepareStatement(is_insert);	
 				pst_update = connection.prepareStatement(is_update);
@@ -55,7 +55,7 @@ public class AssiduidadeDAO extends MasterDAO{
 		ResultSet rst = pst_selectAll.executeQuery();
 		 
 		while(rst.next()){
-			 Assiduidade model = new Assiduidade();
+			Assiduidade model = new Assiduidade();
 			 
 
 			 model.setCodigo_matricula(rst.getInt("codigo_matricula"));
@@ -66,12 +66,12 @@ public class AssiduidadeDAO extends MasterDAO{
 		return arlAssiduidade;
 	}
 	
-	public List<Assiduidade> SelectAll(final String pesquisa) throws SQLException {
+	public List<Assiduidade> SelectAllP(final int pesquisa) throws SQLException {
 		List<Assiduidade> arlAssiduidade = new ArrayList<Assiduidade>();
 		
-		Set(pst_selectAllPesquis, 1, "%"+pesquisa+"%");
+		Set(pst_selectAllPesquisa, 1, pesquisa);
 		
-		ResultSet rst = pst_selectAllPesquis.executeQuery();
+		ResultSet rst = pst_selectAllPesquisa.executeQuery();
 		 
 		while(rst.next()){
 			Assiduidade model = new Assiduidade();
@@ -86,18 +86,19 @@ public class AssiduidadeDAO extends MasterDAO{
 
 	@Override
 	public Object Select(Object parameter) throws SQLException {
-Assiduidade assiduidade = null;
+Assiduidade model = null;
 		
 		Set(pst_select, 1, ((Assiduidade)parameter).getCodigo_matricula());
 		Set(pst_select, 2, ((Assiduidade)parameter).getData_entrada());
 		
 		ResultSet rst = pst_select.executeQuery();
 		if(rst.next()) {
-			assiduidade = new Assiduidade();
-			assiduidade.setCodigo_matricula(rst.getInt("codigo_matricula"));
-			assiduidade.setData_entrada(rst.getTimestamp("data_entrada"));
+			model = new Assiduidade();
+			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setData_entrada(rst.getTimestamp("data_entrada"));
+			
 		}
-		return assiduidade;
+		return model;
 	}
 
 	@Override
@@ -110,9 +111,11 @@ Assiduidade assiduidade = null;
 	public void Insert(Object parameter) throws SQLException {
 		pst_insert.clearParameters();
 		
-		Assiduidade lo_plano = (Assiduidade)parameter;
-		Set(pst_insert, 1, lo_plano.getCodigo_matricula());
-		Set(pst_insert, 2, lo_plano.getData_entrada());
+		Assiduidade lo_assiduidade = (Assiduidade)parameter;
+		
+		Set(pst_insert, 1, lo_assiduidade.getCodigo_matricula());
+		Set(pst_insert, 2, lo_assiduidade.getData_entrada());
+		
 		pst_insert.execute();
 		
 		if (pst_insert.getUpdateCount() > 0) {
@@ -127,4 +130,9 @@ Assiduidade assiduidade = null;
 		return 0;
 	}
 
+	
+	
+	
+	
+	
 }

@@ -31,6 +31,8 @@ public class Assiduidade {
 		this.data_entrada = data_entrada;
 		
 	}
+
+
 	
 	
 	
