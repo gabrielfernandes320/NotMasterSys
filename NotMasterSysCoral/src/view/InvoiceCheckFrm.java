@@ -6,8 +6,10 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.text.MaskFormatter;
 
 import com.sun.org.apache.bcel.internal.generic.Select;
+import com.sun.prism.paint.Color;
 
 import database.ConnectionFactory;
 import database.InvoiceDAO;
@@ -18,6 +20,7 @@ import table.model.InvoicesCheckTableModel;
 import table.model.InvoicesCheckTableModel;
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.Dimension;
@@ -29,14 +32,15 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 
 public class InvoiceCheckFrm extends JInternalFrame {
-	private JTextField tbInitialDate;
-	private JTextField tbFinalDate;
+	private JFormattedTextField tbInitialDate;
+	private JFormattedTextField tbFinalDate;
 	private InvoicesCheckTableModel model;
 
 	/**
@@ -68,21 +72,37 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		lblDe.setBounds(27, 13, 28, 14);
 		getContentPane().add(lblDe);
 		
-		tbInitialDate = new JTextField();
+		MaskFormatter maskData = null;
+		try {
+			maskData = new MaskFormatter("##-##-####");
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		MaskFormatter maskData2 = null;
+		try {
+			maskData2 = new MaskFormatter("##-##-####");
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		
+		tbInitialDate = new JFormattedTextField();
 		tbInitialDate.setBounds(51, 11, 102, 20);
+		getContentPane().add(tbInitialDate);
+		maskData2.install(tbInitialDate);
 		getContentPane().add(tbInitialDate);
 		tbInitialDate.setColumns(10);
 		
 		JLabel lblAt = new JLabel("At\u00E9:");
 		lblAt.setFont(new Font("Arial", Font.BOLD, 12));
 		lblAt.setBounds(165, 13, 28, 14);
-		getContentPane().add(lblAt);
+		getContentPane().add(lblAt);	
 		
-		tbFinalDate = new JTextField();
-		tbFinalDate.setColumns(10);
+		tbFinalDate = new JFormattedTextField();
 		tbFinalDate.setBounds(197, 11, 115, 20);
 		getContentPane().add(tbFinalDate);
-		
+		maskData.install(tbFinalDate);
+		getContentPane().add(tbFinalDate);
+
 		JLabel lblSituao = new JLabel("Situa\u00E7\u00E3o:");
 		lblSituao.setFont(new Font("Arial", Font.BOLD, 12));
 		lblSituao.setBounds(326, 13, 66, 14);
@@ -137,6 +157,15 @@ public class InvoiceCheckFrm extends JInternalFrame {
 					
 					model.addListaDeInvoice(invoicesList);
 				
+					
+					
+					for (int i = 0; i < model.getRowCount(); i++) {
+						if(model.getValueAt(i, 3) != null) {
+							model.setRowColour(1, Color.RED);
+							
+						}
+					}
+				
 				  } catch (SQLException e1) {
 					 e1.printStackTrace();
 			}
@@ -148,8 +177,16 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		button.setBounds(580, 6, 137, 31);
 		getContentPane().add(button);
 		
+	}
+	
+	
+	private void checkRows(InvoicesCheckTableModel table) {
+		for (int i = 0; i < table.getRowCount(); i++) {
+			if(table.getValueAt(i, 3) != null) {
+				table.setRowColour(1, Color.RED);
+				
+			}
+		}
 		
-		
-
 	}
 }

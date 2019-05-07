@@ -6,10 +6,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
+
+import com.sun.prism.paint.Color;
 
 import javafx.util.converter.DateTimeStringConverter;
 import model.Invoice;
@@ -121,6 +124,16 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 
 		return valueObject;
 	}
+	
+	 List<Color> rowColours = Arrays.asList(
+		        Color.RED,
+		        Color.GREEN
+		    );
+	
+	public void setRowColour(int row, Color c) {
+        rowColours.set(row, c);
+        fireTableRowsUpdated(row, row);
+    }
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {

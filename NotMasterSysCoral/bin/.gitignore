@@ -1,4 +1,5 @@
-/view/
+/database/
+/lib/
 /model/
 /table/
-/database/
+/view/
