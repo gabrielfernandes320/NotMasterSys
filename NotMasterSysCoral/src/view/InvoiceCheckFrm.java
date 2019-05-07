@@ -4,8 +4,9 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.MaskFormatter;
-import com.sun.prism.paint.Color;
+import com.sun.xml.internal.ws.api.Component;
 import database.ConnectionFactory;
 import database.InvoiceDAO;
 import model.Invoice;
@@ -15,6 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JButton;
 import java.awt.SystemColor;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
@@ -31,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.color.*;
+import java.lang.String;
 
 public class InvoiceCheckFrm extends JInternalFrame {
 	private JFormattedTextField tbInitialDate;
@@ -111,7 +115,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		JTable tabela = new JTable(model);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		JScrollPane scrollPane = new JScrollPane(tabela);
+		JScrollPane scrollPane = new JScrollPane(getNewRenderedTable(tabela));
 		scrollPane.setSize(0, 0);
 		scrollPane.setLocation(0, 0);
 		scrollPane.setBounds(10, 42, 721, 307);
@@ -165,13 +169,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 					}
 
 					model.addListaDeInvoice(invoicesList);
-					
-					for (int i = 0; i < model.getRowCount(); i++) {
-						if (model.getValueAt(i, 3) != null) {
-							model.setRowColour(1, Color.RED);
-
-						}
-					}
+					tabela.repaint();
 
 				} catch (SQLException | ParseException e1) {
 					e1.printStackTrace();
@@ -186,13 +184,36 @@ public class InvoiceCheckFrm extends JInternalFrame {
 
 	}
 
-	private void checkRows(InvoicesCheckTableModel table) {
-		for (int i = 0; i < table.getRowCount(); i++) {
-			if (table.getValueAt(i, 3) != null) {
-				table.setRowColour(1, Color.RED);
+	private JTable getNewRenderedTable(final JTable tabela) {
 
+		tabela.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+
+			public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int col) {
+				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+				
+				if (table.getModel().getValueAt(row, 4) == null) {
+					setBackground(Color.WHITE);
+					setForeground(Color.BLACK);
+				} else {
+					setBackground(Color.GREEN);
+					setForeground(Color.BLACK);
+				}
+
+				if (table.getModel().getValueAt(row, 5) == null) {
+					setBackground(Color.WHITE);
+					setForeground(Color.BLACK);
+				} else {
+					setBackground(Color.RED);
+					setForeground(Color.BLACK);
+				}
+
+				return this;
 			}
-		}
+		});
 
-	}
+		return tabela;
+
+	};
+
 }
