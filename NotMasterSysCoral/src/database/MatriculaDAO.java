@@ -36,6 +36,7 @@ public class MatriculaDAO extends MasterDAO{
 		
 		pst_selectAll = connection.prepareStatement(is_selectAll);
 		pst_selectAluno = connection.prepareStatement(is_selectAluno);
+		pst_select = connection.prepareStatement(is_select);
 		pst_insert = connection.prepareStatement(is_insert);
 		
 	}
@@ -86,9 +87,24 @@ public class MatriculaDAO extends MasterDAO{
 
 	@Override
 	public Matricula Select(Object parameter) throws SQLException {
-		return null;
-		// TODO Auto-generated method stub
-
+		
+		Matricula matricula = null;
+		Matricula lo_matricula = (Matricula)parameter;
+		
+		Set(pst_selectAluno, 1, lo_matricula.getCodigo_aluno());
+		
+		ResultSet rst = pst_selectAluno.executeQuery();
+		
+		if (rst.next()) {
+			matricula = new Matricula();
+			matricula.setCodigo_aluno(rst.getInt("codigo_aluno"));
+			matricula.setAluno(rst.getString("aluno"));
+			
+			return matricula;			
+		}
+		
+		else
+			return null;
 	}
 	
 	

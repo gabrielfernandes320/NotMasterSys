@@ -9,7 +9,9 @@ import javax.swing.text.MaskFormatter;
 import com.sun.xml.internal.ws.api.Component;
 import database.ConnectionFactory;
 import database.InvoiceDAO;
+import database.MatriculaDAO;
 import model.Invoice;
+import model.Matricula;
 import table.model.InvoicesCheckTableModel;
 import java.awt.Font;
 import javax.swing.JComboBox;
@@ -191,20 +193,37 @@ public class InvoiceCheckFrm extends JInternalFrame {
 			public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 					boolean hasFocus, int row, int col) {
 				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+				String payed = String.valueOf(table.getValueAt(row, 4));
+				String canceled = String.valueOf(table.getValueAt(row, 5));
+				Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+				Matricula matri = new Matricula();
+				try {
+					MatriculaDAO md = new MatriculaDAO(conn);
+					
+					matri.setCodigo_aluno(Integer.parseInt(String.valueOf(table.getValueAt(row, 0))));
+					matri = md.Select(matri);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
-				if (table.getModel().getValueAt(row, 4) == null) {
+				
+				
+				if (payed == "null" && canceled == "null") {
 					setBackground(Color.WHITE);
 					setForeground(Color.BLACK);
-				} else {
+					table.setValueAt("asdsad", row , 4);
+					
+				} else if(payed != "null"){
 					setBackground(Color.GREEN);
 					setForeground(Color.BLACK);
-				}
-
-				if (table.getModel().getValueAt(row, 5) == null) {
-					setBackground(Color.WHITE);
-					setForeground(Color.BLACK);
-				} else {
+				
+				} else if(String.valueOf(matri.getCodigo_matricula()) == null){
 					setBackground(Color.RED);
+					setForeground(Color.BLACK);
+						
+				} else {
+					setBackground(Color.YELLOW);
 					setForeground(Color.BLACK);
 				}
 

@@ -65,7 +65,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 	}
 
 	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+	/*public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		Invoice invoice = invoices.get(rowIndex);
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		switch (columnIndex) {
@@ -106,7 +106,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 			System.err.println("Índice da coluna inválido");
 		}
 		fireTableCellUpdated(rowIndex, columnIndex);
-	}
+	}*/
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Invoice invoiceSelecionado = invoices.get(rowIndex);
