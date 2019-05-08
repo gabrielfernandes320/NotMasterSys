@@ -7,14 +7,18 @@ import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
 import javax.swing.text.MaskFormatter;
 
 import database.AlunoDAO;
 import database.ConnectionFactory;
 import database.MatriculaDAO;
+import database.Matricula_ModalidadeDAO;
 import model.Aluno;
 import model.Matricula;
+import model.Matricula_Modalidade;
 import table.model.PlansTableModel;
+import table.model.ModalidadeMatriculaTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,20 +33,25 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextArea;
-import java.awt.List;
+import java.util.List;
+import java.util.Locale;
 import java.awt.Point;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.Action;
 
@@ -52,7 +61,7 @@ public class MatriculaFrm extends JInternalFrame{
 	private JTextField txtCodAluno;
 	private JTextField txtVencimento;
 
-	
+	private JTable modalityTable;
 	
 	/**
 	 * Create the frame.
@@ -61,8 +70,6 @@ public class MatriculaFrm extends JInternalFrame{
 	
 		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");	
 		Matricula model = new Matricula();
-		
-		JTable table;
 		
 		setClosable(true);
 		setTitle("Matricular aluno");
@@ -153,29 +160,30 @@ public class MatriculaFrm extends JInternalFrame{
 		getContentPane().add(btnAdicionarModalidade);
 		btnAdicionarModalidade.setEnabled(false);
 	
-		JScrollBar scrollBar = new JScrollBar();
-		scrollBar.setBounds(534, 204, 20, 200);
-		getContentPane().add(scrollBar);
+		JScrollPane mScrollPane = new JScrollPane();
+		mScrollPane.setBounds(10, 204, 544, 200);
+		getContentPane().add(mScrollPane);
 		
-		table = new JTable();
-		table.setBounds(10, 204, 544, 200);
-		getContentPane().add(table);
-
+		ModalidadeMatriculaTableModel mTableModel = new ModalidadeMatriculaTableModel();
+		JTable modalityTable = new JTable(mTableModel);
+		mScrollPane.setViewportView(modalityTable);
 		
 		txtAluno.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_F9) {
 					
-					System.out.println("Buscando por " + txtAluno.getText() + "...");		
-					
+
 					try {
 						
 						conn.setAutoCommit(false);
+						
 						MatriculaDAO dao = new MatriculaDAO(conn);
+						Matricula_ModalidadeDAO matDao = new Matricula_ModalidadeDAO(conn);
 						Matricula model = new Matricula();
+						Matricula_Modalidade matModel = new Matricula_Modalidade();
 						
 						model.setAluno(txtAluno.getText());
-						
+			
 						model = dao.SelectAluno(model);
 
 						txtCodAluno.setText(Integer.toString(model.getCodigo_aluno()));
@@ -184,9 +192,38 @@ public class MatriculaFrm extends JInternalFrame{
 						if (model.getCodigo_aluno() != 0) {			
 							txtAluno.setEnabled(true);
 							txtVencimento.setEnabled(true);
-							btnSalvar.setEnabled(true);
+							//btnSalvar.setEnabled(true);
 							dataMatriculaField.setEnabled(true);
 							btnAdicionarModalidade.setEnabled(true);
+							
+							
+							matModel.setCodigo_matricula(Integer.parseInt(txtMatricula.getText()));
+							
+							List<Matricula_Modalidade> matModList = matDao.selectPorCodigoAluno(model); 
+							
+							mTableModel.addListaDeMatricula_Modalidade(matModList);
+							mScrollPane.setViewportView(modalityTable);
+							
+							modalityTable.addMouseListener(new MouseAdapter() {
+								public void mouseClicked(MouseEvent e) {
+									if (e.getClickCount() == 1) {
+
+										System.out.println("selected");
+
+										btnRemover.setEnabled(true);
+										
+										
+										
+										//System.out.println("Codigo da matricula selecionada: " + matModList.get(1));
+
+										
+										
+									}
+								}
+							});
+							
+						} else {
+							JOptionPane.showMessageDialog(getContentPane(), "Erro: Aluno não encontrado!");
 						}
 						
 						
@@ -229,27 +266,63 @@ public class MatriculaFrm extends JInternalFrame{
 					btnSalvar.setEnabled(true);
 					dataMatriculaField.setEnabled(true);
 					
-					Date data_matricula = new Date(df.parse(dataMatriculaField.getText()).getTime());
+					txtCodAluno.setText(Integer.toString(dao.NextCodigoAluno(model)));
+					txtMatricula.setText(Integer.toString(dao.NextCodigoMatricula(model)));	
 					
-					model.setCodigo_matricula(dao.NextCodigoMatricula(model));
-					model.setCodigo_aluno(Integer.parseInt(txtCodAluno.getText()));
-					model.setData_matricula(data_matricula);
-					model.setDia_vencimento(Integer.parseInt(txtVencimento.getText()));
-					model.setAluno(txtAluno.getText());
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(getContentPane(), "Erro: Aluno não cadastrado!");
+					e1.printStackTrace();
+				}
+				
+			}
+		}); //btn adicionar
+		
+		btnRemover.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				try {
+					Matricula_Modalidade model = new Matricula_Modalidade();
+					Matricula_ModalidadeDAO dao = new Matricula_ModalidadeDAO(conn);
+					Matricula mat = new Matricula();
+					//MatriculaDAO matDao = new MatriculaDAO(conn);
+				
+					mat.setCodigo_aluno(Integer.parseInt(txtCodAluno.getText()));
+					
+					List<Matricula_Modalidade> matModList = dao.selectPorCodigoAluno(mat); 
+					
+					model = (Matricula_Modalidade) matModList.get(modalityTable.getSelectedRow());
+					System.out.println("Element "+model.getCodigo_matricula());
+
+					mat.setCodigo_matricula(model.getCodigo_matricula());
 					
 					
+					//TODO: PASSAR UM DATE PRO dao.delete();
 					
+					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+					LocalDate localDate = LocalDate.now();
+					String data = (dtf.format(localDate));
+					DateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+					Date date = (Date) format.parse(data);
+					
+					System.out.println(date);
+					
+					
+					//System.out.println(data);
+					
+					//dao.Delete(model, data);
+						
+					btnRemover.setEnabled(false);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
-
-				
+				}			
 			}
-		}); //btn adicionar
+		}); //btn remover
 		
 		btnAdicionarModalidade.addActionListener(new ActionListener() {
 			
@@ -280,7 +353,7 @@ public class MatriculaFrm extends JInternalFrame{
 					
 					addMod.setVisible(true);
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(getContentPane(), "Erro: Aluno não cadastrado!");
 					e1.printStackTrace();
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
@@ -308,7 +381,7 @@ public class MatriculaFrm extends JInternalFrame{
 					model.setAluno(txtAluno.getText());
 					
 					dao.Insert(model);
-					JOptionPane.showMessageDialog(getContentPane(), "Sucesso! Aluno Matriculado");
+					
 			
 				
 				} catch (SQLException e1) {
@@ -321,7 +394,17 @@ public class MatriculaFrm extends JInternalFrame{
 			}
 		}); //btnSalvar
 		
+		btnPesquisar.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//System.out.println("Adicionar Aluno");
+				
+				JOptionPane.showMessageDialog(getContentPane(), "Digite o nome no campo \"Aluno\" e tecle F9");
+				
+			}
+		}); //btn pesquisar
 		
+
 	}
 	
 	
