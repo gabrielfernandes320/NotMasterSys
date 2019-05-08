@@ -4,6 +4,9 @@ import java.awt.EventQueue;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.MaskFormatter;
 
 import database.AlunoDAO;
@@ -11,16 +14,23 @@ import database.ConnectionFactory;
 import database.MatriculaDAO;
 import model.Aluno;
 import model.Matricula;
+import table.model.PlansTableModel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextArea;
 import java.awt.List;
+import java.awt.Point;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,9 +58,16 @@ public class MatriculaFrm extends JInternalFrame{
 	 * Create the frame.
 	 */
 	public MatriculaFrm() {
+	
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");	
+		Matricula model = new Matricula();
+		MatriculaTableModel tableModel = new MatriculaTableModel();
+		
+		JTable table;
+		
 		setClosable(true);
 		setTitle("Matricular aluno");
-		setBounds(100, 100, 574, 350);
+		setBounds(100, 100, 574, 450);
 		getContentPane().setLayout(null);
 		
 		JButton btnPesquisar = new JButton("Buscar");
@@ -136,8 +153,15 @@ public class MatriculaFrm extends JInternalFrame{
 		btnAdicionarModalidade.setBounds(10, 176, 202, 23);
 		getContentPane().add(btnAdicionarModalidade);
 		btnAdicionarModalidade.setEnabled(false);
+	
+		JScrollBar scrollBar = new JScrollBar();
+		scrollBar.setBounds(534, 204, 20, 200);
+		getContentPane().add(scrollBar);
+		
+		table = new JTable();
+		table.setBounds(10, 204, 544, 200);
+		getContentPane().add(table);
 
-		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 		
 		txtAluno.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -156,6 +180,7 @@ public class MatriculaFrm extends JInternalFrame{
 						model = dao.SelectAluno(model);
 
 						txtCodAluno.setText(Integer.toString(model.getCodigo_aluno()));
+						txtMatricula.setText(Integer.toString(dao.NextCodigoMatricula(model)));
 						
 						if (model.getCodigo_aluno() != 0) {			
 							txtAluno.setEnabled(true);
@@ -194,15 +219,77 @@ public class MatriculaFrm extends JInternalFrame{
 			public void actionPerformed(ActionEvent e) {
 				//System.out.println("Adicionar Aluno");
 				
-				txtAluno.setEnabled(true);
-				txtVencimento.setEnabled(true);
-				btnAdicionarModalidade.setEnabled(true);
-				btnSalvar.setEnabled(true);
-				dataMatriculaField.setEnabled(true);
-				
+				try {
+					
+					conn.setAutoCommit(false);
+					MatriculaDAO dao = new MatriculaDAO(conn);
+					
+					txtAluno.setEnabled(true);
+					txtVencimento.setEnabled(true);
+					btnAdicionarModalidade.setEnabled(true);
+					btnSalvar.setEnabled(true);
+					dataMatriculaField.setEnabled(true);
+					
+					Date data_matricula = new Date(df.parse(dataMatriculaField.getText()).getTime());
+					
+					model.setCodigo_matricula(dao.NextCodigoMatricula(model));
+					model.setCodigo_aluno(Integer.parseInt(txtCodAluno.getText()));
+					model.setData_matricula(data_matricula);
+					model.setDia_vencimento(Integer.parseInt(txtVencimento.getText()));
+					model.setAluno(txtAluno.getText());
+					
+					
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 				
 			}
 		}); //btn adicionar
+		
+		btnAdicionarModalidade.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				try {
+					
+					conn.setAutoCommit(false);
+					MatriculaDAO dao = new MatriculaDAO(conn);
+					
+					Date data_matricula = new Date(df.parse(dataMatriculaField.getText()).getTime());
+					
+					model.setCodigo_matricula(Integer.parseInt(txtMatricula.getText()));
+					model.setCodigo_aluno(Integer.parseInt(txtCodAluno.getText()));
+					model.setData_matricula(data_matricula);
+					model.setDia_vencimento(Integer.parseInt(txtVencimento.getText()));
+					model.setAluno(txtAluno.getText());
+					
+					dao.Insert(model);
+					
+					JOptionPane.showMessageDialog(getContentPane(), "Insira as demais informações da matrícula: ");
+					
+					AddModalidadeFrm addMod = new AddModalidadeFrm(MatriculaFrm.this, model);
+					
+					
+					
+					addMod.setVisible(true);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}		
+			}
+		}); //btnAdicionarModalidade
+		
 		
 		btnSalvar.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
@@ -215,6 +302,7 @@ public class MatriculaFrm extends JInternalFrame{
 					
 					Date data_matricula = new Date(df.parse(dataMatriculaField.getText()).getTime());
 					
+					model.setCodigo_matricula(Integer.parseInt(txtMatricula.getText()));
 					model.setCodigo_aluno(Integer.parseInt(txtCodAluno.getText()));
 					model.setData_matricula(data_matricula);
 					model.setDia_vencimento(Integer.parseInt(txtVencimento.getText()));
@@ -234,17 +322,7 @@ public class MatriculaFrm extends JInternalFrame{
 			}
 		}); //btnSalvar
 		
-		btnAdicionarModalidade.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-				AddModalidadeFrm addMod = new AddModalidadeFrm(MatriculaFrm.this);
-				addMod.setVisible(true);
-				
-			}
-		}); //btnAdicionarModalidade
+		
 	}
 	
 	
