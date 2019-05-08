@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -23,14 +24,19 @@ import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JPasswordField;
 
 public class LoginFrm extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField tbUser;
-	private JPasswordField tbPassword;
+	private JTextField txfUsuario;
+	private JPasswordField pwfSenha;
+	private JLabel lblUsuario;
+	private JLabel lblSenha;
+	private JButton btnEntrar;
 
 	/**
 	 * Launch the application.
@@ -52,61 +58,111 @@ public class LoginFrm extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginFrm() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 327, 141);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setBounds(100, 100, 327, 141);
+//		contentPane = new JPanel();
+//		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+//		setContentPane(contentPane);
+
+		// Define o tamanho da janela.
+		setSize(400, 200);
+
+		// Define o titulo da janela.
+		setTitle("Login");
+
+		// Seta o layout a ser utilizado (NULL significa que não irá utilizar nenhum).
+		setLayout(null);
+
+		// Define que não poderá ser alterado as dimensões da tela.
+		setResizable(false);
+
+		// Define o método de fechamento da janela.
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setBackground(Color.black);
+
+		setLocationRelativeTo(null);
+		// Cria os componentes.
+		ComponentesCriar();
 		
-		JButton btnNewButton = new JButton("Ok");
-		btnNewButton.setBounds(193, 32, 108, 45);
-		btnNewButton.addActionListener(new ActionListener() {
+		
+		
+	}
+	
+	public void ComponentesCriar() {
+		
+		btnEntrar = new JButton("Entrar");
+		btnEntrar.setBounds(150, 110, 100, 25);
+		btnEntrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Usuario user = new Usuario();
-				Connection conn;
-				user.setUsuario(tbUser.getText());
-				if(user.getUsuario() == "flux"){
-					user.setPerfil("Completo");
-					conn = ConnectionFactory.getConnection("master", "admin", "admin");
-				}
-				else {
-				conn = ConnectionFactory.getConnection("master", tbUser.getText().toString(), tbPassword.getText());
-				System.out.println("Deu certo");
-				}
-				try {
-					UsuarioDAO dao = new UsuarioDAO(conn);
-					user = (Usuario) dao.Select(user);
-					System.out.println(user.getUsuario() + user.getPerfil());
-					new PrincipalWindow(user).setVisible(true);
-					setVisible(false); //you can't see me!  // i see you
-					dispose(); //Destroy the JFrame object
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
+				ValidarLogin();
 			}
 		});
-		contentPane.setLayout(null);
-		contentPane.add(btnNewButton);
 		
-		tbUser = new JTextField();
-		tbUser.setBounds(59, 32, 124, 20);
-		contentPane.add(tbUser);
-		tbUser.setColumns(10);
+		getContentPane().add(btnEntrar);
 		
-		JLabel lblUsuario = new JLabel("Usuario:");
+		txfUsuario = new JTextField();
+		txfUsuario.setBounds(90, 30, 260, 25);
+		txfUsuario.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				pwfSenha.requestFocus();
+			}
+		});
+		getContentPane().add(txfUsuario);
+		
+		lblUsuario = new JLabel("Usuario:");
 		lblUsuario.setFont(new Font("Arial", Font.PLAIN, 12));
-		lblUsuario.setBounds(10, 32, 54, 14);
-		contentPane.add(lblUsuario);
+		lblUsuario.setBounds(30, 30, 200, 25);
+		getContentPane().add(lblUsuario);
 		
-		JLabel lblSenha = new JLabel("Senha:");
+		lblSenha = new JLabel("Senha:");
 		lblSenha.setFont(new Font("Arial", Font.PLAIN, 12));
-		lblSenha.setBounds(10, 59, 54, 14);
-		contentPane.add(lblSenha);
+		lblSenha.setBounds(30, 65, 200, 25);
+		getContentPane().add(lblSenha);
 		
-		tbPassword = new JPasswordField();
-		tbPassword.setBounds(59, 57, 124, 20);
-		contentPane.add(tbPassword);
+		pwfSenha = new JPasswordField();
+		pwfSenha.setBounds(90, 65, 260, 25);
+		pwfSenha.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				btnEntrar.requestFocus();
+				ValidarLogin();
+
+			}
+		});
+		getContentPane().add(pwfSenha);
+		
+	}
+	
+	
+	public void ValidarLogin() {
+		Usuario user = new Usuario();
+		Connection conn;
+		user.setUsuario(txfUsuario.getText());
+		if(user.getUsuario() == "flux"){
+			user.setPerfil("Completo");
+			conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		}
+		else {
+		conn = ConnectionFactory.getConnection("master", txfUsuario.getText().toString(), pwfSenha.getText());
+		System.out.println("Deu certo");
+		}
+		try {
+			UsuarioDAO dao = new UsuarioDAO(conn);
+			user = (Usuario) dao.Select(user);
+			System.out.println(user.getUsuario() + user.getPerfil());
+			new PrincipalWindow(user).setVisible(true);
+			setVisible(false); //you can't see me!  // i see you
+			dispose(); //Destroy the JFrame object
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, "Usuario ou Senha Incorreta!");
+			e1.printStackTrace();
+		}
 	}
 }
