@@ -1,4 +1,5 @@
 package model;
+
 import java.util.Date;
 
 public class Matricula {
@@ -8,20 +9,19 @@ public class Matricula {
 	private Date data_matricula;
 	private int dia_vencimento;
 	private Date data_encerramento;
-	
-	//TODO: data_matrica e data_encerramento to date
+	private String aluno;
 	
 	public Matricula() {
-		
 	}
 	
-	public Matricula(int codigo_matricula, int codigo_aluno, Date data_matricula, int dia_vencimento, Date data_encerramento) {
+	public Matricula(int codigo_matricula, int codigo_aluno, Date data_matricula, int dia_vencimento, Date data_encerramento, String aluno) {
 		super();
 		this.codigo_matricula = codigo_matricula;
 		this.codigo_aluno = codigo_aluno;
 		this.data_matricula = data_matricula;
 		this.dia_vencimento = dia_vencimento;
 		this.data_encerramento = data_encerramento;
+		this.aluno = aluno;
 	}
 
 
@@ -63,6 +63,14 @@ public class Matricula {
 
 	public void setData_encerramento(Date data_encerramento) {
 		this.data_encerramento = data_encerramento;
+	}
+
+	public String getAluno() {
+		return aluno;
+	}
+
+	public void setAluno(String aluno) {
+		this.aluno = aluno;
 	}
 
 }
