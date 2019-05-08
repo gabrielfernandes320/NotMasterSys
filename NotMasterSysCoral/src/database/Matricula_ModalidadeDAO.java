@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Graduacoes;
+import model.Invoice;
 import model.Matricula;
 import model.Matricula_Modalidade;
+import model.Plano;
 
 public class Matricula_ModalidadeDAO extends MasterDAO{
 	
@@ -18,9 +20,16 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 	private String is_insert = "INSERT INTO matriculas_modalidades"
 			+ " ( codigo_matricula, modalidade, graduacao, plano, data_inicio, data_fim)"
 			+ " VALUES ( ?, ?, ?, ?, ?, ? )";
+	private String is_selectPorCodigoAluno = "select * "
+			+ "from matriculas_modalidades join matriculas on matriculas_modalidades.codigo_matricula "
+			+ "= matriculas.codigo_matricula where matriculas.codigo_aluno = ?";
+	private String is_delete = "delete from matriculas_modalidades where codigo_matricula= ?; "
+			+ "update matriculas set data_encerramento = ? where codigo_matricula = ?";
 	
 	private PreparedStatement pst_insert;
 	private PreparedStatement pst_select;
+	private PreparedStatement pst_selectPorCodigoAluno;
+	private PreparedStatement pst_delete;
 	
 	Connection io_connection;
 	
@@ -30,6 +39,8 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 		
 		pst_insert = connection.prepareStatement(is_insert);
 		pst_select = connection.prepareStatement(is_select);
+		pst_selectPorCodigoAluno = connection.prepareStatement(is_selectPorCodigoAluno);
+		pst_delete = connection.prepareStatement(is_delete);
 	}
 	
 	public void Insert(Object parameter) throws SQLException {
@@ -45,16 +56,6 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 		Set(pst_insert, 5, lo_matMod.getData_inicio());
 		Set(pst_insert, 6, lo_matMod.getData_fim());
 		
-		
-		//Set(pst_insert, 1, lo_matricula.getCodigo_aluno());
-		//Set(pst_insert, 2, lo_matricula.getData_matricula());
-		//Set(pst_insert, 3, lo_matricula.getDia_vencimento());
-		
-		//if (lo_matricula.getData_encerramento() != null) {
-			//Set(pst_insert, 4, lo_matricula.getData_encerramento());
-		//} else {
-			//Set(pst_insert, 4, null);
-		//}
 		
 		pst_insert.execute();
 		
@@ -73,18 +74,20 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 	}
 
 
-	public List<Matricula_Modalidade> Select(int matricula) throws SQLException {
+	public List<Matricula_Modalidade> Select(Matricula parameter) throws SQLException {
 		
 		List<Matricula_Modalidade> arlMatricModalidade = new ArrayList<Matricula_Modalidade>();
 		
-		pst_select.setInt(1, matricula);
+		
+		Set(pst_select, 1, parameter.getCodigo_aluno());
 		
 		ResultSet rst = pst_select.executeQuery();
 		 
 		while(rst.next()){
-			
 			Matricula_Modalidade model = new Matricula_Modalidade();
-			 
+			
+			int x = 0;
+			
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));;
 			model.setModalidade(rst.getString("modalidade"));
 			model.setGraduacao(rst.getString("graduacao"));
@@ -93,11 +96,39 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 			model.setData_fim(rst.getDate("data_fim"));
 			arlMatricModalidade.add(model);
 			 
+			System.out.println(x);
 		 }
-				
+		
 		return arlMatricModalidade;
 	}
 	
+	public List<Matricula_Modalidade> selectPorCodigoAluno(Object parameter) throws SQLException {
+		
+		pst_selectPorCodigoAluno.clearParameters();
+		
+		List<Matricula_Modalidade> arlMat = new ArrayList<Matricula_Modalidade>();
+		Matricula lo_mat = (Matricula) parameter;
+		
+		int cod = lo_mat.getCodigo_aluno();
+		Set(pst_selectPorCodigoAluno, 1, cod);
+		
+		ResultSet rst = pst_selectPorCodigoAluno.executeQuery();
+
+		while(rst.next()){
+			 Matricula_Modalidade model = new Matricula_Modalidade();
+			 
+			 model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			 model.setModalidade(rst.getString("modalidade"));
+			 model.setData_fim(rst.getDate("data_fim"));
+			 model.setData_inicio(rst.getDate("data_inicio"));
+			 model.setGraduacao(rst.getString("graduacao"));
+			 model.setPlano(rst.getString("plano"));
+			 
+			 arlMat.add(model);
+		 }
+		//String[] returno = new String[arlMat.size()];
+		return arlMat;
+	}
 
 	@Override
 	public void Update(Object parameter) throws SQLException {
@@ -105,9 +136,17 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 		
 	}
 
-	@Override
-	public int Delete(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
+	public int Delete(Object parameter, String date) throws SQLException {
+		pst_delete.clearParameters();
+		
+		Matricula_Modalidade lo_matricula = (Matricula_Modalidade)parameter;
+		
+		Set(pst_delete, 1, lo_matricula.getCodigo_matricula());
+		Set(pst_delete, 2, date.toString());
+		Set(pst_delete, 3, lo_matricula.getCodigo_matricula());
+		
+		pst_delete.executeQuery();
+		
 		return 0;
 	}
 
@@ -115,5 +154,11 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 	public Object Select(Object parameter) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int Delete(Object parameter) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

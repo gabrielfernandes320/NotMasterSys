@@ -24,12 +24,17 @@ public class MatriculaDAO extends MasterDAO{
 	private String is_selectAluno = "select * from alunos where aluno = ?";
 	
 	private String is_selectCheckMatricula = "select * from matriculas where codigo_matricula = ?";
+	private String is_selectCheckAluno = "select codigo_aluno, count (1) from matriculas group by codigo_aluno";
+	private String is_delete = "delete from matriculas_modalidades where codigo_matricula= ?; "
+			+ "delete from matriculas where codigo_matricula = ?";
 	
 	private PreparedStatement pst_selectAll;
 	private PreparedStatement pst_insert;
 	private PreparedStatement pst_select;
+	private PreparedStatement pst_delete;
 	private PreparedStatement pst_selectAluno;
 	private PreparedStatement pst_selectCheckMatricula;
+	private PreparedStatement pst_selectCheckAluno;
 	
 	Connection io_connection;
 	
@@ -42,7 +47,8 @@ public class MatriculaDAO extends MasterDAO{
 		pst_select = connection.prepareStatement(is_select);
 		pst_insert = connection.prepareStatement(is_insert);
 		pst_selectCheckMatricula = connection.prepareStatement(is_selectCheckMatricula);
-		
+		pst_selectCheckAluno = connection.prepareStatement(is_selectCheckAluno);
+		pst_delete = connection.prepareStatement(is_delete);
 	}
 	
 	public void Insert(Object parameter) throws SQLException {
@@ -145,7 +151,14 @@ public class MatriculaDAO extends MasterDAO{
 	
 	@Override
 	public int Delete(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
+		
+		pst_insert.clearParameters();
+		
+		Matricula lo_matricula = (Matricula)parameter;
+		
+		Set(pst_insert, 1, lo_matricula.getCodigo_matricula());
+		Set(pst_insert, 2, lo_matricula.getCodigo_matricula());
+		
 		return 0;
 	}
 
@@ -167,6 +180,24 @@ public class MatriculaDAO extends MasterDAO{
 		return (maior + 1);
 	}
 		
+	public int NextCodigoAluno (Object parameter) throws SQLException {
+		List<Object> arlMatricula = new ArrayList<Object>();
+		
+		ResultSet rst = pst_selectCheckAluno.executeQuery();
+		
+		int maior = 0;
+		
+		while (rst.next()) {
+			
+			if (rst.getInt(1) > maior) {
+				maior = rst.getInt(1);
+			}
+			
+		}
+			
+		return (maior + 1);
+	}
+	
 	public Matricula checkMatricula (Matricula parameter) {
 		
 		Matricula matricula = null;
