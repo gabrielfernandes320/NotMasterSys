@@ -14,12 +14,14 @@ import model.Usuario;
 
 public class InvoiceDAO extends MasterDAO {
 
-	private String is_delete = "";
-	private String is_selectAllP="select * from faturas_matriculas where codigo_matricula = ?";
-	private String is_selectAll = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento FROM faturas_matriculas  INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula  INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno WHERE faturas_matriculas.data_vencimento BETWEEN ? AND ?";
 
-	private String is_select = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n"
-			+ "  FROM public.faturas_matriculas";
+	private String is_selectAllP = "SELECT alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \r\n" + 
+			"FROM faturas_matriculas \r\n" + 
+			"INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula \r\n" + 
+			"INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno\r\n" + 
+			"WHERE faturas_matriculas.codigo_matricula = ?";
+
+	private String is_selectAll = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento FROM faturas_matriculas  INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula  INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno WHERE faturas_matriculas.data_vencimento BETWEEN ? AND ?";
 
 	private String is_select_pendigns_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento \r\n"
 			+ "FROM faturas_matriculas  \r\n"
@@ -31,51 +33,34 @@ public class InvoiceDAO extends MasterDAO {
 
 	private String is_select_canceled_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento FROM faturas_matriculas  INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula  INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno WHERE faturas_matriculas.data_cancelamento is not null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?";
 
-	private String is_insert = "INSERT INTO faturas_matriculas		"
-								+" (								"
-								+"		codigo_matricula,			"
-								+"		data_vencimento,			"
-								+ "		valor,						"
-								+ "		data_pagamento,				"
-								+ "		data_cancelamento			"
-								+" )								"
-								+"	VALUES							"	
-								+" (								"
-								+"			?,						"	
-								+"			?,						"
-								+ "			?,						"
-								+ "			?,						"
-								+ "			?"	
-								+" )";
-;
-
-	private String is_update = "";
+	private String is_insert = "INSERT INTO faturas_matriculas		" + " (								"
+			+ "		codigo_matricula,			" + "		data_vencimento,			"
+			+ "		valor,						" + "		data_pagamento,				"
+			+ "		data_cancelamento			" + " )								"
+			+ "	VALUES							" + " (								"
+			+ "			?,						" + "			?,						"
+			+ "			?,						" + "			?,						" + "			?" + " )";;
 
 	private String is_payment = "UPDATE public.faturas_matriculas\r\n" + "   SET data_pagamento = CURRENT_TIMESTAMP\r\n"
 			+ " WHERE codigo_matricula = ? and valor = ?";
-	
-	private String is_canceling = "UPDATE public.faturas_matriculas\r\n" + "   SET data_cancelamento = CURRENT_TIMESTAMP\r\n"
-			+ " WHERE codigo_matricula = ? and valor = ?";
-	
+
+	private String is_canceling = "UPDATE public.faturas_matriculas\r\n"
+			+ "   SET data_cancelamento = CURRENT_TIMESTAMP\r\n" + " WHERE codigo_matricula = ? and valor = ?";
+
 	private String is_changevalue = "UPDATE public.faturas_matriculas\r\n" + "   SET valor = ?\r\n"
 			+ " WHERE codigo_matricula = ? and valor = ?";
 	
 
 	private PreparedStatement pst_selectAll;
-	private PreparedStatement pst_select;
 	private PreparedStatement pst_selectPendings;
 	private PreparedStatement pst_selectCanceled;
 	private PreparedStatement pst_selectPayed;
 	private PreparedStatement pst_insert;
-	private PreparedStatement pst_update;
-	private PreparedStatement pst_delete;
 	private PreparedStatement pst_payment;
 	private PreparedStatement pst_cancel;
 	private PreparedStatement pst_changevalue;
 	private PreparedStatement pst_selectAllPesquisa;
 
-	
-	
 	Connection io_connection;
 
 	public InvoiceDAO(Connection connection) throws SQLException {
@@ -86,34 +71,35 @@ public class InvoiceDAO extends MasterDAO {
 		pst_selectPayed = connection.prepareStatement(is_select_payeid_invocies);
 		pst_selectPendings = connection.prepareStatement(is_select_pendigns_invocies);
 		pst_insert = connection.prepareStatement(is_insert);
-		pst_delete = connection.prepareStatement(is_delete);
-		pst_update = connection.prepareStatement(is_update);
 		pst_payment = connection.prepareStatement(is_payment);
 		pst_cancel = connection.prepareStatement(is_canceling);
 		pst_changevalue = connection.prepareStatement(is_changevalue);
 		pst_selectAllPesquisa = connection.prepareStatement(is_selectAllP);
 
-
 	}
-	
+
 	public List<Invoice> SelectAllP(final int pesquisa) throws SQLException {
+		
 		List<Invoice> arlInvoice = new ArrayList<Invoice>();
-		
+
 		Set(pst_selectAllPesquisa, 1, pesquisa);
-		
+
 		ResultSet rst = pst_selectAllPesquisa.executeQuery();
-		 
-		while(rst.next()){
-			Invoice model = new Invoice();
+
+		while (rst.next()) {
 			
+			Invoice model = new Invoice();
+
+			model.setNome_aluno(rst.getString("aluno"));
 			model.setData_vencimento(rst.getDate("data_vencimento"));
-			model.setData_cancelamento(rst.getDate("data_cancelamento"));
 			model.setValor(rst.getDouble("valor"));
+			model.setData_cancelamento(rst.getDate("data_cancelamento"));
 			model.setData_pagamento(rst.getDate("data_pagamento"));
 			
-			 arlInvoice.add(model);
-		 }
-				
+			arlInvoice.add(model);
+			
+		}
+
 		return arlInvoice;
 	}
 
@@ -223,37 +209,37 @@ public class InvoiceDAO extends MasterDAO {
 	public int PayInvoice(Invoice parameter) throws SQLException {
 
 		int IsPaymentSucessfull = 0;
-		
+
 		Invoice lo_invoice = (Invoice) parameter;
 
 		Set(pst_payment, 1, lo_invoice.getCodigo_matricula());
 		Set(pst_payment, 2, lo_invoice.getValor());
 
 		IsPaymentSucessfull = pst_payment.executeUpdate();
-		
+
 		return IsPaymentSucessfull;
 
 	}
-	
+
 	public int CancelInvoice(Invoice parameter) throws SQLException {
 
 		int IsCancellingSucessfull = 0;
-		
+
 		Invoice lo_invoice = (Invoice) parameter;
 
 		Set(pst_cancel, 1, lo_invoice.getCodigo_matricula());
 		Set(pst_cancel, 2, lo_invoice.getValor());
 
 		IsCancellingSucessfull = pst_cancel.executeUpdate();
-		
+
 		return IsCancellingSucessfull;
 
 	}
-	
+
 	public int ChangeInvoicePrice(Invoice parameter, Double newvalue) throws SQLException {
 
 		int IsChangeSucessfull = 0;
-		
+
 		Invoice lo_invoice = (Invoice) parameter;
 
 		Set(pst_changevalue, 1, newvalue);
@@ -261,7 +247,7 @@ public class InvoiceDAO extends MasterDAO {
 		Set(pst_changevalue, 3, lo_invoice.getValor());
 
 		IsChangeSucessfull = pst_changevalue.executeUpdate();
-		
+
 		return IsChangeSucessfull;
 
 	}
@@ -281,20 +267,20 @@ public class InvoiceDAO extends MasterDAO {
 	@Override
 	public void Insert(Object parameter) throws SQLException {
 		pst_insert.clearParameters();
-		
-		Invoice lo_invoice = (Invoice)parameter;
-		
+
+		Invoice lo_invoice = (Invoice) parameter;
+
 		Set(pst_insert, 1, lo_invoice.getCodigo_matricula());
 		Set(pst_insert, 2, lo_invoice.getData_vencimento());
 		Set(pst_insert, 3, lo_invoice.getValor());
 		Set(pst_insert, 4, lo_invoice.getData_pagamento());
 		Set(pst_insert, 5, lo_invoice.getData_cancelamento());
 		pst_insert.execute();
-		
+
 		if (pst_insert.getUpdateCount() > 0) {
 			io_connection.commit();
 		}
-	
+
 	}
 
 	@Override

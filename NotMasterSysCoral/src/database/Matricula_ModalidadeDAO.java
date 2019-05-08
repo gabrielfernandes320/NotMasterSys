@@ -43,7 +43,7 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 		Set(pst_insert, 3, lo_matMod.getGraduacao());
 		Set(pst_insert, 4, lo_matMod.getPlano());
 		Set(pst_insert, 5, lo_matMod.getData_inicio());
-		Set(pst_insert, 6, lo_matMod.getFata_fim());
+		Set(pst_insert, 6, lo_matMod.getData_fim());
 		
 		
 		//Set(pst_insert, 1, lo_matricula.getCodigo_aluno());
@@ -89,7 +89,7 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 			model.setGraduacao(rst.getString("graduacao"));
 			model.setPlano(rst.getString("plano"));
 			model.setData_inicio(rst.getDate("data_inicio"));
-			model.setFata_fim(rst.getDate("data_fim"));
+			model.setData_fim(rst.getDate("data_fim"));
 			arlMatricModalidade.add(model);
 			 
 		 }

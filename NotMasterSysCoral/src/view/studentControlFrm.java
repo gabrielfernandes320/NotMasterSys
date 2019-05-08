@@ -1,257 +1,207 @@
 package view;
 
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import database.AssiduidadeDAO;
 import database.ConnectionFactory;
 import database.InvoiceDAO;
 import database.MatriculaDAO;
-import database.PlanosDAO;
+import database.ModalidadesDAO;
 import lib.MasterMonthChooser;
-import model.Assiduidade;
 import model.Invoice;
 import model.Matricula;
 import table.model.AssiduidadeTableModel;
-import table.model.InvoicesCheck2TableModel;
-import table.model.PlansTableModel;
-
+import table.model.InvoicesCheckTableModel;
+import table.model.InvoicesStudentCtrlTableModel;
+import table.model.ModalidadeMatriculaTableModel;
 import java.awt.Color;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.JTable;
-import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JLabel;
 
-public class StudentControlFrm extends JDialog {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private GregorianCalendar teste;
-	private AssiduidadeTableModel assModel;
-	private InvoicesCheck2TableModel invModel;
+public class studentControlFrm extends JInternalFrame {
+
+	private AssiduidadeTableModel aTableModel;
+	private InvoicesStudentCtrlTableModel iTableModel;
+	private ModalidadeMatriculaTableModel mTableModel;
 	private JTextField txfNumMatricula;
 	private JTextField txfNomeAluno;
-	private JTextField txfSituacaoColsulta;
-	private JTable tblConsulta;
-	private JTable tblCosultaAl;
-	private JTable tblAssiduidade;
-	private JPanel pnlConsulta;
-	private JPanel pnlCosultaAl;
-	private JPanel pnlAssiduidade;
-	private JScrollPane scpConsulta;
-	private JScrollPane scpCosultaAl;
-	private JScrollPane scpAssiduidade;
+	private JTable assiduidadeTable;
+	private JTable invoicesTable;
 	private MasterMonthChooser mmcData;
+	
 
 	Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+	private JTable modalityTable;
 
-	/**
-	 * Launch the application.
-	 * @throws SQLException 
-	 */
-	public static void main(String[] args) throws SQLException {
-		
-		
-		
-		
-					StudentControlFrm frame = new StudentControlFrm();
-					frame.setVisible(true);
-	
-	}
-
-	/**
-	 * Create the frame.
-	 * @throws SQLException 
-	 */
-	public StudentControlFrm() throws SQLException {
-	//	setIconifiable(true);
+	public studentControlFrm() {
+		setClosable(true);
+		// setIconifiable(true);
 		setTitle("Controle de Alunos");
 		setBounds(100, 100, 696, 538);
 		getContentPane().setLayout(null);
-		
+
 		JPanel pnlFoto = new JPanel();
 		pnlFoto.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, new Color(0, 0, 0)));
 		pnlFoto.setBounds(22, 22, 181, 203);
 		getContentPane().add(pnlFoto);
-		
+
 		txfNumMatricula = new JTextField();
 		txfNumMatricula.setBounds(230, 22, 100, 20);
 		getContentPane().add(txfNumMatricula);
 		txfNumMatricula.setColumns(10);
-		txfNumMatricula.addKeyListener(new KeyAdapter() {
-	        @Override
-	        public void keyPressed(KeyEvent e) {
-	            if(e.getKeyCode() == KeyEvent.VK_ENTER){
-	            	String aux = txfNumMatricula.getText();
-	            	
-	            	
-	            	
-	            		assModel.limpar();
-	            		invModel.limpar();
-						
-								try {
-									conn.setAutoCommit(false);
-								} catch (SQLException e3) {
-									// TODO Auto-generated catch block
-									e3.printStackTrace();
-								}
-
-								
-							AssiduidadeDAO ass = null;
-
-								try {
-									ass = new AssiduidadeDAO(conn);
-								} catch (SQLException e3) {
-									// TODO Auto-generated catch block
-									e3.printStackTrace();
-								}
-
-							Assiduidade model = null;
-							Timestamp ts;
-
-								model = new Assiduidade();
-
-								Date date = new Date();
-								long time = date.getTime();
-								ts = new Timestamp(time);
-
-								model.setCodigo_matricula(Integer.parseInt(aux));
-								model.setData_entrada(ts);
-							
-
-								try {
-									ass.Insert(model);
-								} catch (SQLException e2) {
-									// TODO Auto-generated catch block
-									e2.printStackTrace();
-								}
-								//add a tabela
-								try {
-									assModel.addListaDeAssiduidades(
-											new AssiduidadeDAO(conn).SelectAllP(Integer.parseInt(aux)));
-								} catch (NumberFormatException | SQLException e2) {
-									// TODO Auto-generated catch block
-									e2.printStackTrace();
-								}
-
-						
-						//Fatura Matricula
-						
-						
-						
-						invModel = new InvoicesCheck2TableModel();
-						
-
-							try {
-								invModel.addListaDeInvoice(new InvoiceDAO(conn).SelectAllP(Integer.parseInt(aux)));
-							} catch (NumberFormatException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-	
-						
-						
-						
-						
-						
-					}
-	        			
-	        			
-	        			
-	                
-	            }
-	        
-
-	    });
-		
-		
 		
 		txfNomeAluno = new JTextField();
 		txfNomeAluno.setEditable(false);
 		txfNomeAluno.setBounds(343, 22, 318, 20);
 		getContentPane().add(txfNomeAluno);
 		txfNomeAluno.setColumns(10);
-		
-		
-		txfSituacaoColsulta = new JTextField();
-		txfSituacaoColsulta.setEditable(false);
-		txfSituacaoColsulta.setColumns(10);
-		txfSituacaoColsulta.setBounds(230, 166, 431, 54);
-		getContentPane().add(txfSituacaoColsulta);
-		
-		JButton btnAcsAluno = new JButton("Acessar dados do Aluno");
-		btnAcsAluno.setBounds(230, 236, 210, 30);
-		getContentPane().add(btnAcsAluno);
-		
-		JButton btnAcsMatricula = new JButton("Acessar dados da Matr\u00EDcula");
-		btnAcsMatricula.setBounds(450, 236, 210, 30);
-		getContentPane().add(btnAcsMatricula);
-		
-		//tabela consulta 
-		
-		pnlConsulta = new JPanel();
-		invModel = new InvoicesCheck2TableModel();
-		pnlConsulta.setLayout(null);
 
-		tblConsulta = new JTable(invModel);
-		tblConsulta.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scpConsulta = new JScrollPane(tblConsulta);
-		scpConsulta.setBounds(0, 0, 431, 220);
-		pnlConsulta.add(scpConsulta);
-		pnlConsulta.setBounds(230, 277, 431, 220);
-		getContentPane().add(pnlConsulta);
-		
-		
-		//Tabela ConsultaAL
-		tblCosultaAl = new JTable();
-		tblCosultaAl.setBounds(230, 53, 431, 102);
-		getContentPane().add(tblCosultaAl);
-		
-		
-		//Tabela Assiduidade
-		pnlAssiduidade = new JPanel();
-		assModel = new AssiduidadeTableModel();
-		pnlAssiduidade.setLayout(null);
+		JButton studentBtn = new JButton("Acessar dados do Aluno");
+		studentBtn.setBounds(230, 236, 210, 30);
+		getContentPane().add(studentBtn);
 
-		tblAssiduidade = new JTable(assModel);
-		tblAssiduidade.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scpAssiduidade = new JScrollPane(tblAssiduidade);
-		scpAssiduidade.setBounds(0, 0, 181, 220);
-		pnlAssiduidade.add(scpAssiduidade);
-		pnlAssiduidade.setBounds(22, 277, 181, 220);
-		getContentPane().add(pnlAssiduidade);
+		JButton matriculaBtn = new JButton("Acessar dados da Matr\u00EDcula");
+		matriculaBtn.setBounds(450, 236, 210, 30);
+		getContentPane().add(matriculaBtn);
+		
+		aTableModel = new AssiduidadeTableModel();
+		iTableModel = new InvoicesStudentCtrlTableModel();
+		mTableModel = new ModalidadeMatriculaTableModel();
 		
 		mmcData = new MasterMonthChooser();
 		mmcData.setBounds(22, 236, 181, 30);
 		getContentPane().add(mmcData);
 		
+		JScrollPane aScrollPane = new JScrollPane();
+		aScrollPane.setBounds(22, 277, 181, 203);
+		getContentPane().add(aScrollPane);
+		
+		assiduidadeTable = new JTable(aTableModel);
+		aScrollPane.setViewportView(assiduidadeTable);
+		
+		JScrollPane iScrollPane = new JScrollPane();
+		iScrollPane.setBounds(229, 277, 432, 203);
+		getContentPane().add(iScrollPane);
+		
+		invoicesTable = new JTable(iTableModel);
+		iScrollPane.setViewportView(getNewRenderedTable(invoicesTable));
+		
+		JScrollPane mScrollPane = new JScrollPane();
+		mScrollPane.setBounds(230, 54, 431, 101);
+		getContentPane().add(mScrollPane);
+		
+		modalityTable = new JTable(mTableModel);
+		mScrollPane.setViewportView(modalityTable);
+		
+		// COISAS IMPORTANTES
+		
+		txfNumMatricula.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					
+					try {
+						
+						updateFieldsAndTables(txfNumMatricula.getText());
+						
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+			}	
+		});
+
+	}
+	
+	private void updateFieldsAndTables(String cod_matricula) throws SQLException {
+		
+		InvoiceDAO iDAO = new InvoiceDAO(conn);
+		AssiduidadeDAO aDAO = new AssiduidadeDAO(conn);
+		ModalidadesDAO mDAO = new ModalidadesDAO(conn);
+		
+		//CARREGAR TABLE FATURAS
+		List<Invoice> invoicesList = iDAO.SelectAllP(Integer.parseInt(cod_matricula));
+		iTableModel.addListaDeInvoice(invoicesList);	
+		
+		//CARREGAR NOME
+		txfNomeAluno.setText(invoicesList.get(0).getNome_aluno());
+		
+		//CARREGAR ASSIDUIDADE
+		//aDAO.SelectByMonth(Integer.parseInt(cod_matricula), mmcData.getDate());
 		
 	}
-	public void zerarTodos() {
-		assModel.limpar();
+
+	private JTable getNewRenderedTable(final JTable tabela) {
+
+		tabela.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+
+			public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int col) {
+				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+				String payed = String.valueOf(table.getValueAt(row, 2));
+				String canceled = String.valueOf(table.getValueAt(row, 3));
+				Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+				Matricula matri = new Matricula();
+				try {
+					
+					MatriculaDAO md = new MatriculaDAO(conn);					
+					matri.setCodigo_matricula(Integer.parseInt(txfNumMatricula.getText()));
+					matri = md.checkMatricula(matri);
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
+				if (payed == "null" && canceled == "null" && String.valueOf(matri.getData_encerramento()) == "null") {
+					
+					setBackground(Color.WHITE);
+					setForeground(Color.BLACK);
+					
+					
+				} else if(payed != "null"){
+					
+					setBackground(Color.GREEN);
+					setForeground(Color.BLACK);
+					
+				
+				} else if(payed == "null" && String.valueOf(matri.getData_encerramento()) != "null"){
+					
+					setBackground(Color.RED);
+					setForeground(Color.BLACK);
+					
+						
+				} else {
+					
+					setBackground(Color.YELLOW);
+					setForeground(Color.BLACK);
+					
+				}
+
+				return this;
+				
+			}
+		});
+
+		return tabela;
+
 	}
 }

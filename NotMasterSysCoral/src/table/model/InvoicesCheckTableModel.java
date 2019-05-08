@@ -1,6 +1,8 @@
 package table.model;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -88,6 +90,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 	 */
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		Invoice invoiceSelecionado = invoices.get(rowIndex);
 		String valueObject = null;
 		switch (columnIndex) {
@@ -98,7 +101,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 			valueObject = String.valueOf(invoiceSelecionado.getNome_aluno());
 			break;
 		case 2:
-			valueObject = String.valueOf(invoiceSelecionado.getData_vencimento());
+			valueObject = df.format((invoiceSelecionado.getData_vencimento()));
 			break;
 		case 3:
 			valueObject = String.valueOf(invoiceSelecionado.getValor());
@@ -107,13 +110,13 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 			if(String.valueOf(invoiceSelecionado.getData_pagamento()) == "null")
 				valueObject = null;
 			else
-				valueObject = String.valueOf(invoiceSelecionado.getData_pagamento());				
+				valueObject = df.format((invoiceSelecionado.getData_pagamento()));				
 			break;
 		case 5:
 			if(String.valueOf(invoiceSelecionado.getData_cancelamento()) == "null")
 				valueObject = null;
 			else
-				valueObject = String.valueOf(invoiceSelecionado.getData_cancelamento());	
+				valueObject = df.format((invoiceSelecionado.getData_cancelamento()));	
 			break;
 		default:
 			System.err.println("Índice inválido para propriedade do bean Invoice.class");

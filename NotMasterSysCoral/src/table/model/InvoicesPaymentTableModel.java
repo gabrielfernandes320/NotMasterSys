@@ -89,6 +89,7 @@ public class InvoicesPaymentTableModel extends AbstractTableModel  {
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		Invoice invoiceSelecionado = invoices.get(rowIndex);
 		String valueObject = null;
 		switch (columnIndex) {
@@ -99,7 +100,7 @@ public class InvoicesPaymentTableModel extends AbstractTableModel  {
 			valueObject = String.valueOf(invoiceSelecionado.getNome_aluno());
 			break;
 		case 2:
-			valueObject = String.valueOf(invoiceSelecionado.getData_vencimento());
+			valueObject = df.format((invoiceSelecionado.getData_vencimento()));
 			break;
 		case 3:
 			valueObject = String.valueOf(invoiceSelecionado.getValor());

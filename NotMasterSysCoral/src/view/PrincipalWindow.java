@@ -49,12 +49,14 @@ public class PrincipalWindow extends JFrame {
 	JMenuItem itemGFFaturamentoProc;
 	JMenuItem itemCFFaturamentoProc;
 	JMenuItem itemGPFaturamentoProc;
+	JMenuItem itemControleAlunos;
 	UsersFrm us;
 	StudentFrm studentFrm;
 	ModalityFrm mod;
 	InvoiceCheckFrm icf;
 	InvoicePaymentFrm ipf;
 	GenerateInvoicesFrm gif;
+	studentControlFrm scf;
 	JLabel lbUsuarioHora;
 
 	public PrincipalWindow(Usuario user) {
@@ -140,6 +142,7 @@ public class PrincipalWindow extends JFrame {
 		itemGFFaturamentoProc = new JMenuItem("Gerar Faturamento");
 		itemCFFaturamentoProc = new JMenuItem("Consultar Faturas");
 		itemGPFaturamentoProc = new JMenuItem("Gerar Pagamentos");
+		itemControleAlunos = new JMenuItem("Controle de Alunos");
 		
 		//icones dos itens
 
@@ -159,6 +162,7 @@ public class PrincipalWindow extends JFrame {
 		menuCadastros.add(itemPlanosCad);
 		menuProcessos.add(itemMatricularProc);
 		menuProcessos.add(itemFaturamentoProc);
+		menuUtilitarios.add(itemControleAlunos);
 
 		itemMatricularProc.add(itemAlunoMatricularProc);
 		itemFaturamentoProc.add(itemGFFaturamentoProc);
@@ -266,10 +270,24 @@ public class PrincipalWindow extends JFrame {
 			}
 		});
 		
-		//Cadastro
-//		
+		//Cadastro	
 		
-		
+		itemControleAlunos.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JanelaVerificar(UsersFrm.class.getName())) {
+					
+				}
+				else {
+					scf = new studentControlFrm();
+					scf.setName(UsersFrm.class.getName());
+					scf.setLocation(1, 1);
+					desktopPane.add(scf);
+					scf.setVisible(true);
+				}
+			}
+		});
 		
 		itemModalidadesCad.addActionListener(new ActionListener() {
 			

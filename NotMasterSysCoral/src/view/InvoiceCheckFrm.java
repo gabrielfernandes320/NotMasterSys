@@ -244,7 +244,5 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		return tabela;
 
 	};
-
-
 	
 }
