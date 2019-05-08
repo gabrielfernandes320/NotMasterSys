@@ -23,10 +23,13 @@ public class MatriculaDAO extends MasterDAO{
 	
 	private String is_selectAluno = "select * from alunos where aluno = ?";
 	
+	private String is_selectCheckMatricula = "select * from matriculas where codigo_matricula = ?";
+	
 	private PreparedStatement pst_selectAll;
 	private PreparedStatement pst_insert;
 	private PreparedStatement pst_select;
 	private PreparedStatement pst_selectAluno;
+	private PreparedStatement pst_selectCheckMatricula;
 	
 	Connection io_connection;
 	
@@ -38,6 +41,7 @@ public class MatriculaDAO extends MasterDAO{
 		pst_selectAluno = connection.prepareStatement(is_selectAluno);
 		pst_select = connection.prepareStatement(is_select);
 		pst_insert = connection.prepareStatement(is_insert);
+		pst_selectCheckMatricula = connection.prepareStatement(is_selectCheckMatricula);
 		
 	}
 	
@@ -89,7 +93,6 @@ public class MatriculaDAO extends MasterDAO{
 		return arlMatricula;
 	}
 	
-
 	@Override
 	public Matricula Select(Object parameter) throws SQLException {
 		
@@ -111,7 +114,6 @@ public class MatriculaDAO extends MasterDAO{
 		else
 			return null;
 	}
-	
 	
 	public Matricula SelectAluno(Object parameter) throws SQLException {
 		
@@ -141,7 +143,6 @@ public class MatriculaDAO extends MasterDAO{
 		
 	}
 	
-	
 	@Override
 	public int Delete(Object parameter) throws SQLException {
 		// TODO Auto-generated method stub
@@ -166,4 +167,37 @@ public class MatriculaDAO extends MasterDAO{
 		return (maior + 1);
 	}
 		
+	public Matricula checkMatricula (Matricula parameter) {
+		
+		Matricula matricula = null;
+		
+		try {
+			
+			pst_selectCheckMatricula.setInt(1, parameter.getCodigo_matricula());
+			
+			ResultSet rst = pst_selectCheckMatricula.executeQuery();
+			
+			if (rst.next()) {
+				
+				matricula = new Matricula();
+				if(rst.getDate("data_encerramento") != null) {
+					matricula.setData_encerramento(rst.getDate("data_encerramento"));	
+				}
+									
+				return matricula;			
+				
+			}
+			
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		}
+		
+		
+		return matricula;
+		
+	}
+	
 	}

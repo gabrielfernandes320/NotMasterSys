@@ -198,10 +198,11 @@ public class InvoiceCheckFrm extends JInternalFrame {
 				Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 				Matricula matri = new Matricula();
 				try {
-					MatriculaDAO md = new MatriculaDAO(conn);
 					
-					matri.setCodigo_aluno(Integer.parseInt(String.valueOf(table.getValueAt(row, 0))));
-					matri = md.Select(matri);
+					MatriculaDAO md = new MatriculaDAO(conn);					
+					matri.setCodigo_matricula(Integer.parseInt(String.valueOf(table.getValueAt(row, 0))));
+					matri = md.checkMatricula(matri);
+					
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -209,25 +210,33 @@ public class InvoiceCheckFrm extends JInternalFrame {
 				
 				
 				
-				if (payed == "null" && canceled == "null") {
+				if (payed == "null" && canceled == "null" && String.valueOf(matri.getData_encerramento()) == null) {
+					
 					setBackground(Color.WHITE);
 					setForeground(Color.BLACK);
-					table.setValueAt("asdsad", row , 4);
+					
 					
 				} else if(payed != "null"){
+					
 					setBackground(Color.GREEN);
 					setForeground(Color.BLACK);
+					
 				
-				} else if(String.valueOf(matri.getCodigo_matricula()) == null){
+				} else if(payed == "null" && String.valueOf(matri.getData_encerramento()) != null){
+					
 					setBackground(Color.RED);
 					setForeground(Color.BLACK);
+					
 						
 				} else {
+					
 					setBackground(Color.YELLOW);
 					setForeground(Color.BLACK);
+					
 				}
 
 				return this;
+				
 			}
 		});
 
