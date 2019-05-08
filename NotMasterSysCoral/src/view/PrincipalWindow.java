@@ -175,6 +175,11 @@ public class PrincipalWindow extends JFrame {
 		menuBar.add(menuUtilitarios);
 		menuBar.add(menuAjuda);
 		
+		scf = new studentControlFrm();
+		scf.setName(UsersFrm.class.getName());
+		scf.setLocation(1, 1);
+		desktopPane.add(scf);
+		scf.setVisible(true);
 
 		//A��es para os item abaixo
 		//Sistema
@@ -271,24 +276,7 @@ public class PrincipalWindow extends JFrame {
 		});
 		
 		//Cadastro	
-		
-		itemControleAlunos.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (JanelaVerificar(UsersFrm.class.getName())) {
-					
-				}
-				else {
-					scf = new studentControlFrm();
-					scf.setName(UsersFrm.class.getName());
-					scf.setLocation(1, 1);
-					desktopPane.add(scf);
-					scf.setVisible(true);
-				}
-			}
-		});
-		
+			
 		itemModalidadesCad.addActionListener(new ActionListener() {
 			
 			@Override
