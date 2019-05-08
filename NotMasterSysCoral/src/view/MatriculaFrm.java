@@ -61,7 +61,6 @@ public class MatriculaFrm extends JInternalFrame{
 	
 		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");	
 		Matricula model = new Matricula();
-		MatriculaTableModel tableModel = new MatriculaTableModel();
 		
 		JTable table;
 		
