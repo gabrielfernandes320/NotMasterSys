@@ -9,7 +9,7 @@ import java.util.List;
 
 import model.Graduacoes;
 import model.Modalidades;
-import model.Planos;
+import model.Plano;
 
 public class GraduacoesDAO extends MasterDAO{
 		private String is_delete = "delete from graduacoes where graduacao = ?";
