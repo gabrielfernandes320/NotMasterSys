@@ -100,6 +100,24 @@ public class GraduacoesDAO extends MasterDAO{
 		}
 		return graduacoes;
 	}
+	
+	public String[] SelectPorModalidade (String mod) throws SQLException {
+		ArrayList<String> arlPlano = new ArrayList<String>();
+		String[] returno = null;
+		
+		Set(pst_selectAllgraduationsByModality, 1, mod);
+		ResultSet rst = pst_selectAllgraduationsByModality.executeQuery();
+		 
+		while(rst.next()){
+			 Plano model = new Plano();
+			 
+			 model.setModalidade(rst.getString("graduacao"));
+			 
+			 arlPlano.add(model.getModalidade());
+		 }
+		returno = new String[arlPlano.size()];
+		return arlPlano.toArray(returno);
+	}
 
 	@Override
 	public void Update(Object parameter) throws SQLException {
