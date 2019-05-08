@@ -42,7 +42,7 @@ public class InvoiceDAO extends MasterDAO {
 			+ "			?,						" + "			?,						" + "			?" + " )";;
 
 	private String is_payment = "UPDATE public.faturas_matriculas\r\n" + "   SET data_pagamento = CURRENT_TIMESTAMP\r\n"
-			+ " WHERE codigo_matricula = ? and valor = ?";
+			+ " WHERE codigo_matricula = ? and valor = ? and data_vencimento = ?";
 
 	private String is_canceling = "UPDATE public.faturas_matriculas\r\n"
 			+ "   SET data_cancelamento = CURRENT_TIMESTAMP\r\n" + " WHERE codigo_matricula = ? and valor = ?";
@@ -214,6 +214,7 @@ public class InvoiceDAO extends MasterDAO {
 
 		Set(pst_payment, 1, lo_invoice.getCodigo_matricula());
 		Set(pst_payment, 2, lo_invoice.getValor());
+		
 
 		IsPaymentSucessfull = pst_payment.executeUpdate();
 

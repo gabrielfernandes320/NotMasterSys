@@ -171,8 +171,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 						break;
 					}
 
-					model.addListaDeInvoice(invoicesList);				
-					tabela.repaint();
+					model.addListaDeInvoice(invoicesList);									
 
 				} catch (SQLException | ParseException e1) {
 					e1.printStackTrace();

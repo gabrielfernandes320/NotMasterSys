@@ -147,6 +147,7 @@ public class InvoicePaymentFrm extends JInternalFrame {
 					inv.setCodigo_matricula(
 							Integer.parseInt(String.valueOf((tabela.getValueAt(tabela.getSelectedRow(), 0)))));
 					inv.setValor(Double.parseDouble((String) tabela.getValueAt(tabela.getSelectedRow(), 3)));
+					inv.setData_vencimento((java.sql.Date) tabela.getValueAt(tabela.getSelectedRow(), 3));
 
 					try {
 
