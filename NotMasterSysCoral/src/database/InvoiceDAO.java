@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Assiduidade;
 import model.Invoice;
 import model.Usuario;
 
 public class InvoiceDAO extends MasterDAO {
 
 	private String is_delete = "";
+	private String is_selectAllP="select * from faturas_matriculas where codigo_matricula = ?";
 	private String is_selectAll = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento FROM faturas_matriculas  INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula  INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno WHERE faturas_matriculas.data_vencimento BETWEEN ? AND ?";
 
 	private String is_select = "SELECT codigo_matricula, data_vencimento, valor, data_pagamento, data_cancelamento\r\n"
@@ -54,6 +56,9 @@ public class InvoiceDAO extends MasterDAO {
 	private PreparedStatement pst_payment;
 	private PreparedStatement pst_cancel;
 	private PreparedStatement pst_changevalue;
+	private PreparedStatement pst_selectAllPesquisa;
+
+	
 	
 	Connection io_connection;
 
@@ -70,7 +75,30 @@ public class InvoiceDAO extends MasterDAO {
 		pst_payment = connection.prepareStatement(is_payment);
 		pst_cancel = connection.prepareStatement(is_canceling);
 		pst_changevalue = connection.prepareStatement(is_changevalue);
+		pst_selectAllPesquisa = connection.prepareStatement(is_selectAllP);
 
+
+	}
+	
+	public List<Invoice> SelectAllP(final int pesquisa) throws SQLException {
+		List<Invoice> arlInvoice = new ArrayList<Invoice>();
+		
+		Set(pst_selectAllPesquisa, 1, pesquisa);
+		
+		ResultSet rst = pst_selectAllPesquisa.executeQuery();
+		 
+		while(rst.next()){
+			Invoice model = new Invoice();
+			
+			model.setData_vencimento(rst.getDate("data_vencimento"));
+			model.setData_cancelamento(rst.getDate("data_cancelamento"));
+			model.setValor(rst.getDouble("valor"));
+			model.setData_pagamento(rst.getDate("data_pagamento"));
+			
+			 arlInvoice.add(model);
+		 }
+				
+		return arlInvoice;
 	}
 
 	@Override

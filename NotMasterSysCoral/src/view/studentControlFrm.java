@@ -6,10 +6,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
@@ -21,10 +23,15 @@ import javax.swing.border.EtchedBorder;
 
 import database.AssiduidadeDAO;
 import database.ConnectionFactory;
+import database.InvoiceDAO;
+import database.MatriculaDAO;
 import database.PlanosDAO;
 import lib.MasterMonthChooser;
 import model.Assiduidade;
+import model.Invoice;
+import model.Matricula;
 import table.model.AssiduidadeTableModel;
+import table.model.InvoicesCheck2TableModel;
 import table.model.PlansTableModel;
 
 import java.awt.Color;
@@ -35,9 +42,14 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
-public class studentControlFrm extends JDialog {
+public class StudentControlFrm extends JDialog {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private GregorianCalendar teste;
 	private AssiduidadeTableModel assModel;
+	private InvoicesCheck2TableModel invModel;
 	private JTextField txfNumMatricula;
 	private JTextField txfNomeAluno;
 	private JTextField txfSituacaoColsulta;
@@ -63,7 +75,7 @@ public class studentControlFrm extends JDialog {
 		
 		
 		
-					studentControlFrm frame = new studentControlFrm();
+					StudentControlFrm frame = new StudentControlFrm();
 					frame.setVisible(true);
 	
 	}
@@ -72,7 +84,7 @@ public class studentControlFrm extends JDialog {
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	public studentControlFrm() throws SQLException {
+	public StudentControlFrm() throws SQLException {
 	//	setIconifiable(true);
 		setTitle("Controle de Alunos");
 		setBounds(100, 100, 696, 538);
@@ -96,23 +108,28 @@ public class studentControlFrm extends JDialog {
 	            	
 	            	
 	            		assModel.limpar();
-						try {
-							try {
-								conn.setAutoCommit(false);
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
+	            		invModel.limpar();
+						
+								try {
+									conn.setAutoCommit(false);
+								} catch (SQLException e3) {
+									// TODO Auto-generated catch block
+									e3.printStackTrace();
+								}
+
+								
 							AssiduidadeDAO ass = null;
-							try {
-								ass = new AssiduidadeDAO(conn);
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
+
+								try {
+									ass = new AssiduidadeDAO(conn);
+								} catch (SQLException e3) {
+									// TODO Auto-generated catch block
+									e3.printStackTrace();
+								}
+
 							Assiduidade model = null;
 							Timestamp ts;
-							try {
+
 								model = new Assiduidade();
 
 								Date date = new Date();
@@ -121,25 +138,46 @@ public class studentControlFrm extends JDialog {
 
 								model.setCodigo_matricula(Integer.parseInt(aux));
 								model.setData_entrada(ts);
-							} catch (NumberFormatException e2) {
-								// TODO Auto-generated catch block
-								e2.printStackTrace();
-							}
 							
-							zerarTodos();
+
+								try {
+									ass.Insert(model);
+								} catch (SQLException e2) {
+									// TODO Auto-generated catch block
+									e2.printStackTrace();
+								}
+								//add a tabela
+								try {
+									assModel.addListaDeAssiduidades(
+											new AssiduidadeDAO(conn).SelectAllP(Integer.parseInt(aux)));
+								} catch (NumberFormatException | SQLException e2) {
+									// TODO Auto-generated catch block
+									e2.printStackTrace();
+								}
+
+						
+						//Fatura Matricula
+						
+						
+						
+						invModel = new InvoicesCheck2TableModel();
+						
+
 							try {
-								ass.Insert(model);
-								assModel.addListaDeAssiduidades(
-										new AssiduidadeDAO(conn).SelectAllP(Integer.parseInt(aux)));
+								invModel.addListaDeInvoice(new InvoiceDAO(conn).SelectAllP(Integer.parseInt(aux)));
+							} catch (NumberFormatException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
-								System.out.println(e1);
 							}
-						} catch (NumberFormatException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} 
+	
+						
+						
+						
+						
+						
 					}
 	        			
 	        			
@@ -158,9 +196,6 @@ public class studentControlFrm extends JDialog {
 		getContentPane().add(txfNomeAluno);
 		txfNomeAluno.setColumns(10);
 		
-		tblConsulta = new JTable();
-		tblConsulta.setBounds(230, 277, 431, 220);
-		getContentPane().add(tblConsulta);
 		
 		txfSituacaoColsulta = new JTextField();
 		txfSituacaoColsulta.setEditable(false);
@@ -176,7 +211,22 @@ public class studentControlFrm extends JDialog {
 		btnAcsMatricula.setBounds(450, 236, 210, 30);
 		getContentPane().add(btnAcsMatricula);
 		
-		//Tabela Consulta
+		//tabela consulta 
+		
+		pnlConsulta = new JPanel();
+		invModel = new InvoicesCheck2TableModel();
+		pnlConsulta.setLayout(null);
+
+		tblConsulta = new JTable(invModel);
+		tblConsulta.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scpConsulta = new JScrollPane(tblConsulta);
+		scpConsulta.setBounds(0, 0, 431, 220);
+		pnlConsulta.add(scpConsulta);
+		pnlConsulta.setBounds(230, 277, 431, 220);
+		getContentPane().add(pnlConsulta);
+		
+		
+		//Tabela ConsultaAL
 		tblCosultaAl = new JTable();
 		tblCosultaAl.setBounds(230, 53, 431, 102);
 		getContentPane().add(tblCosultaAl);
