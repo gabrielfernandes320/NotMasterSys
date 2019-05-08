@@ -42,6 +42,7 @@ public class PlansSearch extends JDialog {
 	 * Create the frame.
 	 */
 	public PlansSearch(final PlansFrm window) {
+		setTitle("Pesquisa de Planos");
 		
 		this.window = window;
 		
@@ -49,29 +50,11 @@ public class PlansSearch extends JDialog {
 		setBounds(100, 100, 602, 458);
 		getContentPane().setLayout(null);
 		
+		
 		txfPesquisa = new JTextField();
-		txfPesquisa.setBounds(196, 27, 159, 20);
+		txfPesquisa.setBounds(218, 27, 243, 20);
 		getContentPane().add(txfPesquisa);
 		txfPesquisa.setColumns(10);
-		
-		
-		
-		JButton btnAtualizar = new JButton("Atualizar");
-		btnAtualizar.setBounds(470, 26, 95, 23);
-		btnAtualizar.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent a) {
-
-				zerarTodos();
-
-				mostrarTodos();
-
-				txfPesquisa.setText("");
-
-			}
-		});
-		getContentPane().add(btnAtualizar);
 		
 
 		
@@ -81,19 +64,19 @@ public class PlansSearch extends JDialog {
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Plano", "Modalidade"}));
-		comboBox.setBounds(107, 27, 79, 20);
+		comboBox.setBounds(107, 27, 101, 20);
 		getContentPane().add(comboBox);
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
-		btnPesquisar.setBounds(365, 26, 95, 23);
+		btnPesquisar.setBounds(471, 26, 95, 23);
 		btnPesquisar.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent a) {
 
-				zerarTodos();
+//				zerarTodos();
 
-				if (comboBox.getSelectedItem().toString().equals("Plano") && !txfPesquisa.getText().equals("")) {
+				if (comboBox.getSelectedItem().toString().equals("Plano")) {
 					
 					try {
 						model.addListaDePlanos(new PlanosDAO(conn).SelectAll(txfPesquisa.getText()));
@@ -106,7 +89,7 @@ public class PlansSearch extends JDialog {
 				} 
 				else {
 
-					if (comboBox.getSelectedItem().toString().equals("Modalidade") && !txfPesquisa.getText().equals("")) {
+					if (comboBox.getSelectedItem().toString().equals("Modalidade")) {
 						
 						try {
 							model.addListaDePlanos(new PlanosDAO(conn).SelectAllM(txfPesquisa.getText()));
@@ -170,22 +153,22 @@ public class PlansSearch extends JDialog {
 		         }
 		        } );
 
-		mostrarTodos();
+//		mostrarTodos();
 
 	}
 
 
-	public void mostrarTodos() {
-		try {
-			//// ??????????
+//	public void mostrarTodos() {
+//		try {
+//			//// ??????????
+//
+//			model.addListaDePlanos(new PlanosDAO(conn).SelectAll(""));
+//		} catch (Exception e) {
+//			System.err.printf("Erro: %s.\n", e.getMessage());
+//		}
+//	}
 
-			model.addListaDePlanos(new PlanosDAO(conn).SelectAll(""));
-		} catch (Exception e) {
-			System.err.printf("Erro: %s.\n", e.getMessage());
-		}
-	}
-
-	public void zerarTodos() {
-		model.limpar();
-	}
+//	public void zerarTodos() {
+//		model.limpar();
+//	}
 }
