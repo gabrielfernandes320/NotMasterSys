@@ -168,6 +168,7 @@ public class ModalityFrm extends JInternalFrame {
 		            
 		            
 		            try {
+		            	conn.setAutoCommit(false);
 		            	GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
 		            	Graduacoes g = new Graduacoes();
 		            	g.setGraduations(tableGraduation.getValueAt(tableGraduation.getSelectedRow(), 0).toString());
