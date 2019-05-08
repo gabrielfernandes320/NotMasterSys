@@ -21,7 +21,7 @@ public class AssiduidadeDAO extends MasterDAO {
 			+ "		data_entrada	" + "	)					" + "	VALUES				"
 			+ "	(					" + "		?,				" + "		?				" + "	)";
 	private String is_update = "UPDATE assiduidade " + "   SET codigo_matricula=? where data_entrada = ?";
-	private String is_selectByMonth = "select * from assiduidade where codigo_matricula = ? and data_entrada BETWEEN ? and ? order by data_entrada";
+	private String is_selectByMonth = "select * from assiduidade where codigo_matricula = ? AND EXTRACT(MONTH FROM data_entrada) = ?";
 
 	private PreparedStatement pst_selectAll;
 	private PreparedStatement pst_selectAllPesquisa;
@@ -95,15 +95,14 @@ public class AssiduidadeDAO extends MasterDAO {
 		return model;
 	}
 
-	public List<Assiduidade> SelectByMonth(int pesquisa, Date month) throws SQLException {
+	public List<Assiduidade> SelectByMonth(int pesquisa, int month) throws SQLException {
 		
 		List<Assiduidade> arlAssiduidade = new ArrayList<Assiduidade>();
 
-		Set(pst_selectAllPesquisa, 1, pesquisa);
-		pst_selectByMonth.setDate(2, month);
-		pst_selectByMonth.setDate(3, month);S
+		Set(pst_selectByMonth, 1, pesquisa);
+		Set(pst_selectByMonth, 2, month);
 
-		ResultSet rst = pst_selectAllPesquisa.executeQuery();
+		ResultSet rst = pst_selectByMonth.executeQuery();
 
 		while (rst.next()) {
 			Assiduidade model = new Assiduidade();

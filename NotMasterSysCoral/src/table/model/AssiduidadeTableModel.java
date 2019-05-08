@@ -2,6 +2,7 @@ package table.model;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,11 +65,14 @@ public class AssiduidadeTableModel extends AbstractTableModel{
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Assiduidade assiduidadeSelecionado = assiduidade.get(rowIndex);
 		String valueObject = null;
 		switch (columnIndex) {
 		case 0:
-			valueObject = String.valueOf(assiduidadeSelecionado.getData_entrada());
+			Date date = new Date(1);
+			date.setTime(assiduidadeSelecionado.getData_entrada().getTime());
+;			valueObject = df.format(date);
 			break;
 		default:
 			System.err.println("Índice inválido para propriedade do bean Assiduidade.class");

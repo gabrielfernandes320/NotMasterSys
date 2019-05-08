@@ -73,15 +73,16 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 	}
 
 
-	public List<Matricula_Modalidade> Select(Matricula parameter) throws SQLException {
+	public List<Matricula_Modalidade> Select(int matricula) throws SQLException {
 		
 		List<Matricula_Modalidade> arlMatricModalidade = new ArrayList<Matricula_Modalidade>();
 		
-		Set(pst_select, 1, parameter.getCodigo_matricula());
+		pst_select.setInt(1, matricula);
 		
 		ResultSet rst = pst_select.executeQuery();
 		 
 		while(rst.next()){
+			
 			Matricula_Modalidade model = new Matricula_Modalidade();
 			 
 			model.setCodigo_matricula(rst.getInt("codigo_matricula"));;
