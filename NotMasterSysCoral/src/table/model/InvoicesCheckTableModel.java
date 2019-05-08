@@ -1,37 +1,40 @@
 package table.model;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
-
+import javax.swing.table.DefaultTableModel;
 import com.sun.prism.paint.Color;
-
 import javafx.util.converter.DateTimeStringConverter;
 import model.Invoice;
 
 public class InvoicesCheckTableModel extends AbstractTableModel  {
 
 	private List<Invoice> invoices;
-	private String[] colunas = new String[] { "Codigo Matricula", "Nome Aluno",  "Data de vencimento", "Valor", "Data de pagamento", "Data de Cancelamento" };
-	
+	private String[] colunas = new String[] { "Codigo Matricula", "Nome Aluno", "Data de vencimento", "Valor",
+			"Data de pagamento", "Data de Cancelamento" };
+
 	public InvoicesCheckTableModel(List<Invoice> invoices) {
 		this.invoices = invoices;
 	}
-	
+
 	public InvoicesCheckTableModel() {
 		this.invoices = new ArrayList<Invoice>();
 	}
-	
+
 	public int getRowCount() {
-		return invoices.size();
+
+		int result = 0;
+
+		if (invoices != null) {
+			result = invoices.size();
+		}
+
+		return result;
+
 	}
 
 	public int getColumnCount() {
@@ -54,7 +57,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 		invoice.setData_vencimento(aValue.getData_vencimento());
 		invoice.setValor(aValue.getValor());
 		invoice.setData_pagamento(aValue.getData_pagamento());
-		invoice.setData_cancelamento(aValue.getData_cancelamento());		
+		invoice.setData_cancelamento(aValue.getData_cancelamento());
 
 		fireTableCellUpdated(rowIndex, 0);
 		fireTableCellUpdated(rowIndex, 1);
@@ -65,48 +68,24 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 	}
 
 	@Override
-	/*public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		Invoice invoice = invoices.get(rowIndex);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		switch (columnIndex) {
-		case 0:
-			invoice.setCodigo_matricula(Integer.parseInt(aValue.toString()));
-			break;
-		case 1:
-			invoice.setNome_aluno(aValue.toString());
-			break;
-		case 3:
-			invoice.setValor(Double.parseDouble(aValue.toString()));
-			break;
-		case 5:
-			try {
-				invoice.setData_cancelamento(formatter.parse(aValue.toString()));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
-		case 4:
-			try {
-				invoice.setData_pagamento(formatter.parse(aValue.toString()));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
-		case 2:
-			try {
-				invoice.setData_vencimento(formatter.parse(aValue.toString()));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
-		default:
-			System.err.println("Índice da coluna inválido");
-		}
-		fireTableCellUpdated(rowIndex, columnIndex);
-	}*/
+	/*
+	 * public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+	 * Invoice invoice = invoices.get(rowIndex); SimpleDateFormat formatter = new
+	 * SimpleDateFormat("dd/MM/yyyy"); switch (columnIndex) { case 0:
+	 * invoice.setCodigo_matricula(Integer.parseInt(aValue.toString())); break; case
+	 * 1: invoice.setNome_aluno(aValue.toString()); break; case 3:
+	 * invoice.setValor(Double.parseDouble(aValue.toString())); break; case 5: try {
+	 * invoice.setData_cancelamento(formatter.parse(aValue.toString())); } catch
+	 * (ParseException e) { // TODO Auto-generated catch block e.printStackTrace();
+	 * } break; case 4: try {
+	 * invoice.setData_pagamento(formatter.parse(aValue.toString())); } catch
+	 * (ParseException e) { // TODO Auto-generated catch block e.printStackTrace();
+	 * } break; case 2: try {
+	 * invoice.setData_vencimento(formatter.parse(aValue.toString())); } catch
+	 * (ParseException e) { // TODO Auto-generated catch block e.printStackTrace();
+	 * } break; default: System.err.println("Índice da coluna inválido"); }
+	 * fireTableCellUpdated(rowIndex, columnIndex); }
+	 */
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Invoice invoiceSelecionado = invoices.get(rowIndex);
@@ -125,27 +104,25 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 			valueObject = String.valueOf(invoiceSelecionado.getValor());
 			break;
 		case 4:
-			valueObject = String.valueOf(invoiceSelecionado.getData_pagamento());
+			if(String.valueOf(invoiceSelecionado.getData_pagamento()) == "null")
+				valueObject = null;
+			else
+				valueObject = String.valueOf(invoiceSelecionado.getData_pagamento());				
 			break;
 		case 5:
-			valueObject = String.valueOf(invoiceSelecionado.getData_cancelamento());
-			break;	
+			if(String.valueOf(invoiceSelecionado.getData_cancelamento()) == "null")
+				valueObject = null;
+			else
+				valueObject = String.valueOf(invoiceSelecionado.getData_cancelamento());	
+			break;
 		default:
 			System.err.println("Índice inválido para propriedade do bean Invoice.class");
 		}
 
 		return valueObject;
 	}
-	
-	 List<Color> rowColours = Arrays.asList(
-		        Color.RED,
-		        Color.GREEN
-		    );
-	
-	public void setRowColour(int row, Color c) {
-        rowColours.set(row, c);
-        fireTableRowsUpdated(row, row);
-    }
+
+	List<Color> rowColours = Arrays.asList(Color.RED, Color.GREEN);
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -172,7 +149,7 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 
 	public void addListaDeInvoice(List<Invoice> novosInvoices) {
 
-		int tamanhoAntigo = getRowCount();		
+		int tamanhoAntigo = getRowCount();
 		invoices = novosInvoices;
 		fireTableRowsInserted(tamanhoAntigo, getRowCount() - 1);
 	}
@@ -185,6 +162,5 @@ public class InvoicesCheckTableModel extends AbstractTableModel  {
 	public boolean isEmpty() {
 		return invoices.isEmpty();
 	}
-
 
 }

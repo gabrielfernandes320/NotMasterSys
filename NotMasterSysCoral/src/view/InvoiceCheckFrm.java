@@ -42,6 +42,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 	private JFormattedTextField tbInitialDate;
 	private JFormattedTextField tbFinalDate;
 	private InvoicesCheckTableModel model;
+	private JTable tabela;
 	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
 	/**
@@ -112,9 +113,9 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		cbSituation.setModel(new DefaultComboBoxModel(new String[] { "Todas", "Em Aberto", "Pagas", "Canceladas" }));
 		cbSituation.setBounds(402, 11, 115, 20);
 		getContentPane().add(cbSituation);
-
+		
 		model = new InvoicesCheckTableModel();
-		JTable tabela = new JTable(model);
+		tabela = new JTable(model);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JScrollPane scrollPane = new JScrollPane(getNewRenderedTable(tabela));
@@ -170,7 +171,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 						break;
 					}
 
-					model.addListaDeInvoice(invoicesList);
+					model.addListaDeInvoice(invoicesList);				
 					tabela.repaint();
 
 				} catch (SQLException | ParseException e1) {
@@ -210,7 +211,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 				
 				
 				
-				if (payed == "null" && canceled == "null" && String.valueOf(matri.getData_encerramento()) == null) {
+				if (payed == "null" && canceled == "null" && String.valueOf(matri.getData_encerramento()) == "null") {
 					
 					setBackground(Color.WHITE);
 					setForeground(Color.BLACK);
@@ -222,7 +223,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 					setForeground(Color.BLACK);
 					
 				
-				} else if(payed == "null" && String.valueOf(matri.getData_encerramento()) != null){
+				} else if(payed == "null" && String.valueOf(matri.getData_encerramento()) != "null"){
 					
 					setBackground(Color.RED);
 					setForeground(Color.BLACK);
@@ -244,4 +245,6 @@ public class InvoiceCheckFrm extends JInternalFrame {
 
 	};
 
+
+	
 }
