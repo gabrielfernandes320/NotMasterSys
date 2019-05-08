@@ -23,9 +23,11 @@ import javax.swing.text.MaskFormatter;
 
 import database.ConnectionFactory;
 import database.GraduacoesDAO;
+import database.Matricula_ModalidadeDAO;
 import database.ModalidadesDAO;
 import database.PlanosDAO;
 import model.Graduacoes;
+import model.Matricula;
 import model.Matricula_Modalidade;
 import model.Plano;
 import table.model.StudentsTableModel;
@@ -47,7 +49,7 @@ public class AddModalidadeFrm extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public AddModalidadeFrm(final MatriculaFrm window) {
+	public AddModalidadeFrm(final MatriculaFrm window, final Matricula matricula) {
 		setBounds(100, 100, 258, 387);
 		//setClosable(true);
 		getContentPane().setLayout(null);
@@ -132,7 +134,6 @@ public class AddModalidadeFrm extends JDialog {
 						
 						planos = plan.SelectPorModalidade(String.valueOf(comboBoxModalidade.getSelectedItem()));
 						comboBoxPlano.setModel(new DefaultComboBoxModel(planos));
-						System.out.println("coéééé");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -147,27 +148,52 @@ public class AddModalidadeFrm extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Matricula_Modalidade matriculaMod = new Matricula_Modalidade();
-					
-					Date data_inicio = null;
-					Date data_fim = null;
 					
 					try {
-						data_inicio = new Date(df.parse(txtDataInicio.getText()).getTime());
-						data_fim = new Date(df.parse(txtDataFim.getText()).getTime());
-					} catch (ParseException e1) {
+						conn.setAutoCommit(false);
+					} catch (SQLException e3) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						e3.printStackTrace();
 					}
 					
-					matriculaMod.setModalidade(String.valueOf(comboBoxModalidade.getSelectedItem()));
-					matriculaMod.setGraduacao(String.valueOf(comboBoxGraduacao.getSelectedItem()));
-					matriculaMod.setPlano(String.valueOf(comboBoxPlano.getSelectedItem()));
-					matriculaMod.setData_inicio(data_inicio);
-					matriculaMod.setFata_fim(data_fim);
+					Matricula_Modalidade model = new Matricula_Modalidade();
+					Matricula_ModalidadeDAO dao;
 					
-					System.out.println("Teste: " + matriculaMod.getModalidade() + " " + matriculaMod.getGraduacao()
-										+ " " + matriculaMod.getPlano() + " " + matriculaMod.getData_inicio() + " " + matriculaMod.getFata_fim());
+					try {
+						dao = new Matricula_ModalidadeDAO(conn);
+						
+						Date data_inicio = null;
+						Date data_fim = null;
+						
+						try {
+							data_inicio = new Date(df.parse(txtDataInicio.getText()).getTime());
+							data_fim = new Date(df.parse(txtDataFim.getText()).getTime());
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						model.setCodigo_matricula(matricula.getCodigo_matricula());
+						model.setModalidade(String.valueOf(comboBoxModalidade.getSelectedItem()));
+						model.setGraduacao(String.valueOf(comboBoxGraduacao.getSelectedItem()));
+						model.setPlano(String.valueOf(comboBoxPlano.getSelectedItem()));
+						model.setData_inicio(data_inicio);
+						model.setData_fim(data_fim);
+						
+						dao.Insert(model);
+									
+						System.out.println("Teste: " + model.getModalidade() + " " + model.getGraduacao()
+											+ " " + model.getPlano() + " " + model.getData_inicio() + " " + model.getData_fim());
+						
+						dispose();
+						
+						
+					} catch (SQLException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} 
+					
+					
 				}
 			});
 			

@@ -143,5 +143,22 @@ public class MatriculaDAO extends MasterDAO{
 		return 0;
 	}
 
-
-}
+	public int NextCodigoMatricula (Object parameter) throws SQLException {
+		List<Object> arlMatricula = new ArrayList<Object>();
+		
+		ResultSet rst = pst_selectAll.executeQuery();
+		
+		int maior = 0;
+		
+		while (rst.next()) {
+			
+			if (rst.getInt(1) > maior) {
+				maior = rst.getInt(1);
+			}
+			
+		}
+			
+		return (maior + 1);
+	}
+		
+	}
