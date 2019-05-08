@@ -1,8 +1,12 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyBoundsListener;
@@ -19,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import model.Usuario;
 import java.awt.event.MouseAdapter;
@@ -67,7 +72,7 @@ public class PrincipalWindow extends JFrame {
 		
 		// Define o titulo da janela.
 		setTitle("Menu Principal");
-
+		
 		// Seta o layout a ser utilizado (NULL significa que nï¿½o irï¿½ utilizar nenhum).
 		getContentPane().setLayout(null);
 
@@ -82,6 +87,55 @@ public class PrincipalWindow extends JFrame {
 
 		criarComponentes();
 		AcessController(user);
+		
+		setContentPane(CreateContentPane());
+	}
+	
+	/**
+	 * Método responsavel pela imagem do fundo do Neo Editor Writer. 
+	 * @return
+	 */
+	public 
+	Container		CreateContentPane() 
+	{
+	        //
+		// Criação do painel.
+		//
+		JPanel 
+		contentPane		= 	new JPanel(new BorderLayout());
+	        
+		//
+		// Carrega a imagem.
+		//
+		desktopPane		=	new JDesktopPane()
+		{	
+			Image 
+			im		= 	(
+							new ImageIcon("wallpaper3.jpg")
+						).getImage();			
+			
+			public 
+			void		paintComponent(Graphics g)
+			{        
+				g.drawImage(im,0,0,this);				
+			}
+		};
+		desktopPane.setBackground(Color.BLACK);
+	        
+		//
+		// Cria o painel OPACO.
+		//
+		contentPane.setOpaque(true);
+		
+		//
+		// Adiciona ao JDesktopPane.
+		//
+		contentPane.add(desktopPane);
+	         
+	        //
+	        // Retorna o painel.
+	        //
+	        return contentPane;
 	}
 
 	private void criarComponentes() {
@@ -146,13 +200,13 @@ public class PrincipalWindow extends JFrame {
 		
 		//icones dos itens
 
-		itemUsuariosSist.setIcon(new ImageIcon("C:\\Users\\eduar\\Desktop\\NotMasterSys\\MasterImage\\src\\16x16\\aplicacao.png"));
-		itemSairSist.setIcon(new ImageIcon("C:\\Users\\eduar\\Desktop\\NotMasterSys\\MasterImage\\src\\16x16\\sair.png"));
-		itemAlunosCad.setIcon(new ImageIcon("C:\\Users\\eduar\\Desktop\\NotMasterSys\\MasterImage\\src\\16x16\\aplicacao.png"));
-		itemModalidadesCad.setIcon(new ImageIcon("C:\\Users\\eduar\\Desktop\\NotMasterSys\\MasterImage\\src\\16x16\\aplicacao.png"));
-		itemPlanosCad.setIcon(new ImageIcon("C:\\Users\\eduar\\Desktop\\NotMasterSys\\MasterImage\\src\\16x16\\aplicacao.png"));
-		itemMatricularProc.setIcon(new ImageIcon("C:\\Users\\eduar\\Desktop\\NotMasterSys\\MasterImage\\src\\16x16\\aplicacao.png"));
-		itemFaturamentoProc.setIcon(new ImageIcon("C:\\Users\\eduar\\Desktop\\NotMasterSys\\MasterImage\\src\\16x16\\aplicacao.png"));
+		itemUsuariosSist.setIcon(new ImageIcon("aplicacao.png"));
+		itemSairSist.setIcon(new ImageIcon("sair.png"));
+		itemAlunosCad.setIcon(new ImageIcon("aplicacao.png"));
+		itemModalidadesCad.setIcon(new ImageIcon("aplicacao.png"));
+		itemPlanosCad.setIcon(new ImageIcon("aplicacao.png"));
+		itemMatricularProc.setIcon(new ImageIcon("aplicacao.png"));
+		itemFaturamentoProc.setIcon(new ImageIcon("aplicacao.png"));
 
 
 		menuSistema.add(itemUsuariosSist);
@@ -175,11 +229,6 @@ public class PrincipalWindow extends JFrame {
 		menuBar.add(menuUtilitarios);
 		menuBar.add(menuAjuda);
 		
-		scf = new studentControlFrm();
-		scf.setName(UsersFrm.class.getName());
-		scf.setLocation(1, 1);
-		desktopPane.add(scf);
-		scf.setVisible(true);
 
 		//Aï¿½ï¿½es para os item abaixo
 		//Sistema
@@ -276,7 +325,24 @@ public class PrincipalWindow extends JFrame {
 		});
 		
 		//Cadastro	
-			
+		
+		itemControleAlunos.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JanelaVerificar(UsersFrm.class.getName())) {
+					
+				}
+				else {
+					scf = new studentControlFrm();
+					scf.setName(UsersFrm.class.getName());
+					scf.setLocation(1, 1);
+					desktopPane.add(scf);
+					scf.setVisible(true);
+				}
+			}
+		});
+		
 		itemModalidadesCad.addActionListener(new ActionListener() {
 			
 			@Override
@@ -382,38 +448,41 @@ public class PrincipalWindow extends JFrame {
 	}
 	
 	private void AcessController(Usuario user){
-		switch (user.getPerfil()) {
-		case "Cadastral":
-			menuBar.getMenu(0).setEnabled(false);
-			menuBar.getMenu(2).setEnabled(false);
-			menuBar.getMenu(3).setEnabled(false);
-			break;
-			
-		case "Matricular":
-			menuBar.getMenu(0).setEnabled(false);
-			menuBar.getMenu(1).setEnabled(false);
-			menuBar.getMenu(3).setEnabled(false);	
-			menuBar.getMenu(2).getMenuComponent(1).setEnabled(false);
-			break;
-			
-		case "Completo":
-			menuBar.getMenu(0).setEnabled(true);
-			menuBar.getMenu(1).setEnabled(true);
-			menuBar.getMenu(2).setEnabled(true);
-			menuBar.getMenu(3).setEnabled(true);
-			menuBar.getMenu(4).setEnabled(true);
-			break;
-			
-		case "Financeiro":
-			menuBar.getMenu(0).setEnabled(false);
-			menuBar.getMenu(1).setEnabled(false);
-			menuBar.getMenu(2).getMenuComponent(0).setEnabled(false);
-			menuBar.getMenu(3).setEnabled(false);
-			break;
+		if (user != null) {
+			switch (user.getPerfil()) {
+			case "Cadastral":
+				menuBar.getMenu(0).setEnabled(false);
+				menuBar.getMenu(2).setEnabled(false);
+				menuBar.getMenu(3).setEnabled(false);
+				break;
+				
+			case "Matricular":
+				menuBar.getMenu(0).setEnabled(false);
+				menuBar.getMenu(1).setEnabled(false);
+				menuBar.getMenu(3).setEnabled(false);	
+				menuBar.getMenu(2).getMenuComponent(1).setEnabled(false);
+				break;
+				
+			case "Completo":
+				menuBar.getMenu(0).setEnabled(true);
+				menuBar.getMenu(1).setEnabled(true);
+				menuBar.getMenu(2).setEnabled(true);
+				menuBar.getMenu(3).setEnabled(true);
+				menuBar.getMenu(4).setEnabled(true);
+				break;
+				
+			case "Financeiro":
+				menuBar.getMenu(0).setEnabled(false);
+				menuBar.getMenu(1).setEnabled(false);
+				menuBar.getMenu(2).getMenuComponent(0).setEnabled(false);
+				menuBar.getMenu(3).setEnabled(false);
+				break;
 
-		default:
-			break;
+			default:
+				break;
+			}
 		}
+		
 	}
 	
 
