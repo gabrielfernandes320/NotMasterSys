@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.xml.internal.ws.encoding.MtomCodec.MtomXMLStreamReaderEx;
+
+import model.Matricula_Modalidade;
 import model.Modalidades;
 import model.Plano;
 
@@ -133,21 +136,36 @@ public class PlanosDAO extends MasterDAO {
 		returno = new String[arlPlano.size()];
 		return arlPlano.toArray(returno);
 	}
+	
+	public Object SelecT(Matricula_Modalidade parameter) throws SQLException {
+//		cria o objeto modaliidade
+		Plano plano = null;
+		
+		Set(pst_select, 1, parameter.getPlano());
+		
+		ResultSet rst = pst_select.executeQuery();
+		if(rst.next()) {
+			plano = new Plano();
+			plano.setModalidade(rst.getString("modalidade"));
+			plano.setPlano(rst.getString("plano"));
+			plano.setValor(rst.getDouble("valor_mensal"));
+		}
+		return plano;
+	}
 
 	@Override
 	public Object Select(Object parameter) throws SQLException {
 //		cria o objeto modaliidade
 		Plano plano = null;
 		
-		Set(pst_select, 1, ((Plano)parameter).getPlano());
-		Set(pst_select, 2, ((Plano)parameter).getModalidade());
+		Set(pst_select, 1, (Plano)parameter);
 		
 		ResultSet rst = pst_select.executeQuery();
 		if(rst.next()) {
 			plano = new Plano();
-			plano.setModalidade(rst.getString("graduacoes"));
-			plano.setPlano(rst.getString("modalidade"));
-			plano.setValor((rst.getDouble("graduacoes")));
+			plano.setModalidade(rst.getString("modalidade"));
+			plano.setPlano(rst.getString("plano"));
+			plano.setValor(rst.getDouble("valor"));
 		}
 		return plano;
 	}

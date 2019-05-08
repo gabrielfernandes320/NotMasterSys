@@ -31,7 +31,23 @@ public class InvoiceDAO extends MasterDAO {
 
 	private String is_select_canceled_invocies = "SELECT faturas_matriculas.codigo_matricula, alunos.aluno , faturas_matriculas.data_vencimento, faturas_matriculas.valor, faturas_matriculas.data_pagamento, faturas_matriculas.data_cancelamento FROM faturas_matriculas  INNER JOIN matriculas ON faturas_matriculas.codigo_matricula = matriculas.codigo_matricula  INNER JOIN alunos ON alunos.codigo_aluno = matriculas.codigo_aluno WHERE faturas_matriculas.data_cancelamento is not null AND faturas_matriculas.data_vencimento BETWEEN ? AND ?";
 
-	private String is_insert = "";
+	private String is_insert = "INSERT INTO faturas_matriculas		"
+								+" (								"
+								+"		codigo_matricula,			"
+								+"		data_vencimento,			"
+								+ "		valor,						"
+								+ "		data_pagamento,				"
+								+ "		data_cancelamento			"
+								+" )								"
+								+"	VALUES							"	
+								+" (								"
+								+"			?,						"	
+								+"			?,						"
+								+ "			?,						"
+								+ "			?,						"
+								+ "			?"	
+								+" )";
+;
 
 	private String is_update = "";
 
@@ -264,8 +280,21 @@ public class InvoiceDAO extends MasterDAO {
 
 	@Override
 	public void Insert(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
-
+		pst_insert.clearParameters();
+		
+		Invoice lo_invoice = (Invoice)parameter;
+		
+		Set(pst_insert, 1, lo_invoice.getCodigo_matricula());
+		Set(pst_insert, 2, lo_invoice.getData_vencimento());
+		Set(pst_insert, 3, lo_invoice.getValor());
+		Set(pst_insert, 4, lo_invoice.getData_pagamento());
+		Set(pst_insert, 5, lo_invoice.getData_cancelamento());
+		pst_insert.execute();
+		
+		if (pst_insert.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
+	
 	}
 
 	@Override

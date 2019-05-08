@@ -155,7 +155,8 @@ public class ModalidadesDAO extends MasterDAO{
         Set(pst_delete, 1, lo_modalidade.getModalidade());
 
         affectedrows = pst_delete.executeUpdate();
-
+        io_connection.commit();
+        
         return affectedrows;
 
 	}

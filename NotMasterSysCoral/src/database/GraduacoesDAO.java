@@ -162,6 +162,7 @@ public class GraduacoesDAO extends MasterDAO{
         Set(pst_delete, 1, lo_graduacao.getGraduations());
 
         affectedrows = pst_delete.executeUpdate();
+        io_connection.commit();
 
         return affectedrows;
 

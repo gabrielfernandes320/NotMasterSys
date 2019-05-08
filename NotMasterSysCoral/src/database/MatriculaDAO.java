@@ -77,6 +77,11 @@ public class MatriculaDAO extends MasterDAO{
 		while (rst.next()) {
 			
 			Matricula model = new Matricula();
+			model.setCodigo_matricula(rst.getInt("codigo_matricula"));
+			model.setCodigo_aluno(rst.getInt("codigo_aluno"));
+			model.setData_matricula(rst.getDate("data_matricula"));
+			model.setDia_vencimento(rst.getInt("dia_vencimento"));
+			model.setData_encerramento(rst.getDate("data_encerramento"));
 			arlMatricula.add(model);
 			
 		}
