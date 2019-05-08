@@ -91,8 +91,8 @@ public class GenerateInvoicesFrm extends JInternalFrame {
 							
 							double value = 0;
 							model = (Matricula)allEnrollment.get(i);
-							List<Matricula_Modalidade> modalityList = new ArrayList<Matricula_Modalidade>();
-							modalityList = enrollmentModalityDAO.Select(model);
+							List<Matricula_Modalidade> modalityList = new ArrayList<Matricula_Modalidade>();							
+							modalityList = enrollmentModalityDAO.Select(model.getCodigo_matricula());
 							
 								for(int j = 0; j < modalityList.size(); j++) {
 									Plano plan = new Plano();
