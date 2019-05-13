@@ -76,7 +76,7 @@ public class ModalitySearchFrm extends JDialog {
 		}
 		
 		txfSearch = new JTextField();
-		txfSearch.setBounds(89, 11, 220, 20);
+		txfSearch.setBounds(89, 11, 247, 20);
 		getContentPane().add(txfSearch);
 		txfSearch.setColumns(10);
 		
@@ -84,9 +84,9 @@ public class ModalitySearchFrm extends JDialog {
 		lblModalidade.setBounds(10, 13, 75, 17);
 		getContentPane().add(lblModalidade);
 		
-		JButton btnAtualizar = new JButton("Atualizar");
+		JButton btnAtualizar = new JButton("Pesquisar");
 		btnAtualizar.setBackground(SystemColor.menu);
-				btnAtualizar.setBounds(312, 10, 89, 23);
+				btnAtualizar.setBounds(340, 10, 104, 23);
 		getContentPane().add(btnAtualizar);
 		txfSearch.setText("");
 		JPanel painelFundo;

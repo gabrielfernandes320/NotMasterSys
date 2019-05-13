@@ -49,8 +49,12 @@ public class ModalityFrm extends JInternalFrame {
 	private JScrollPane scrollPaneGraduate;
 	private JLabel lblModality;
 	private JLabel lblGraduate;
+	private JLabel lblMessage;
 	private JTable tableGraduate;
 	private String idSelecionado;
+	private JPanel	painelFundo;
+	private JTable tableGraduation;
+	private JScrollPane barraRolagem;
 	private GraduacoesTableModel model;
 	private boolean IsUpdate = false;
 	private List<Graduacoes> newGraduations = new ArrayList<Graduacoes>();
@@ -80,33 +84,33 @@ public class ModalityFrm extends JInternalFrame {
 		getContentPane().setLayout(null);
 		
 		
-		JButton btnSearch = new JButton("Buscar");
+		btnSearch = new JButton("Buscar");
 		btnSearch.setBackground(SystemColor.menu);
 		btnSearch.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/localizar.png")));
 		btnSearch.setEnabled(true);
 		btnSearch.setBounds(20, 11, 95, 37);
 		getContentPane().add(btnSearch);
 				
-		JButton btnRemove = new JButton("Remover");
+		btnRemove = new JButton("Remover");
 		btnRemove.setBackground(SystemColor.menu);
 		btnRemove.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/remover.png")));
 		btnRemove.setEnabled(false);
 		btnRemove.setBounds(230, 11, 115, 37);
 		getContentPane().add(btnRemove);
 		
-		JButton btnSave = new JButton("Salvar");
+		btnSave = new JButton("Salvar");
 		btnSave.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/salvar.png")));
 		btnSave.setBackground(SystemColor.menu);
 		btnSave.setEnabled(false);
 		btnSave.setBounds(345, 11, 104, 37);
 		getContentPane().add(btnSave);
 		
-		JLabel lblModality = new JLabel("Modalidade:");
+		lblModality = new JLabel("Modalidade:");
 		lblModality.setEnabled(true);
 		lblModality.setBounds(10, 54, 72, 22);
 		getContentPane().add(lblModality);
 		
-		JLabel lblGraduate = new JLabel(" Gradua\u00E7\u00E3o:");
+		lblGraduate = new JLabel(" Gradua\u00E7\u00E3o:");
 		lblGraduate.setEnabled(true);
 		lblGraduate.setBounds(10, 81, 72, 14);
 		getContentPane().add(lblGraduate);
@@ -123,29 +127,30 @@ public class ModalityFrm extends JInternalFrame {
 		getContentPane().add(txfGraduation);
 		txfGraduation.setColumns(10);
 		
-		JButton btnOk = new JButton("OK");
+		btnOk = new JButton("OK");
 		btnOk.setBackground(SystemColor.menu);
 		btnOk.setEnabled(false);
 		btnOk.setBounds(391, 79, 58, 18);
 		getContentPane().add(btnOk);
 		
-		JButton btnAdd = new JButton("Adicionar");
+		btnAdd = new JButton("Adicionar");
 		btnAdd.setBackground(SystemColor.menu);
 		btnAdd.setIcon(new ImageIcon(ModalityFrm.class.getResource("/view/images/adicionar.png")));
 		btnAdd.setBounds(115, 11, 115, 37);
 		getContentPane().add(btnAdd);
 				
-		JLabel lblMessage = new JLabel("Duplo clique na linha da gradua\u00E7\u00E3o para remov\u00EA-la.");
+		lblMessage = new JLabel("Duplo clique na linha da gradua\u00E7\u00E3o para remov\u00EA-la.");
 		lblMessage.setBounds(11, 264, 414, 14);
 		getContentPane().add(lblMessage);
 
-		JPanel	painelFundo = new JPanel();
+		painelFundo = new JPanel();
 		model = new GraduacoesTableModel();
 		painelFundo.setLayout(null);
 		
-		JTable tableGraduation = new JTable(model);
+		tableGraduation = new JTable(model);
 		tableGraduation.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JScrollPane barraRolagem = new JScrollPane(tableGraduation);
+		
+		barraRolagem = new JScrollPane(tableGraduation);
 		barraRolagem.setBounds(0, 0, 440, 147);
 		painelFundo.add(barraRolagem);
 		painelFundo.setBounds(10, 106, 439, 147);
@@ -211,20 +216,20 @@ public class ModalityFrm extends JInternalFrame {
 				btnOk.setEnabled(true);
 				btnSearch.setEnabled(false);
 				txfGraduation.setEditable(true);
-				}
+			}
 		});
 		
 		
 		btnSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
+				
 				if( (txfModality.getText()).isEmpty() ) {
 					JOptionPane.showMessageDialog(null,"O campo da Modalidade deve ser preenchido!");
-				}
-				else if(model.isEmpty()) {
-					JOptionPane.showMessageDialog(null,"Deve ser cadastrada pelos uma graduaçao.");
+				}else if(model.isEmpty()) {
+					JOptionPane.showMessageDialog(null,"Deve ser cadastrada ao menos uma graduaçao.");
 				}else {
-					
+			
 					if(IsUpdate) {
 						try {
 							conn.setAutoCommit(false);
@@ -232,64 +237,53 @@ public class ModalityFrm extends JInternalFrame {
 							
 							GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
 							
-							try {
-							
-								for(int i = 0 ; i< newGraduations.size() ;i++) {
-									
-									graduationDao.Insert(newGraduations.get(i));
-									}
-									newGraduations.clear();
+								try {
 								
-							}catch (SQLException e1) {
-								e1.printStackTrace();
-							}
+									for(int i = 0 ; i< newGraduations.size() ;i++) {
+										
+										graduationDao.Insert(newGraduations.get(i));
+										}
+									
+									newGraduations.clear();
+									JOptionPane.showMessageDialog(null,"Salvo com sucesso!");
+									ClearScreen();
+								}catch (SQLException e1) {
+									e1.printStackTrace();
+								}
 							
-					}catch (SQLException e2) {
-						e2.printStackTrace();
-					}
-						JOptionPane.showMessageDialog(null,"Salvo com sucesso!");
+							}catch (SQLException e2) {
+								e2.printStackTrace();
+							}
 						
 					}else {
-						try {
-							conn.setAutoCommit(false);
-							System.out.println("Conectado com sucesso!");
-							
-							Modalidades modalityModel = new Modalidades();
-							ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
-							GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
-							
-							modalityModel.setModalidade(txfModality.getText());
 							try {
-								modalityDao.Insert(modalityModel);
-								for(int i=0; i<model.getRowCount();i++) {
-									graduationDao.Insert(model.getGraduacao(i));
-								}
+								conn.setAutoCommit(false);
+								System.out.println("Conectado com sucesso!");
 								
-							}catch (SQLException e1) {
-								e1.printStackTrace();
-							}
+								Modalidades modalityModel = new Modalidades();
+								ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
+								GraduacoesDAO graduationDao = new GraduacoesDAO(conn);
+								
+								modalityModel.setModalidade(txfModality.getText());
+									try {
+										modalityDao.Insert(modalityModel);
+										for(int i=0; i<model.getRowCount();i++) {
+											graduationDao.Insert(model.getGraduacao(i));
+										}
+										
+									}catch (SQLException e1) {
+										e1.printStackTrace();
+									}
 						
-							
-						}catch (SQLException e2) {
-							e2.printStackTrace();
-						}
-						JOptionPane.showMessageDialog(null,"Salvo com sucesso!");
-					  }
+								JOptionPane.showMessageDialog(null,"Salvo com sucesso!");
+								ClearScreen();
+									
+							}catch (SQLException e2) {
+								e2.printStackTrace();
+							}
 					}
-				
-				btnOk.setEnabled(false);
-				btnSave.setEnabled(false);
-				btnRemove.setEnabled(false);
-				btnSearch.setEnabled(true);
-				btnAdd.setEnabled(true);
-				txfModality.setEditable(false);
-				txfGraduation.setEditable(false);
-				txfGraduation.setText("");
-				txfModality.setText("");
-				IsUpdate = false;
-				model.limpar();
-				
-			}});
+				}
+		}});
 		
 		
 		btnRemove.addActionListener(new ActionListener() {
@@ -297,47 +291,44 @@ public class ModalityFrm extends JInternalFrame {
 				if( (txfModality.getText()).isEmpty() ) {
 					JOptionPane.showMessageDialog(null,"Uma modalidade deve ser selecionada!");
 				}else {
+				
 					Modalidades modalityModel = new Modalidades();
 					modalityModel.setModalidade(txfModality.getText().toString());
 					
 						try {
-							ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
-							GraduacoesDAO  graduationDao = new GraduacoesDAO(conn);
-							
-							for(int i = 0; i < model.getRowCount(); i++) {
-								graduationDao.Delete(model.getGraduacao(i));
-							}
-							modalityDao.Delete(modalityModel);
-							JOptionPane.showMessageDialog(null,"Deletado com sucesso!");
+								ModalidadesDAO modalityDao = new ModalidadesDAO(conn);
+								GraduacoesDAO  graduationDao = new GraduacoesDAO(conn);
+								
+								for(int i = 0; i < model.getRowCount(); i++) {
+									graduationDao.Delete(model.getGraduacao(i));
+								}
+								modalityDao.Delete(modalityModel);
+								JOptionPane.showMessageDialog(null,"Deletado com sucesso!");
+								ClearScreen();
+								
 						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 							JOptionPane.showMessageDialog(null,"Delete o(s) plano(s) desta modalidade primeiro!");
 						}
 						
 				}
-				btnOk.setEnabled(false);
-				btnSave.setEnabled(false);
-				btnRemove.setEnabled(false);
-				btnSearch.setEnabled(true);
-				btnAdd.setEnabled(true); 
-				txfModality.setEditable(false);
-				txfGraduation.setEditable(false);
-				txfGraduation.setText("");
-				txfModality.setText("");
-				IsUpdate = false;
-				model.limpar();
+				
 			}});
 		
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Graduacoes newGraduation = new Graduacoes();
-				newGraduation.setId_modality(txfModality.getText());
-				newGraduation.setGraduations(txfGraduation.getText());
-				model.addGraduacao(newGraduation);
-				txfGraduation.setText("");
-				newGraduations.add(newGraduation);
-				
+				if((txfModality.getText()).isEmpty()) {
+					JOptionPane.showMessageDialog(null,"Digite uma modalidade primeiro");
+				}else if ((txfGraduation.getText()).isEmpty()) {
+					JOptionPane.showMessageDialog(null,"Digite uma graduação no campo");
+				}else {
+					Graduacoes newGraduation = new Graduacoes();
+					newGraduation.setId_modality(txfModality.getText());
+					newGraduation.setGraduations(txfGraduation.getText());
+					model.addGraduacao(newGraduation);
+					txfGraduation.setText("");
+					newGraduations.add(newGraduation);
+				}
 			}
 		});
 		
@@ -345,18 +336,28 @@ public class ModalityFrm extends JInternalFrame {
 	}
 	
 	
+	private void ClearScreen() {
+
+		btnOk.setEnabled(false);
+		btnSave.setEnabled(false);
+		btnRemove.setEnabled(false);
+		btnSearch.setEnabled(true);
+		btnAdd.setEnabled(true);
+		txfModality.setEditable(false);
+		txfGraduation.setEditable(false);
+		txfGraduation.setText("");
+		txfModality.setText("");
+		IsUpdate = false;
+		model.limpar();
+
+	}
 	
 	public void Update(final Modalidades p, final List<Graduacoes> graduation) {
-
 		txfModality.setText(p.getModalidade());
 		model.limpar();
 		model.addListaDeGraduacoes(graduation);
 		updateCampos();
 		IsUpdate = true;
-
-//	while()
-//	cbxModalidade.setSelectedIndex();
-//		
 	}
 	
 	public void updateCampos() {
