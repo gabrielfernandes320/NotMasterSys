@@ -32,7 +32,7 @@ import database.PlanosDAO;
 
 public class GenerateInvoicesFrm extends JInternalFrame {
 	Connection conn =  ConnectionFactory.getConnection("master", "admin", "admin");
-	MasterMonthChooser invoiceMonth;
+	MasterMonthChooser invoiceMonth = new MasterMonthChooser();
 	
 	/**
 	 * Launch the application.
@@ -50,9 +50,6 @@ public class GenerateInvoicesFrm extends JInternalFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public GenerateInvoicesFrm() {
 		setTitle("Gerar Faturas");
 		setClosable(true);
@@ -64,7 +61,7 @@ public class GenerateInvoicesFrm extends JInternalFrame {
 		btnGenerateInvoices.setBounds(127, 46, 184, 31);
 		getContentPane().add(btnGenerateInvoices);
 		
-		invoiceMonth = new MasterMonthChooser();
+
 		invoiceMonth.setBounds(127, 11, 184, 24);
 		getContentPane().add(invoiceMonth);
 		
@@ -73,6 +70,7 @@ public class GenerateInvoicesFrm extends JInternalFrame {
 		getContentPane().add(lblNewLabel);
 		
 		btnGenerateInvoices.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
@@ -87,41 +85,41 @@ public class GenerateInvoicesFrm extends JInternalFrame {
 						List<Object> allEnrollment = new ArrayList<Object>();
 						allEnrollment = enrollmentDAO.SelectAll();
 						
-						for(int i=0; i < allEnrollment.size(); i++) {
-							
-							double value = 0;
-							model = (Matricula)allEnrollment.get(i);
-							List<Matricula_Modalidade> modalityList = new ArrayList<Matricula_Modalidade>();							
-							modalityList = enrollmentModalityDAO.Select(model.getCodigo_matricula());
-							
-								for(int j = 0; j < modalityList.size(); j++) {
-									Plano plan = new Plano();
-									plan = (Plano) plansDAO.SelecT(modalityList.get(j));
-									value += plan.getValor();
+							for(int i=0; i < allEnrollment.size(); i++) {
+								double value = 0;
+								model = (Matricula)allEnrollment.get(i);
+								
+								if((model.getData_encerramento()) == null) {
+									
+									List<Matricula_Modalidade> modalityList = new ArrayList<Matricula_Modalidade>();							
+									modalityList = enrollmentModalityDAO.Select(model.getCodigo_matricula());
+									
+										for(int j = 0; j < modalityList.size(); j++) {
+											Plano plan = new Plano();
+											plan = (Plano) plansDAO.SelecT(modalityList.get(j));
+											value += plan.getValor();
+										}
+									
+									java.util.Date selectedDate = invoiceMonth.getDate();
+									Date dueDate = new Date(selectedDate.getYear(),  selectedDate.getMonth(), model.getDia_vencimento());
+										
+									Invoice invoice = new Invoice();
+									invoice.setCodigo_matricula(model.getCodigo_matricula());
+									invoice.setData_vencimento(dueDate);
+									invoice.setValor(value);
+									invoice.setData_pagamento(null);
+									invoice.setData_cancelamento(null);
+									invDAO.Insert(invoice);
 								}
-							java.util.Date selectedDate = invoiceMonth.getDate();
-							Date dueDate = new Date(selectedDate.getYear(),  selectedDate.getMonth(), model.getDia_vencimento());
-							
-							Invoice invoice = new Invoice();
-							invoice.setCodigo_matricula(model.getCodigo_matricula());
-							invoice.setData_vencimento(dueDate);
-							invoice.setValor(value);
-							invoice.setData_pagamento(null);
-							invoice.setData_cancelamento(null);
-							invDAO.Insert(invoice);
-							
-						} 
+							} 
+					
 						JOptionPane.showMessageDialog(null,"Faturas geradas com sucesso!");
-					}catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null,"Faturas ja existentes para esta data" );
-				}  
-				
-				
-				
-				
-				
+					
+				}catch (SQLException e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null,"Faturas ja existentes para esta data" );
+					
+					}  
 				
 			}
 		});
