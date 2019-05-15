@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -18,11 +19,13 @@ import javax.swing.JDialog;
 
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import database.ConnectionFactory;
 import database.GraduacoesDAO;
+import database.MatriculaDAO;
 import database.Matricula_ModalidadeDAO;
 import database.ModalidadesDAO;
 import database.PlanosDAO;
@@ -45,7 +48,7 @@ public class AddModalidadeFrm extends JDialog {
 	private String[] planos = null;
 
 	Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
-	
+
 	/**
 	 * Create the frame.
 	 */
@@ -57,6 +60,8 @@ public class AddModalidadeFrm extends JDialog {
 		ModalidadesDAO mod;
 		GraduacoesDAO grad;
 		PlanosDAO plan;
+		
+		Matricula_Modalidade model = new Matricula_Modalidade();
 		
 		try {
 			mod = new ModalidadesDAO(conn);
@@ -122,6 +127,7 @@ public class AddModalidadeFrm extends JDialog {
 			JButton btnConfirmar = new JButton("Confirmar");
 			btnConfirmar.setBounds(10, 314, 89, 23);
 			getContentPane().add(btnConfirmar);
+			btnConfirmar.setBackground(SystemColor.menu);
 			
 			comboBoxModalidade.addActionListener(new ActionListener() {
 				
@@ -156,11 +162,12 @@ public class AddModalidadeFrm extends JDialog {
 						e3.printStackTrace();
 					}
 					
-					Matricula_Modalidade model = new Matricula_Modalidade();
+					
 					Matricula_ModalidadeDAO dao;
 					
 					try {
 						dao = new Matricula_ModalidadeDAO(conn);
+						MatriculaDAO matDao = new MatriculaDAO(conn);
 						
 						Date data_inicio = null;
 						Date data_fim = null;
@@ -180,16 +187,19 @@ public class AddModalidadeFrm extends JDialog {
 						model.setData_inicio(data_inicio);
 						model.setData_fim(data_fim);
 						
-						dao.Insert(model);
-									
-						System.out.println("Teste: " + model.getModalidade() + " " + model.getGraduacao()
-											+ " " + model.getPlano() + " " + model.getData_inicio() + " " + model.getData_fim());
-						
-						dispose();
-						
+						if (model.getData_inicio() != null) {
+							System.out.println("certo");
+							
+							matDao.Insert(matricula);
+							dao.Insert(model);
+							
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(getContentPane(), "Erro: Insira data de início!");
+						}
 						
 					} catch (SQLException e2) {
-						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(getContentPane(), "Erro: Aluno não está cadastrado!");
 						e2.printStackTrace();
 					} 
 					
@@ -201,6 +211,8 @@ public class AddModalidadeFrm extends JDialog {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		
+
 		
 	}
 }

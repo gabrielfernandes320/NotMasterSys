@@ -37,12 +37,15 @@ import java.util.List;
 import java.util.Locale;
 import java.awt.Point;
 import java.awt.ScrollPane;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -52,6 +55,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import javax.swing.JTable;
 import javax.swing.Action;
 
@@ -78,27 +84,37 @@ public class MatriculaFrm extends JInternalFrame{
 		
 		JButton btnPesquisar = new JButton("Buscar");
 		btnPesquisar.setIcon(new ImageIcon(MatriculaFrm.class.getResource("/view/images/localizar.png")));
-		btnPesquisar.setBounds(10, 11, 89, 35);
+		btnPesquisar.setBounds(10, 11, 100, 35);
 		getContentPane().add(btnPesquisar);
+		btnPesquisar.setBackground(SystemColor.menu);
+		
+		JButton btnAtualizar = new JButton("Atualizar");
+		//btnAtualizar.setIcon(new ImageIcon(MatriculaFrm.class.getResource("/view/images/atualizar.png")));
+		btnAtualizar.setBounds(444, 176, 104, 23);
+		getContentPane().add(btnAtualizar);
+		btnAtualizar.setBackground(SystemColor.menu);
 		
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setIcon(new ImageIcon(MatriculaFrm.class.getResource("/view/images/adicionar.png")));
-		btnAdicionar.setBounds(109, 11, 124, 35);
+		btnAdicionar.setBounds(120, 11, 124, 35);
 		getContentPane().add(btnAdicionar);
+		btnAdicionar.setBackground(SystemColor.menu);
 		
 		JButton btnRemover = new JButton("Remover");
 		btnRemover.setEnabled(false);
 		btnRemover.setIcon(new ImageIcon(MatriculaFrm.class.getResource("/view/images/remover.png")));
-		btnRemover.setBounds(325, 11, 124, 35);
+		btnRemover.setBounds(300, 11, 124, 35);
 		getContentPane().add(btnRemover);
 		btnRemover.setEnabled(false);
+		btnRemover.setBackground(SystemColor.menu);
 		
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.setEnabled(false);
 		btnSalvar.setIcon(new ImageIcon(MatriculaFrm.class.getResource("/view/images/salvar.png")));
-		btnSalvar.setBounds(459, 11, 89, 35);
+		btnSalvar.setBounds(440, 11, 100, 35);
 		getContentPane().add(btnSalvar);
 		btnSalvar.setEnabled(false);
+		btnSalvar.setBackground(SystemColor.menu);
 		
 		JLabel lblMatricula = new JLabel("Matricula:");
 		lblMatricula.setBounds(10, 69, 79, 14);
@@ -159,6 +175,7 @@ public class MatriculaFrm extends JInternalFrame{
 		btnAdicionarModalidade.setBounds(10, 176, 202, 23);
 		getContentPane().add(btnAdicionarModalidade);
 		btnAdicionarModalidade.setEnabled(false);
+		btnAdicionarModalidade.setBackground(SystemColor.menu);
 	
 		JScrollPane mScrollPane = new JScrollPane();
 		mScrollPane.setBounds(10, 204, 544, 200);
@@ -188,6 +205,7 @@ public class MatriculaFrm extends JInternalFrame{
 
 						txtCodAluno.setText(Integer.toString(model.getCodigo_aluno()));
 						txtMatricula.setText(Integer.toString(dao.NextCodigoMatricula(model)));
+						txtAluno.setText(model.getAluno());
 						
 						if (model.getCodigo_aluno() != 0) {			
 							txtAluno.setEnabled(true);
@@ -208,16 +226,7 @@ public class MatriculaFrm extends JInternalFrame{
 								public void mouseClicked(MouseEvent e) {
 									if (e.getClickCount() == 1) {
 
-										System.out.println("selected");
-
-										btnRemover.setEnabled(true);
-										
-										
-										
-										//System.out.println("Codigo da matricula selecionada: " + matModList.get(1));
-
-										
-										
+										btnRemover.setEnabled(true);							
 									}
 								}
 							});
@@ -250,6 +259,41 @@ public class MatriculaFrm extends JInternalFrame{
 			}
 		});
 		
+		btnAtualizar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				try {
+					MatriculaDAO dao = new MatriculaDAO(conn);
+					Matricula_ModalidadeDAO matDao = new Matricula_ModalidadeDAO(conn);
+					Matricula model = new Matricula();
+					Matricula_Modalidade matModel = new Matricula_Modalidade();
+				
+					model.setAluno(txtAluno.getText());
+					
+					model = dao.SelectAluno(model);
+					
+					matModel.setCodigo_matricula(model.getCodigo_aluno());
+					
+					List<Matricula_Modalidade> matModList = matDao.selectPorCodigoAluno(model); 
+					
+					mTableModel.addListaDeMatricula_Modalidade(matModList);
+					mScrollPane.setViewportView(modalityTable);
+					
+					if (modalityTable.getRowCount() > 0) {
+						btnRemover.setEnabled(true);
+					}
+						
+				} catch (SQLException e1) {
+					
+					e1.printStackTrace();
+					
+				}		
+			}
+		});
+		
 		btnAdicionar.addActionListener(new ActionListener() {		
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -262,6 +306,7 @@ public class MatriculaFrm extends JInternalFrame{
 					
 					txtAluno.setEnabled(true);
 					txtVencimento.setEnabled(true);
+					txtCodAluno.setEnabled(true);
 					btnAdicionarModalidade.setEnabled(true);
 					btnSalvar.setEnabled(true);
 					dataMatriculaField.setEnabled(true);
@@ -286,7 +331,7 @@ public class MatriculaFrm extends JInternalFrame{
 					Matricula_Modalidade model = new Matricula_Modalidade();
 					Matricula_ModalidadeDAO dao = new Matricula_ModalidadeDAO(conn);
 					Matricula mat = new Matricula();
-					//MatriculaDAO matDao = new MatriculaDAO(conn);
+					MatriculaDAO matDao = new MatriculaDAO(conn);
 				
 					mat.setCodigo_aluno(Integer.parseInt(txtCodAluno.getText()));
 					
@@ -297,27 +342,28 @@ public class MatriculaFrm extends JInternalFrame{
 
 					mat.setCodigo_matricula(model.getCodigo_matricula());
 					
+					dao.Delete(model);
 					
-					//TODO: PASSAR UM DATE PRO dao.delete();
+					matModList = dao.selectPorCodigoAluno(mat); 
+					Matricula_Modalidade matModel = new Matricula_Modalidade();
+					matModel.setCodigo_matricula(Integer.parseInt(txtMatricula.getText()));
 					
-					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
-					LocalDate localDate = LocalDate.now();
-					String data = (dtf.format(localDate));
-					DateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
-					Date date = (Date) format.parse(data);
-					
-					System.out.println(date);
-					
-					
-					//System.out.println(data);
-					
-					//dao.Delete(model, data);
+					mTableModel.addListaDeMatricula_Modalidade(matModList);
+					mScrollPane.setViewportView(modalityTable);
 						
+					if (modalityTable.getRowCount() == 0) {
+						int opt = JOptionPane.showConfirmDialog(null, "Todas as modalidades foram encerradas. \nDeseja encerrar a matrícula?", "Aviso", JOptionPane.YES_NO_OPTION);
+						
+						if (opt == 0) {
+							System.out.println("Encerrando matrícula...");
+							matDao.DeleteMatricula(mat);
+						} else {
+							System.out.println("Matricula continua cadastrada.");
+						}
+					}
+					
 					btnRemover.setEnabled(false);
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}			
@@ -328,13 +374,11 @@ public class MatriculaFrm extends JInternalFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				
 				try {
 					
 					conn.setAutoCommit(false);
-					MatriculaDAO dao = new MatriculaDAO(conn);
-					
+			
 					Date data_matricula = new Date(df.parse(dataMatriculaField.getText()).getTime());
 					
 					model.setCodigo_matricula(Integer.parseInt(txtMatricula.getText()));
@@ -343,26 +387,27 @@ public class MatriculaFrm extends JInternalFrame{
 					model.setDia_vencimento(Integer.parseInt(txtVencimento.getText()));
 					model.setAluno(txtAluno.getText());
 					
-					dao.Insert(model);
+					if (model.getDia_vencimento() >= 1 && model.getDia_vencimento() <= 28) {		
+						AddModalidadeFrm addMod = new AddModalidadeFrm(MatriculaFrm.this, model);			
+						addMod.setVisible(true);
+						
+					} else {
+						JOptionPane.showMessageDialog(getContentPane(), "Erro: Dia do vencimento inválido!");
+					}
 					
-					JOptionPane.showMessageDialog(getContentPane(), "Insira as demais informações da matrícula: ");
-					
-					AddModalidadeFrm addMod = new AddModalidadeFrm(MatriculaFrm.this, model);
-					
-					
-					
-					addMod.setVisible(true);
+								
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(getContentPane(), "Erro: Aluno não cadastrado!");
 					e1.printStackTrace();
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(getContentPane(), "Erro: Insira data de matrícula!");
 					e1.printStackTrace();
-				}		
+				} catch (NumberFormatException e1) {
+					JOptionPane.showMessageDialog(getContentPane(), "Erro: Insira um dia de vencimento!");
+				}
 			}
 		}); //btnAdicionarModalidade
-		
-		
+			
 		btnSalvar.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
 									
@@ -385,12 +430,14 @@ public class MatriculaFrm extends JInternalFrame{
 			
 				
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(getContentPane(), "Erro: Aluno não cadastrado!");
 					e1.printStackTrace();
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(getContentPane(), "Erro: Insira data de matrícula!");
 					e1.printStackTrace();
-				}					
+				}	catch (NumberFormatException e1) {
+					JOptionPane.showMessageDialog(getContentPane(), "Erro: Insira um dia de vencimento!");
+				}				
 			}
 		}); //btnSalvar
 		
@@ -399,14 +446,30 @@ public class MatriculaFrm extends JInternalFrame{
 			public void actionPerformed(ActionEvent e) {
 				//System.out.println("Adicionar Aluno");
 				
-				JOptionPane.showMessageDialog(getContentPane(), "Digite o nome no campo \"Aluno\" e tecle F9");
+				StudentSearchFrm searchForm = new StudentSearchFrm(MatriculaFrm.this);
+				searchForm.setVisible(true);
 				
 			}
 		}); //btn pesquisar
 		
+		
 
 	}
 	
+	void updateTable () {
+		
+	}
 	
+	void updateFields(Matricula matricula) throws SQLException {
+		
+		Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+		Matricula_ModalidadeDAO dao = new Matricula_ModalidadeDAO(conn);
+		Matricula_Modalidade mat = new Matricula_Modalidade();
+		
+		System.out.println(matricula.getAluno());
+		txtCodAluno.setText(String.valueOf(matricula.getCodigo_aluno()));
+		txtAluno.setText(matricula.getAluno());
+		
+	}
 
 }
