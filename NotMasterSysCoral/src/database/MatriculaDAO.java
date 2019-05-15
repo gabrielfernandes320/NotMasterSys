@@ -21,7 +21,7 @@ public class MatriculaDAO extends MasterDAO{
 	
 	private String is_select = "select * from matriculas where codigo_aluno = ?";
 	
-	private String is_selectAluno = "select * from alunos where aluno = ?";
+	private String is_selectAluno = "select * from alunos where aluno like ?";
 	
 	private String is_selectCheckMatricula = "select * from matriculas where codigo_matricula = ?";
 	private String is_selectCheckAluno = "select codigo_aluno, count (1) from matriculas group by codigo_aluno";
@@ -108,7 +108,7 @@ public class MatriculaDAO extends MasterDAO{
 		Matricula matricula = null;
 		Matricula lo_matricula = (Matricula)parameter;
 		
-		Set(pst_selectAluno, 1, lo_matricula.getCodigo_aluno());
+		Set(pst_selectAluno, 1, lo_matricula.getCodigo_aluno()+"%");
 		
 		ResultSet rst = pst_selectAluno.executeQuery();
 		
@@ -129,7 +129,7 @@ public class MatriculaDAO extends MasterDAO{
 		Matricula matricula = null;
 		Matricula lo_matricula = (Matricula)parameter;
 		
-		Set(pst_selectAluno, 1, lo_matricula.getAluno());
+		Set(pst_selectAluno, 1, lo_matricula.getAluno()+"%");
 		
 		ResultSet rst = pst_selectAluno.executeQuery();
 		
