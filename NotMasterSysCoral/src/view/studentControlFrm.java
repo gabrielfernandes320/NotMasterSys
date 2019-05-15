@@ -151,6 +151,8 @@ public class studentControlFrm extends JInternalFrame {
 		getContentPane().add(iScrollPane);
 
 		invoicesTable = new JTable(iTableModel);
+		invoicesTable.getTableHeader().setReorderingAllowed(false);
+		invoicesTable.getTableHeader().setEnabled(false);
 		iScrollPane.setViewportView(getNewRenderedTable(invoicesTable));
 
 		JScrollPane mScrollPane = new JScrollPane();
@@ -158,6 +160,8 @@ public class studentControlFrm extends JInternalFrame {
 		getContentPane().add(mScrollPane);
 
 		modalityTable = new JTable(mTableModel);
+		modalityTable.getTableHeader().setReorderingAllowed(false);
+		modalityTable.getTableHeader().setEnabled(false);
 		mScrollPane.setViewportView(modalityTable);
 		
 		SituationPanel = new JPanel();

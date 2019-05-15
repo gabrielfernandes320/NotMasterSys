@@ -117,8 +117,12 @@ public class InvoiceCheckFrm extends JInternalFrame {
 		model = new InvoicesCheckTableModel();
 		tabela = new JTable(model);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabela.getTableHeader().setReorderingAllowed(false);
+		tabela.getTableHeader().setEnabled(false);
+		
 
 		JScrollPane scrollPane = new JScrollPane(getNewRenderedTable(tabela));
+		scrollPane.setEnabled(false);
 		scrollPane.setSize(0, 0);
 		scrollPane.setLocation(0, 0);
 		scrollPane.setBounds(10, 42, 721, 307);

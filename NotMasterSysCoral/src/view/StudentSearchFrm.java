@@ -66,6 +66,8 @@ public class StudentSearchFrm extends JDialog {
 		getContentPane().add(painelFundo);
 
 		JTable tabela = new JTable(model);
+		tabela.getTableHeader().setReorderingAllowed(false);
+		tabela.getTableHeader().setEnabled(false);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane barraRolagem = new JScrollPane(tabela);
 		barraRolagem.setBounds(0, 0, 434, 195);
