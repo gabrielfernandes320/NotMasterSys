@@ -100,6 +100,8 @@ public class StudentSearchFrm extends JDialog {
 				}
 			}
 		});
+		
+	}
 	
 	public StudentSearchFrm(final StudentFrm window) {
 
