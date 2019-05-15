@@ -214,7 +214,8 @@ public class InvoiceDAO extends MasterDAO {
 
 		Set(pst_payment, 1, lo_invoice.getCodigo_matricula());
 		Set(pst_payment, 2, lo_invoice.getValor());
-		
+		Date data= new Date(parameter.getData_vencimento().getTime());
+		pst_payment.setDate(3, data);
 
 		IsPaymentSucessfull = pst_payment.executeUpdate();
 
@@ -230,6 +231,8 @@ public class InvoiceDAO extends MasterDAO {
 
 		Set(pst_cancel, 1, lo_invoice.getCodigo_matricula());
 		Set(pst_cancel, 2, lo_invoice.getValor());
+		Date data= new Date(parameter.getData_vencimento().getTime());
+		pst_cancel.setDate(3, data);
 
 		IsCancellingSucessfull = pst_cancel.executeUpdate();
 
@@ -246,6 +249,8 @@ public class InvoiceDAO extends MasterDAO {
 		Set(pst_changevalue, 1, newvalue);
 		Set(pst_changevalue, 2, lo_invoice.getCodigo_matricula());
 		Set(pst_changevalue, 3, lo_invoice.getValor());
+		Date data= new Date(parameter.getData_vencimento().getTime());
+		pst_changevalue.setDate(4, data);
 
 		IsChangeSucessfull = pst_changevalue.executeUpdate();
 
