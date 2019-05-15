@@ -53,9 +53,10 @@ public class UsuariosTableModel extends AbstractTableModel  {
 
 		switch (columnIndex) {
 		case 0:
-			usuario.setUsuario(aValue.toString());
-		case 1:
 			usuario.setPerfil(aValue.toString());
+		case 1:
+			
+			usuario.setUsuario(aValue.toString());
 		default:
 			System.err.println("Índice da coluna inválido");
 		}

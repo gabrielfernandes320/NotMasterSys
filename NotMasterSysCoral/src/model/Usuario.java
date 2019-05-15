@@ -9,10 +9,10 @@ public class Usuario {
 	public Usuario() {
 	}
 	
-	public Usuario(String usuario, String perfil, String senha) {
+	public Usuario( String perfil,String usuario, String senha) {
 		super();
-		this.usuario = usuario;
 		this.perfil = perfil;
+		this.usuario = usuario;
 
 	}
 	public String getUsuario() {

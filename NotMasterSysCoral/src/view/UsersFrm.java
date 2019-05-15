@@ -76,7 +76,7 @@ public class UsersFrm extends JInternalFrame {
 	 */
 	public UsersFrm() {
 		setClosable(true);
-		setBounds(100, 100, 463, 369);
+		setBounds(100, 100, 483, 369);
 		getContentPane().setLayout(null);
 		
 		JButton btnAdicionar = new JButton("Adicionar");
@@ -84,7 +84,7 @@ public class UsersFrm extends JInternalFrame {
 		btnAdicionar.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/adicionar.png")));
 		btnAdicionar.setPreferredSize(new Dimension(40, 25));
 		btnAdicionar.setBackground(SystemColor.menu);
-		btnAdicionar.setBounds(119, 11, 104, 31);
+		btnAdicionar.setBounds(119, 11, 120, 31);
 		getContentPane().add(btnAdicionar);
 		
 		JButton btnSalvar = new JButton("Salvar");
@@ -93,7 +93,7 @@ public class UsersFrm extends JInternalFrame {
 		btnSalvar.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/salvar.png")));
 		btnSalvar.setPreferredSize(new Dimension(40, 25));
 		btnSalvar.setBackground(SystemColor.menu);
-		btnSalvar.setBounds(324, 11, 104, 31);
+		btnSalvar.setBounds(348, 11, 114, 31);
 		getContentPane().add(btnSalvar);
 		
 		JButton btnRemover = new JButton("Remover");
@@ -103,7 +103,7 @@ public class UsersFrm extends JInternalFrame {
 		btnRemover.setIcon(new ImageIcon(UsersFrm.class.getResource("/view/images/remover.png")));
 		btnRemover.setPreferredSize(new Dimension(40, 25));
 		btnRemover.setBackground(SystemColor.menu);
-		btnRemover.setBounds(222, 11, 104, 31);
+		btnRemover.setBounds(238, 11, 113, 31);
 		getContentPane().add(btnRemover);
 		
 		tbUser = new JTextField();
@@ -245,7 +245,7 @@ public class UsersFrm extends JInternalFrame {
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JScrollPane scrollPane = new JScrollPane(tabela);
-		scrollPane.setBounds(10, 173, 427, 155);
+		scrollPane.setBounds(10, 173, 452, 155);
 		getContentPane().add(scrollPane);
 		
 		btnBuscar.addActionListener(new ActionListener() {
