@@ -45,10 +45,10 @@ public class InvoiceDAO extends MasterDAO {
 			+ " WHERE codigo_matricula = ? and valor = ? and data_vencimento = ?";
 
 	private String is_canceling = "UPDATE public.faturas_matriculas\r\n"
-			+ "   SET data_cancelamento = CURRENT_TIMESTAMP\r\n" + " WHERE codigo_matricula = ? and valor = ?";
+			+ "   SET data_cancelamento = CURRENT_TIMESTAMP\r\n" + " WHERE codigo_matricula = ? and valor = ? and data_vencimento = ?";
 
 	private String is_changevalue = "UPDATE public.faturas_matriculas\r\n" + "   SET valor = ?\r\n"
-			+ " WHERE codigo_matricula = ? and valor = ?";
+			+ " WHERE codigo_matricula = ? and valor = ? and data_vencimento = ?";
 	
 
 	private PreparedStatement pst_selectAll;

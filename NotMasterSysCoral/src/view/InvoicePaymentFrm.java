@@ -147,7 +147,12 @@ public class InvoicePaymentFrm extends JInternalFrame {
 					inv.setCodigo_matricula(
 							Integer.parseInt(String.valueOf((tabela.getValueAt(tabela.getSelectedRow(), 0)))));
 					inv.setValor(Double.parseDouble((String) tabela.getValueAt(tabela.getSelectedRow(), 3)));
-					inv.setData_vencimento((java.sql.Date) tabela.getValueAt(tabela.getSelectedRow(), 2));
+					try {
+						inv.setData_vencimento(df.parse(tabela.getValueAt(tabela.getSelectedRow(), 2).toString()));
+					} catch (ParseException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 
 					try {
 
@@ -199,7 +204,12 @@ public class InvoicePaymentFrm extends JInternalFrame {
 					inv.setCodigo_matricula(
 							Integer.parseInt(String.valueOf((tabela.getValueAt(tabela.getSelectedRow(), 0)))));
 					inv.setValor(Double.parseDouble((String) tabela.getValueAt(tabela.getSelectedRow(), 3)));
-					inv.setData_vencimento((java.sql.Date) tabela.getValueAt(tabela.getSelectedRow(), 2));
+					try {
+						inv.setData_vencimento(df.parse(tabela.getValueAt(tabela.getSelectedRow(), 2).toString()));
+					} catch (ParseException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 
 					try {
 
@@ -250,7 +260,12 @@ public class InvoicePaymentFrm extends JInternalFrame {
 					inv.setCodigo_matricula(
 							Integer.parseInt(String.valueOf((tabela.getValueAt(tabela.getSelectedRow(), 0)))));
 					inv.setValor(Double.parseDouble((String) tabela.getValueAt(tabela.getSelectedRow(), 3)));
-					inv.setData_vencimento((java.sql.Date) tabela.getValueAt(tabela.getSelectedRow(), 2));
+					try {
+						inv.setData_vencimento(df.parse(tabela.getValueAt(tabela.getSelectedRow(), 2).toString()));
+					} catch (ParseException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 					
 					try {
 
