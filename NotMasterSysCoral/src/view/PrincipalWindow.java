@@ -110,13 +110,11 @@ public class PrincipalWindow extends JFrame {
 		desktopPane		=	new JDesktopPane()
 		{	
 			Image 
-			im		= 	(
-							new ImageIcon("wallpaper3.jpg")
-						).getImage();			
+			im		= 	new ImageIcon(PlansFrm.class.getResource("/view/images/wallpaper3.jpg")).getImage();			
 			
 			public 
 			void		paintComponent(Graphics g)
-			{        
+			{       
 				g.drawImage(im,0,0,this);				
 			}
 		};
@@ -200,13 +198,13 @@ public class PrincipalWindow extends JFrame {
 		
 		//icones dos itens
 
-		itemUsuariosSist.setIcon(new ImageIcon("aplicacao.png"));
-		itemSairSist.setIcon(new ImageIcon("sair.png"));
-		itemAlunosCad.setIcon(new ImageIcon("aplicacao.png"));
-		itemModalidadesCad.setIcon(new ImageIcon("aplicacao.png"));
-		itemPlanosCad.setIcon(new ImageIcon("aplicacao.png"));
-		itemMatricularProc.setIcon(new ImageIcon("aplicacao.png"));
-		itemFaturamentoProc.setIcon(new ImageIcon("aplicacao.png"));
+		itemUsuariosSist.setIcon(new ImageIcon(PlansFrm.class.getResource("/view/images/aplicacao.png")));
+		itemSairSist.setIcon(new ImageIcon(PlansFrm.class.getResource("/view/images/sair.png")));
+		itemAlunosCad.setIcon(new ImageIcon(PlansFrm.class.getResource("/view/images/aplicacao.png")));
+		itemModalidadesCad.setIcon(new ImageIcon(PlansFrm.class.getResource("/view/images/aplicacao.png")));
+		itemPlanosCad.setIcon(new ImageIcon(PlansFrm.class.getResource("/view/images/aplicacao.png")));
+		itemMatricularProc.setIcon(new ImageIcon(PlansFrm.class.getResource("/view/images/aplicacao.png")));
+		itemFaturamentoProc.setIcon(new ImageIcon(PlansFrm.class.getResource("/view/images/aplicacao.png")));
 
 
 		menuSistema.add(itemUsuariosSist);
