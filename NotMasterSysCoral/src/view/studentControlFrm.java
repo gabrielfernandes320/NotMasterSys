@@ -233,7 +233,10 @@ public class studentControlFrm extends JInternalFrame {
 		updateAssiduidadeTable(cod_matricula);
 		
 		//CARREGAR MODALIDADE
-		List<Matricula_Modalidade> list =  mDAO.Select(Integer.parseInt(txfNumMatricula.getText()));
+		Matricula mat = new Matricula();
+		mat.setCodigo_matricula(Integer.parseInt(txfNumMatricula.getText()));
+		
+		List<Matricula_Modalidade> list =  mDAO.Select(mat);
 		mTableModel.addListaDeMatricula_Modalidade(list);
 
 	}

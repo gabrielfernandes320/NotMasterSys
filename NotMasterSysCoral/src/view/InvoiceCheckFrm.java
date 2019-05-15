@@ -199,10 +199,10 @@ public class InvoiceCheckFrm extends JInternalFrame {
 				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 				String payed = String.valueOf(table.getValueAt(row, 4));
 				String canceled = String.valueOf(table.getValueAt(row, 5));
-				Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
-				Matricula matri = new Matricula();
+				Matricula matri = null;
 				try {
-					
+					Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
+					matri = new Matricula();
 					MatriculaDAO md = new MatriculaDAO(conn);					
 					matri.setCodigo_matricula(Integer.parseInt(String.valueOf(table.getValueAt(row, 0))));
 					matri = md.checkMatricula(matri);
