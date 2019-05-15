@@ -211,14 +211,13 @@ public class MatriculaDAO extends MasterDAO{
 			if (rst.next()) {
 				
 				matricula = new Matricula();
-				if(rst.getDate("data_encerramento") != null) {
-					matricula.setData_encerramento(rst.getDate("data_encerramento"));	
-				}
-									
-				return matricula;			
+				matricula.setCodigo_aluno(rst.getInt("codigo_aluno"));
+				matricula.setData_encerramento(rst.getDate("data_encerramento"));	
+				matricula.setDia_vencimento(rst.getInt("dia_vencimento"));														
 				
 			}
 			
+			return matricula;		
 			
 		} catch (SQLException e) {
 

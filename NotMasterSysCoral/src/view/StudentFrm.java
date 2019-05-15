@@ -76,6 +76,19 @@ public class StudentFrm extends JInternalFrame implements ActionListener{
 	 */
 	public StudentFrm() throws SQLException {
 
+		CreateComponents();
+
+	}
+
+	public StudentFrm(Aluno aluno) throws SQLException {
+		
+		CreateComponents();		
+		updateFields(aluno);		
+		
+	}
+	
+	private void CreateComponents() throws SQLException {
+		
 		setClosable(true);
 		setTitle("Cadastro de Alunos");
 		setBounds(100, 100, 470, 510);
@@ -476,9 +489,9 @@ public class StudentFrm extends JInternalFrame implements ActionListener{
 			}
 
 		});
-
+		
 	}
-
+	
     public void actionPerformed(ActionEvent e)
     {
     	

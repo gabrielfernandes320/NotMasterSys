@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -16,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import database.AlunoDAO;
 import database.AssiduidadeDAO;
 import database.ConnectionFactory;
 import database.InvoiceDAO;
@@ -34,9 +38,16 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 
 public class studentControlFrm extends JInternalFrame {
-
+	
+	private int situation = 0;
+	private int cod_aluno;
 	private AssiduidadeTableModel aTableModel;
 	private InvoicesStudentCtrlTableModel iTableModel;
 	private ModalidadeMatriculaTableModel mTableModel;
@@ -45,6 +56,8 @@ public class studentControlFrm extends JInternalFrame {
 	private JTable assiduidadeTable;
 	private JTable invoicesTable;
 	private MasterMonthChooser mmcData;
+	private JLabel SituationLb;
+	private JPanel SituationPanel;
 
 	Connection conn = ConnectionFactory.getConnection("master", "admin", "admin");
 	private JTable modalityTable;
@@ -146,6 +159,19 @@ public class studentControlFrm extends JInternalFrame {
 
 		modalityTable = new JTable(mTableModel);
 		mScrollPane.setViewportView(modalityTable);
+		
+		SituationPanel = new JPanel();
+		SituationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		SituationPanel.setBounds(230, 166, 432, 57);
+		getContentPane().add(SituationPanel);
+		SituationPanel.setLayout(null);
+		
+		SituationLb = new JLabel("Aguardando Consulta...");
+		SituationLb.setBounds(124, 17, 184, 22);
+		SituationPanel.add(SituationLb);
+		SituationLb.setLabelFor(SituationPanel);
+		SituationLb.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		SituationLb.setHorizontalAlignment(SwingConstants.CENTER);
 
 		// COISAS IMPORTANTES
 
@@ -167,6 +193,24 @@ public class studentControlFrm extends JInternalFrame {
 			}
 		});
 
+		studentBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			try {				
+				StudentFrm frm = new StudentFrm(new AlunoDAO(conn).Select(cod_aluno));
+				getParent().add(frm);
+				frm.setVisible(true);
+				frm.setName(StudentFrm.class.getName());
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}					
+				
+			}
+		});
+		
 	}
 
 	private void updateFieldsAndTables(String cod_matricula) throws SQLException {
@@ -190,6 +234,23 @@ public class studentControlFrm extends JInternalFrame {
 
 	}
 
+	private void ChangeLabel() {
+		
+		if(situation != 0) {
+			
+			SituationLb.setText("SITUAÇÃO IRREGULAR");
+			SituationPanel.setBackground(Color.RED);
+			
+		}
+		else {
+			
+			SituationLb.setText("SITUAÇÃO REGULAR");
+			SituationPanel.setBackground(Color.GREEN);
+			
+		}
+		
+	}
+	
 	private void updateAssiduidadeTable(String cod_matricula) throws SQLException {
 
 		AssiduidadeDAO aDAO = new AssiduidadeDAO(conn);
@@ -217,31 +278,45 @@ public class studentControlFrm extends JInternalFrame {
 					MatriculaDAO md = new MatriculaDAO(conn);
 					matri.setCodigo_matricula(Integer.parseInt(txfNumMatricula.getText()));
 					matri = md.checkMatricula(matri);
+					cod_aluno = matri.getCodigo_aluno();
 
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-				if (payed == "null" && canceled == "null" && String.valueOf(matri.getData_encerramento()) == "null") {
-
+				if (payed == "null" && canceled == "null" && String.valueOf(matri.getData_encerramento()) == "null" && matri.getDia_vencimento() <= LocalDate.now().getDayOfMonth()) {
+										
 					setBackground(Color.WHITE);
 					setForeground(Color.BLACK);
+					
+					ChangeLabel();
 
-				} else if (payed != "null") {
+				}else if (payed != "null") {
+				
 
 					setBackground(Color.GREEN);
 					setForeground(Color.BLACK);
+					
+					ChangeLabel();
 
 				} else if (payed == "null" && String.valueOf(matri.getData_encerramento()) != "null") {
 
+					situation++;
+					
 					setBackground(Color.RED);
 					setForeground(Color.BLACK);
+					
+					ChangeLabel();
 
 				} else {
 
+					situation++;
+					
 					setBackground(Color.YELLOW);
 					setForeground(Color.BLACK);
+					
+					ChangeLabel();
 
 				}
 
@@ -253,5 +328,4 @@ public class studentControlFrm extends JInternalFrame {
 		return tabela;
 
 	}
-
 }

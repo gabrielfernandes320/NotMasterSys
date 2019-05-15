@@ -291,4 +291,41 @@ public class AlunoDAO extends MasterDAO {
 		return null;
 	}
 	
+	public Aluno Select(int cod) throws SQLException{
+		
+		Aluno aluno = null;
+					
+		pst_select.setInt(1, cod);
+		
+		ResultSet rst = pst_select.executeQuery();
+		
+		if (rst.next()) {
+			aluno = new Aluno();
+			aluno.setCodigo_aluno(rst.getInt("codigo_aluno"));
+			aluno.setAluno(rst.getString("aluno"));
+			aluno.setData_nascimento(rst.getDate("data_nascimento"));
+			aluno.setSexo(rst.getString("sexo").charAt(0));
+			aluno.setTelefone(rst.getString("telefone"));
+			aluno.setCelular(rst.getString("celular"));
+			aluno.setEmail(rst.getString("email"));
+			aluno.setObservacao(rst.getString("observacao"));
+			aluno.setEndereco(rst.getString("endereco"));
+			aluno.setNumero(rst.getString("numero"));
+			aluno.setComplemento(rst.getString("complemento"));
+			aluno.setBairro(rst.getString("bairro"));
+			aluno.setCidade(rst.getString("cidade"));
+			aluno.setEstado(rst.getString("estado"));
+			aluno.setPais(rst.getString("pais"));
+			aluno.setCep(rst.getString("cep"));
+			
+			return aluno;
+			
+		}
+		
+		else
+			
+			return aluno;
+		
+	}
+	
 }

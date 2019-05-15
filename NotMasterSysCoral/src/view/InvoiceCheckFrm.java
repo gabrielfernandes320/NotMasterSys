@@ -210,7 +210,7 @@ public class InvoiceCheckFrm extends JInternalFrame {
 				
 				
 				
-				if (payed == "null" && canceled == "null" && String.valueOf(matri.getData_encerramento()) == "null") {
+				if (payed == "null" && canceled == "null" && String.valueOf(matri.getData_encerramento()) == "null" && matri.getDia_vencimento() <= LocalDate.now().getDayOfMonth()) {
 					
 					setBackground(Color.WHITE);
 					setForeground(Color.BLACK);
