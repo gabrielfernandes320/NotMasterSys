@@ -136,16 +136,21 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 		
 	}
 
-	public int Delete(Object parameter, String date) throws SQLException {
+	public int Delete(Object parameter) throws SQLException {
 		pst_delete.clearParameters();
 		
 		Matricula_Modalidade lo_matricula = (Matricula_Modalidade)parameter;
 		
 		Set(pst_delete, 1, lo_matricula.getCodigo_matricula());
-		Set(pst_delete, 2, date.toString());
-		Set(pst_delete, 3, lo_matricula.getCodigo_matricula());
+		Set(pst_delete, 2, lo_matricula.getCodigo_matricula());
 		
-		pst_delete.executeQuery();
+		System.out.println("DELETE: " + lo_matricula.getCodigo_matricula());
+		
+		pst_delete.execute();
+		
+		if (pst_delete.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
 		
 		return 0;
 	}
@@ -154,11 +159,5 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 	public Object Select(Object parameter) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public int Delete(Object parameter) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }
