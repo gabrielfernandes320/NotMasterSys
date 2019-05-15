@@ -23,8 +23,8 @@ public class Matricula_ModalidadeDAO extends MasterDAO{
 	private String is_selectPorCodigoAluno = "select * "
 			+ "from matriculas_modalidades join matriculas on matriculas_modalidades.codigo_matricula "
 			+ "= matriculas.codigo_matricula where matriculas.codigo_aluno = ?";
-	private String is_delete = "delete from matriculas_modalidades where codigo_matricula= ?; "
-			+ "update matriculas set data_encerramento = ? where codigo_matricula = ?";
+	private String is_delete = "update matriculas set data_encerramento = current_date where codigo_matricula = ?;"
+			+ "delete from matriculas_modalidades where codigo_matricula= ?";
 	
 	private PreparedStatement pst_insert;
 	private PreparedStatement pst_select;
