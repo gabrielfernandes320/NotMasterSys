@@ -25,13 +25,15 @@ public class MatriculaDAO extends MasterDAO{
 	
 	private String is_selectCheckMatricula = "select * from matriculas where codigo_matricula = ?";
 	private String is_selectCheckAluno = "select codigo_aluno, count (1) from matriculas group by codigo_aluno";
-	private String is_delete = "delete from matriculas_modalidades where codigo_matricula= ?; "
+	private String is_delete = "delete from matriculas_modalidades where codigo_matricula = ?; "
 			+ "delete from matriculas where codigo_matricula = ?";
+	private String is_deleteMatricula = "delete from matriculas where codigo_aluno = ?";
 	
 	private PreparedStatement pst_selectAll;
 	private PreparedStatement pst_insert;
 	private PreparedStatement pst_select;
 	private PreparedStatement pst_delete;
+	private PreparedStatement pst_deleteMatricula;
 	private PreparedStatement pst_selectAluno;
 	private PreparedStatement pst_selectCheckMatricula;
 	private PreparedStatement pst_selectCheckAluno;
@@ -49,6 +51,7 @@ public class MatriculaDAO extends MasterDAO{
 		pst_selectCheckMatricula = connection.prepareStatement(is_selectCheckMatricula);
 		pst_selectCheckAluno = connection.prepareStatement(is_selectCheckAluno);
 		pst_delete = connection.prepareStatement(is_delete);
+		pst_deleteMatricula = connection.prepareStatement(is_deleteMatricula);
 	}
 	
 	public void Insert(Object parameter) throws SQLException {
@@ -158,6 +161,25 @@ public class MatriculaDAO extends MasterDAO{
 		
 		Set(pst_insert, 1, lo_matricula.getCodigo_matricula());
 		Set(pst_insert, 2, lo_matricula.getCodigo_matricula());
+		
+		return 0;
+	}
+	
+	public int DeleteMatricula(Object parameter) throws SQLException {
+		
+		pst_deleteMatricula.clearParameters();
+		
+		Matricula lo_matricula = (Matricula)parameter;
+		
+		Set(pst_deleteMatricula, 1, lo_matricula.getCodigo_aluno());
+		
+		System.out.println(pst_deleteMatricula);
+		
+		pst_deleteMatricula.execute();
+		
+		if (pst_deleteMatricula.getUpdateCount() > 0) {
+			io_connection.commit();
+		}
 		
 		return 0;
 	}
