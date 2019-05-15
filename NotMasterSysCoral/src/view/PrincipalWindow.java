@@ -110,7 +110,7 @@ public class PrincipalWindow extends JFrame {
 		desktopPane		=	new JDesktopPane()
 		{	
 			Image 
-			im		= 	new ImageIcon(PlansFrm.class.getResource("/view/images/wallpaper3.jpg")).getImage();			
+			im		= 	new ImageIcon(PlansFrm.class.getResource("/view/images/wallpaper2.jpg")).getImage();			
 			
 			public 
 			void		paintComponent(Graphics g)
