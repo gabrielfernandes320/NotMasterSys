@@ -101,6 +101,20 @@ public class StudentSearchFrm extends JDialog {
 			}
 		});
 		
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				zerarTodos();
+				try {
+
+					model.addListaDealunos(new AlunoDAO(conn).SelectAll(txfSearch.getText().toString()));
+
+				} catch (Exception e1) {
+					System.err.printf("Erro: %s.\n", e1.getMessage());
+				}
+
+			}
+		});
+		
 	}
 	
 	public StudentSearchFrm(final StudentFrm window) {
